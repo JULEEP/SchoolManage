@@ -175,6 +175,9 @@ import StaffList from './Pages/StaffList';
 import Setting from './Pages/Setting';
 import ImageDisplay from './Pages/ComingSoon';
 import TeacherComingSoon from './Teacher/comingsoon';
+import FeesManagement from './Pages/Fees'
+import FeeDetails from './Pages/FeeDetails';
+import StudentFees from './Student/StudentFees';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -314,6 +317,7 @@ function App() {
             <Route path="/student-transport" element={<TransportPage/>} />
             <Route path="/student-booklist" element={<StudentBookListPage/>} />
             <Route path="/student-dormitory" element={<DormitoryPage/>} />
+            <Route path="/student-fees" element={<StudentFees/>} />
             <Route path="/teacher" element={<Teacher/>} />
             <Route path="/sidebar" element={<Sidebar/>} />
             <Route path="/student-login" element={<StudentLogin/>} />
@@ -322,6 +326,8 @@ function App() {
             <Route path="/staffList" element={<StaffList/>} />
             <Route path="/settings" element={<Setting/>} />
             <Route path="/coming-soon" element={<ImageDisplay/>} />
+            <Route path="/fees" element={<FeesManagement/>} />
+            <Route path="/fees-details" element={<FeeDetails/>} />
 
 
 

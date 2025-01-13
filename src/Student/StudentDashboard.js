@@ -27,6 +27,8 @@ const homework = 'https://cdn.dribbble.com/users/4241563/screenshots/11874468/lo
 const notice = 'https://i.pinimg.com/originals/fb/11/55/fb1155591460c455edf3ced130b127b9.gif';
 const exam = 'https://cdn.dribbble.com/users/957210/screenshots/2475142/untitled-2.gif';
 const attendance = 'https://cdn.dribbble.com/users/1244169/screenshots/4494753/attendance_final.gif';
+const fee = 'https://cdn-icons-gif.flaticon.com/9908/9908553.gif';
+
 
 const bestCategories = [
   { img: subject, name: "Subjects", link: "/student-subject-details" },
@@ -39,6 +41,8 @@ const bestCategories = [
   { img: transport, name: "Transport", link: "/student-transport" },
   { img: routine, name: "Routines", link: "/class-routine" },
   { img: result, name: "Results", link: "/student-result" },
+  { img: fee, name: "My Fees", link: "/student-fees" },
+
 
 
 ];

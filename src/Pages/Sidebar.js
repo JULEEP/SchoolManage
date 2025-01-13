@@ -438,27 +438,18 @@ const toggleWalletDropdown = () => {
       {/* Fees Dropdown */}
       <li className="py-2 flex items-center cursor-pointer" onClick={toggleFeesDropdown}>
         <FaClipboardList className="w-5 h-5 mr-2" />
-        <span>Fees(Coming Soon)</span>
+        <span>Fees</span>
         <FaCaretDown className={`ml-2 transition-transform ${isFeesOpen ? 'rotate-180' : 'rotate-0'}`} />
       </li>
 
       {/* Dropdown Items */}
       {isFeesOpen && (
         <ul className="ml-6 mt-2">
-        <Link to="/feesgroup" className="hover:text-gray-400">
-          <li className="py-2"><a href="#" className="hover:text-gray-400">Fees Group</a></li>
+        <Link to="/fees" className="hover:text-gray-400">
+          <li className="py-2"><a href="#" className="hover:text-gray-400">Add Fees</a></li>
           </Link>
-          <Link to="/feestype" className="hover:text-gray-400">
-          <li className="py-2"><a href="#" className="hover:text-gray-400">Fees Type</a></li>
-          </Link>
-          <Link to="/feesinvo" className="hover:text-gray-400">
-          <li className="py-2"><a href="#" className="hover:text-gray-400">Fees Invoice</a></li>
-          </Link>
-          <Link to="/bankpayment" className="hover:text-gray-400">
-          <li className="py-2"><a href="#" className="hover:text-gray-400">Bank Payment</a></li>
-          </Link>
-          <Link to="/coming-soon" className="hover:text-gray-400">
-          <li className="py-2"><a href="#" className="hover:text-gray-400">Fees Carry Forward</a></li>
+          <Link to="/fees-details" className="hover:text-gray-400">
+          <li className="py-2"><a href="#" className="hover:text-gray-400">Fees Record</a></li>
           </Link>
         </ul>
       )}
