@@ -13,7 +13,9 @@ const MarksList = () => {
 
   const fetchMarks = async () => {
     try {
-      const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/marks");
+      const response = await axios.get(
+        "https://school-backend-1-2xki.onrender.com/api/admin/marks"
+      );
       setMarksList(response.data.marks || []);
     } catch (error) {
       console.error("Error fetching marks:", error);
@@ -72,10 +74,10 @@ const MarksList = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-grow p-6 bg-gray-100">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 ml-8">Marks List</h1>
+      <main className="flex-grow p-6 bg-gray-100 overflow-x-hidden">
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6 ml-20">Marks List</h1>
 
-        <div className="bg-white p-6 rounded-md shadow-md">
+        <div className="bg-white p-6 rounded-md shadow-md ml-20">
           {/* CSV Export Button */}
           <div className="flex items-center justify-end mb-4">
             <button
@@ -91,7 +93,7 @@ const MarksList = () => {
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border-b px-4 py-2 text-left">SL</th>
+                  <th className="border-b px-4 py-2 text-left ml-16">SL</th>
                   <th className="border-b px-4 py-2 text-left">First Name</th>
                   <th className="border-b px-4 py-2 text-left">Last Name</th>
                   <th className="border-b px-4 py-2 text-left">Class</th>
@@ -174,7 +176,7 @@ const MarksList = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-center items-center mt-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
@@ -182,7 +184,7 @@ const MarksList = () => {
               >
                 Previous
               </button>
-              <span className="text-gray-600">
+              <span className="mx-4 text-gray-600">
                 Page {currentPage} of {totalPages}
               </span>
               <button
