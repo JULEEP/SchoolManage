@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import axios from 'axios';
-import { FaBars, FaTimes } from 'react-icons/fa'; // Mobile sidebar toggle icons
+import React, { useState, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import axios from "axios";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const ComplaintBook = () => {
   const [formData, setFormData] = useState({
-    complaintBy: '',
-    complaintType: '',
-    complaintSource: '',
-    phone: '',
-    date: '',
-    actionsTaken: '',
-    assigned: '',
-    description: '',
+    complaintBy: "",
+    complaintType: "",
+    complaintSource: "",
+    phone: "",
+    date: "",
+    actionsTaken: "",
+    assigned: "",
+    description: "",
   });
 
   const [complaintList, setComplaintList] = useState([]);
@@ -21,14 +21,15 @@ const ComplaintBook = () => {
   const itemsPerPage = 5;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Fetch complaints on page load
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-complaints');
+        const response = await axios.get(
+          "https://school-backend-1-2xki.onrender.com/api/admin/get-complaints"
+        );
         setComplaintList(response.data.complaints);
       } catch (error) {
-        console.error('Error fetching complaints:', error);
+        console.error("Error fetching complaints:", error);
       }
     };
     fetchComplaints();
@@ -47,38 +48,47 @@ const ComplaintBook = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('https://school-backend-1-2xki.onrender.com/api/admin/complaints', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        "https://school-backend-1-2xki.onrender.com/api/admin/complaints",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       alert(response.data.message);
 
       setComplaintList([...complaintList, response.data.complaint]);
 
       setFormData({
-        complaintBy: '',
-        complaintType: '',
-        complaintSource: '',
-        phone: '',
-        date: '',
-        actionsTaken: '',
-        assigned: '',
-        description: '',
+        complaintBy: "",
+        complaintType: "",
+        complaintSource: "",
+        phone: "",
+        date: "",
+        actionsTaken: "",
+        assigned: "",
+        description: "",
       });
     } catch (error) {
-      console.error('Error adding complaint:', error);
-      alert('Failed to add complaint.');
+      console.error("Error adding complaint:", error);
+      alert("Failed to add complaint.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const currentComplaints = complaintList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentComplaints = complaintList.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   const totalPages = Math.ceil(complaintList.length / itemsPerPage);
 
   const toggleSidebar = () => {
@@ -86,199 +96,110 @@ const ComplaintBook = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar Overlay */}
-      <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
-        onClick={toggleSidebar}
-      ></div>
-
+    <div className="flex min-h-screen">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Mobile View: Header and Sidebar Toggle Icon */}
+      <div className="flex-1 transition-all duration-300">
+        {/* Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Complaint Book</h1>
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        <h2 className="text-3xl font-semibold text-gray-800 mb-8">Complaint Book</h2>
-
         {/* Form Section */}
         <div className="bg-white p-6 rounded-md shadow-md mb-8">
           <h2 className="text-lg text-gray-700 mb-4">Add Complaint</h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            <div>
-              <label htmlFor="complaintBy" className="text-sm text-gray-600">Complaint By *</label>
-              <input
-                type="text"
-                id="complaintBy"
-                name="complaintBy"
-                value={formData.complaintBy}
-                onChange={handleChange}
-                placeholder="Enter Name"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="complaintType" className="text-sm text-gray-600">Complaint Type *</label>
-              <input
-                type="text"
-                id="complaintType"
-                name="complaintType"
-                value={formData.complaintType}
-                onChange={handleChange}
-                placeholder="Enter Type"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="complaintSource" className="text-sm text-gray-600">Complaint Source *</label>
-              <input
-                type="text"
-                id="complaintSource"
-                name="complaintSource"
-                value={formData.complaintSource}
-                onChange={handleChange}
-                placeholder="Enter Source"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="text-sm text-gray-600">Phone</label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter Phone"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="date" className="text-sm text-gray-600">Date</label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="actionsTaken" className="text-sm text-gray-600">Actions Taken</label>
-              <input
-                type="text"
-                id="actionsTaken"
-                name="actionsTaken"
-                value={formData.actionsTaken}
-                onChange={handleChange}
-                placeholder="Enter Actions Taken"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="assigned" className="text-sm text-gray-600">Assigned</label>
-              <input
-                type="text"
-                id="assigned"
-                name="assigned"
-                value={formData.assigned}
-                onChange={handleChange}
-                placeholder="Enter Assigned To"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-
-            <div className="col-span-4">
-              <label htmlFor="description" className="text-sm text-gray-600">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Enter Description"
-                className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                rows="3"
-              />
-            </div>
-
-            <div className="col-span-4">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm"
-                disabled={isSubmitting}
-              >
-                Save
-              </button>
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {Object.keys(formData).map((field) => (
+              <div key={field} className="w-90">
+                <label htmlFor={field} className="text-sm text-gray-600">
+                  {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, " $1")}{" "}
+                  {field !== "actionsTaken" && field !== "description" && field !== "assigned" ? "*" : ""}
+                </label>
+                {field === "description" ? (
+                  <textarea
+                    id={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={`Enter ${field}`}
+                    className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    rows="3"
+                  />
+                ) : (
+                  <input
+                    type={field === "date" ? "date" : "text"}
+                    id={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={`Enter ${field}`}
+                    className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required={field !== "actionsTaken" && field !== "description" && field !== "assigned"}
+                  />
+                )}
+              </div>
+            ))}
+            <button
+              type="submit"
+              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm"
+              disabled={isSubmitting}
+            >
+              Save
+            </button>
           </form>
         </div>
 
-        {/* Complaint List Section */}
+        {/* Complaint List */}
         <div className="mt-8">
           <h2 className="text-lg text-gray-700 mb-4">Complaint List</h2>
           <div className="overflow-x-auto">
-            <table className="min-w-full table-auto">
+            <table className="min-w-full table-auto border-t border-b border-gray-300">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-2 text-gray-600 text-left">SL</th>
-                  <th className="px-4 py-2 text-gray-600 text-left">Complaint By</th>
-                  <th className="px-4 py-2 text-gray-600 text-left">Complaint Type</th>
-                  <th className="px-4 py-2 text-gray-600 text-left">Source</th>
-                  <th className="px-4 py-2 text-gray-600 text-left">Phone</th>
+                <tr className="border-b">
+                  <th className="px-2 py-1 text-gray-600 text-left">SL</th>
+                  <th className="px-2 py-1 text-gray-600 text-left">Complaint By</th>
+                  <th className="px-2 py-1 text-gray-600 text-left">Complaint Type</th>
+                  <th className="px-2 py-1 text-gray-600 text-left">Source</th>
+                  <th className="px-2 py-1 text-gray-600 text-left">Phone</th>
                 </tr>
               </thead>
               <tbody>
                 {currentComplaints.map((complaint, index) => (
-                  <tr key={complaint._id} className="border-t border-gray-300">
-                    <td className="px-4 py-2 text-gray-600">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td className="px-4 py-2 text-gray-600">{complaint.complaintBy}</td>
-                    <td className="px-4 py-2 text-gray-600">{complaint.complaintType}</td>
-                    <td className="px-4 py-2 text-gray-600">{complaint.complaintSource}</td>
-                    <td className="px-4 py-2 text-gray-600">{complaint.phone}</td>
+                  <tr key={complaint._id} className="border-b">
+                    <td className="px-2 py-1 text-gray-600">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                    <td className="px-2 py-1 text-gray-600">{complaint.complaintBy}</td>
+                    <td className="px-2 py-1 text-gray-600">{complaint.complaintType}</td>
+                    <td className="px-2 py-1 text-gray-600">{complaint.complaintSource}</td>
+                    <td className="px-2 py-1 text-gray-600">{complaint.phone}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="text-sm bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+              className="px-4 py-2 bg-gray-300 rounded-md text-sm disabled:bg-gray-100"
             >
               Previous
             </button>
-            <div className="text-sm text-gray-600">
+            <span className="text-sm text-gray-700">
               Page {currentPage} of {totalPages}
-            </div>
+            </span>
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="text-sm bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+              className="px-4 py-2 bg-gray-300 rounded-md text-sm disabled:bg-gray-100"
             >
               Next
             </button>

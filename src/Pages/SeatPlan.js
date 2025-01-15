@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
+import { FaBars, FaTimes } from 'react-icons/fa'; // For sidebar toggle icons
 
 const GenerateSeatPlan = () => {
   const [exam, setExam] = useState('');
@@ -12,6 +13,7 @@ const GenerateSeatPlan = () => {
   ]);
   const [loading, setLoading] = useState(false);
   const [seatPlan, setSeatPlan] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   // Function to fetch seat plan data via GET request (no filters)
   const handleFetchSeatPlan = async () => {
@@ -83,19 +85,41 @@ const GenerateSeatPlan = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64">
-        <h1 className="text-2xl font-semibold text-gray-700 mb-6">Generate Seat Plan</h1>
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Generate Seat Plan</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
+        {/* Title */}
+        <h1 className="text-2xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">Generate Seat Plan</h1>
 
         {/* Select Criteria */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex gap-6 items-center">
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             {/* Room Number */}
-            <div className="w-1/3">
+            <div className="w-full">
               <label htmlFor="roomNumber" className="block text-sm text-gray-600 mb-1">Room Number</label>
               <input
                 type="text"
@@ -108,7 +132,7 @@ const GenerateSeatPlan = () => {
             </div>
 
             {/* Select Exam */}
-            <div className="w-1/3">
+            <div className="w-full">
               <label htmlFor="exam" className="block text-sm text-gray-600 mb-1">Select Exam</label>
               <select
                 id="exam"
@@ -123,7 +147,7 @@ const GenerateSeatPlan = () => {
             </div>
 
             {/* Select Class */}
-            <div className="w-1/3">
+            <div className="w-full">
               <label htmlFor="className" className="block text-sm text-gray-600 mb-1">Select Class</label>
               <select
                 id="className"
@@ -140,7 +164,7 @@ const GenerateSeatPlan = () => {
 
           <div className="flex gap-6 items-center mt-4">
             {/* Select Section */}
-            <div className="w-1/3">
+            <div className="w-full">
               <label htmlFor="section" className="block text-sm text-gray-600 mb-1">Select Section</label>
               <select
                 id="section"
@@ -156,10 +180,10 @@ const GenerateSeatPlan = () => {
           </div>
 
           {/* Search Button */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-4 gap-4">
             <button
               onClick={handleFetchSeatPlan}
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full sm:w-auto"
               disabled={loading}
             >
               {loading ? 'Fetching...' : 'Fetch Seat Plan'}
@@ -167,7 +191,7 @@ const GenerateSeatPlan = () => {
 
             <button
               onClick={handleCreateSeatPlan}
-              className="bg-purple-500 text-white py-2 px-4 rounded ml-4 hover:bg-purple-600"
+              className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600 w-full sm:w-auto"
               disabled={loading}
             >
               {loading ? 'Generating...' : 'Generate Seat Plan'}

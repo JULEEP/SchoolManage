@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Sidebar from "./Sidebar";  // Import Sidebar
+import Sidebar from "./Sidebar"; // Import Sidebar
+import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
 
 const FeeManagement = () => {
   const [selectedClass, setSelectedClass] = useState("");
@@ -18,6 +19,7 @@ const FeeManagement = () => {
     pendingPayment: "",
   });
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);  // For success popup
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   // Handle class and section change to filter students
   const handleFilterStudents = async () => {
@@ -60,7 +62,7 @@ const FeeManagement = () => {
       paidDate: feeDetails.paidDate,
       pendingPayment: feeDetails.pendingPayment,
     };
-  
+
     try {
       const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/add-fees", {
         method: "POST",
@@ -69,15 +71,15 @@ const FeeManagement = () => {
         },
         body: JSON.stringify(feeData),
       });
-  
+
       const data = await response.json();
-  
+
       // Check if the API responded successfully
       if (response.ok) {
         if (data.message === "Fee added successfully") {
           console.log("Fee details added successfully:", data);
           setIsSuccessPopupOpen(true); // Open success popup
-  
+
           // Reset form and close modal after success
           setFeeDetails({
             feesType: "",
@@ -89,7 +91,7 @@ const FeeManagement = () => {
             paidDate: "",
             pendingPayment: "",
           });
-  
+
           setTimeout(() => {
             setIsSuccessPopupOpen(false);
             setIsModalOpen(false); // Close the modal after a short delay
@@ -107,82 +109,105 @@ const FeeManagement = () => {
       console.error("Error submitting fee details:", error);
     }
   };
-  
-  
+
   return (
     <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar /> {/* Sidebar added here */}
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64"> {/* Add ml-64 to shift the content right */}
-        <h1 className="text-xl text-gray-700 mb-4">Fee Management</h1>
-
-        {/* Filter Section */}
-        <div className="flex items-center space-x-4 mb-6">
-          <select
-            className="p-2 border rounded-md focus:border-purple-500"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-          >
-            <option value="">Select Class</option>
-            <option value="5">Class 5</option>
-            <option value="10">Class 10</option>
-            <option value="11">Class 11</option>
-            <option value="12">Class 12</option>
-          </select>
-          <select
-            className="p-2 border rounded-md focus:border-purple-500"
-            value={selectedSection}
-            onChange={(e) => setSelectedSection(e.target.value)}
-          >
-            <option value="">Select Section</option>
-            <option value="A">Section A</option>
-            <option value="B">Section B</option>
-          </select>
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Fee Management</h1>
           <button
-            className="p-2 bg-purple-600 text-white rounded-md"
-            onClick={handleFilterStudents}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
           >
-            Get Students
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Students Table */}
-        {students.length > 0 ? (
-          <table className="w-full bg-white rounded-lg shadow-md mb-6">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="p-3 text-left">Roll</th>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Class</th>
-                <th className="p-3 text-left">Section</th>
-                <th className="p-3 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student._id} className="border-b">
-                  <td className="p-3">{student.roll}</td>
-                  <td className="p-3">{student.fullName}</td>
-                  <td className="p-3">{student.class}</td>
-                  <td className="p-3">{student.section}</td>
-                  <td className="p-3 text-center">
-                    <button
-                      className="p-2 bg-purple-500 text-white rounded-md"
-                      onClick={() => handleManageFee(student)}
-                    >
-                      Manage Fee
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="text-gray-600">No students found. Please filter by class and section.</p>
-        )}
+        {/* Title and Filter Section */}
+        <div className="p-6">
+          <h1 className="text-2xl font-semibold text-gray-700 mb-6">Fee Management</h1>
 
+          {/* Filter Section */}
+          <div className="flex flex-col sm:flex-row sm:gap-6 sm:items-center mb-6">
+            <select
+              className="p-2 border rounded-md focus:border-purple-500 mb-4 sm:mb-0"
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+            >
+              <option value="">Select Class</option>
+              <option value="5">Class 5</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+            </select>
+            <select
+              className="p-2 border rounded-md focus:border-purple-500 mb-4 sm:mb-0"
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+            >
+              <option value="">Select Section</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+            <button
+              className="p-2 bg-purple-600 text-white rounded-md"
+              onClick={handleFilterStudents}
+            >
+              Get Students
+            </button>
+          </div>
+
+          {/* Students Table */}
+          {students.length > 0 ? (
+            <table className="w-full bg-white rounded-lg shadow-md mb-6">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="p-3 text-left">Roll</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Class</th>
+                  <th className="p-3 text-left">Section</th>
+                  <th className="p-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr key={student._id} className="border-b">
+                    <td className="p-3">{student.roll}</td>
+                    <td className="p-3">{student.fullName}</td>
+                    <td className="p-3">{student.class}</td>
+                    <td className="p-3">{student.section}</td>
+                    <td className="p-3 text-center">
+                      <button
+                        className="p-2 bg-purple-500 text-white rounded-md"
+                        onClick={() => handleManageFee(student)}
+                      >
+                        Manage Fee
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-gray-600">No students found. Please filter by class and section.</p>
+          )}
+        </div>
+        
         {/* Success Popup */}
         {isSuccessPopupOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
@@ -195,7 +220,7 @@ const FeeManagement = () => {
         {/* Modal for Fee Details */}
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-1/3">
               <h2 className="text-lg font-semibold mb-4">
                 Manage Fee for {selectedStudent.fullName}
               </h2>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const ManageStudent = () => {
   const [academicYear, setAcademicYear] = useState("");
@@ -10,6 +11,7 @@ const ManageStudent = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   // Fetch students data from API
   useEffect(() => {
@@ -17,7 +19,9 @@ const ManageStudent = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-student");
+        const response = await fetch(
+          "https://school-backend-1-2xki.onrender.com/api/admin/get-student"
+        );
         const data = await response.json();
         if (response.ok) {
           setStudents(data.students);
@@ -32,25 +36,48 @@ const ManageStudent = () => {
     };
 
     fetchStudents();
-  }, []); // This runs only once when the component mounts
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
+  };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
+          isSidebarOpen ? "block" : "hidden"
+        }`}
+        onClick={toggleSidebar}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar /> {/* Sidebar added here */}
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64">
-        {/* Title */}
-        <h1 className="text-xl text-gray-700">Manage Student</h1>
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile View: Header and Sidebar Toggle Icon */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Manage Student</h1>
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
-        {/* Select Criteria Section */}
-        <div className="space-y-6">
-          <div className="flex gap-4">
-            <div className="w-1/3">
+        <div className="p-4 sm:p-6">
+          {/* Filters */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div>
               <label className="block text-gray-700">Academic Year *</label>
               <select
-                className="w-full border border-gray-300 rounded p-2"
+                className="w-full border border-gray-300 rounded p-2 text-gray-700"
                 value={academicYear}
                 onChange={(e) => setAcademicYear(e.target.value)}
               >
@@ -60,10 +87,10 @@ const ManageStudent = () => {
                 <option value="2026">2026</option>
               </select>
             </div>
-            <div className="w-1/3">
+            <div>
               <label className="block text-gray-700">Class *</label>
               <select
-                className="w-full border border-gray-300 rounded p-2"
+                className="w-full border border-gray-300 rounded p-2 text-gray-700"
                 value={classValue}
                 onChange={(e) => setClassValue(e.target.value)}
               >
@@ -73,10 +100,10 @@ const ManageStudent = () => {
                 <option value="8">8</option>
               </select>
             </div>
-            <div className="w-1/3">
+            <div>
               <label className="block text-gray-700">Section *</label>
               <select
-                className="w-full border border-gray-300 rounded p-2"
+                className="w-full border border-gray-300 rounded p-2 text-gray-700"
                 value={section}
                 onChange={(e) => setSection(e.target.value)}
               >
@@ -89,89 +116,81 @@ const ManageStudent = () => {
           </div>
 
           {/* Search Section */}
-          <div className="flex gap-4">
-            <div className="w-1/3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div>
               <label className="block text-gray-700">Search By Name</label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded p-2"
+                className="w-full border border-gray-300 rounded p-2 text-gray-700"
                 placeholder="Name"
                 value={searchByName}
                 onChange={(e) => setSearchByName(e.target.value)}
               />
             </div>
-            <div className="w-1/3">
+            <div>
               <label className="block text-gray-700">Search By Roll</label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded p-2"
+                className="w-full border border-gray-300 rounded p-2 text-gray-700"
                 placeholder="Roll"
                 value={searchByRoll}
                 onChange={(e) => setSearchByRoll(e.target.value)}
               />
             </div>
-            <div className="w-1/3 flex items-end">
-              <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded">
+            <div className="flex items-end">
+              <button className="bg-purple-500 text-white px-6 py-2 rounded">
                 Search
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Student List Section */}
-        <div className="bg-white p-6 shadow-md rounded space-y-6">
+          <div className="bg-white p-4 sm:p-6 shadow-md rounded">
           <h2 className="text-lg text-gray-700 mb-4">Student List</h2>
           {loading ? (
             <div>Loading...</div>
           ) : error ? (
             <div className="text-red-500">{error}</div>
           ) : (
-            <div className="mb-4 flex justify-between">
-              <div className="w-1/4">
-                <label className="block text-gray-700">Quick Search</label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded p-2"
-                  placeholder="Search"
-                />
-              </div>
-            </div>
+            <table className="w-full border-collapse overflow-x-auto">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border px-4 py-2 text-left">Admission No</th>
+                  <th className="border px-4 py-2 text-left">Name</th>
+                  <th className="border px-4 py-2 text-left">Father Name</th>
+                  <th className="border px-4 py-2 text-left">DOB</th>
+                  <th className="border px-4 py-2 text-left">Class(Section)</th>
+                  <th className="border px-4 py-2 text-left">Gender</th>
+                  <th className="border px-4 py-2 text-left">Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students
+                  .filter(
+                    (student) =>
+                      (searchByName === "" ||
+                        student.firstName.toLowerCase().includes(searchByName.toLowerCase())) &&
+                      (searchByRoll === "" ||
+                        student.admissionNumber.includes(searchByRoll))
+                  )
+                  .map((student) => (
+                    <tr key={student._id} className="hover:bg-gray-50">
+                      <td className="border px-4 py-2">{student.admissionNumber}</td>
+                      <td className="border px-4 py-2">{student.firstName} {student.lastName}</td>
+                      <td className="border px-4 py-2">{student.fatherName}</td>
+                      <td className="border px-4 py-2">
+                        {student.dateOfBirth
+                          ? new Date(student.dateOfBirth).toLocaleDateString()
+                          : ""}
+                      </td>
+                      <td className="border px-4 py-2">{student.class}</td>
+                      <td className="border px-4 py-2">{student.gender}</td>
+                      <td className="border px-4 py-2">{student.category}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           )}
-
-          {/* Table for Student List */}
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2 text-left border-b">Admission No</th>
-                <th className="px-4 py-2 text-left border-b">Name</th>
-                <th className="px-4 py-2 text-left border-b">Father Name</th>
-                <th className="px-4 py-2 text-left border-b">Date Of Birth</th>
-                <th className="px-4 py-2 text-left border-b">Class(Section)</th>
-                <th className="px-4 py-2 text-left border-b">Gender</th>
-                <th className="px-4 py-2 text-left border-b">Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students
-                .filter((student) => {
-                  return (
-                    (searchByName === "" || student.firstName.toLowerCase().includes(searchByName.toLowerCase())) &&
-                    (searchByRoll === "" || student.admissionNumber.includes(searchByRoll))
-                  );
-                })
-                .map((student) => (
-                  <tr key={student._id}>
-                    <td className="px-4 py-2 border-b">{student.admissionNumber}</td>
-                    <td className="px-4 py-2 border-b">{student.firstName} {student.lastName}</td>
-                    <td className="px-4 py-2 border-b">{student.fatherName}</td>
-                    <td className="px-4 py-2 border-b">{student.dateOfBirth ? new Date(student.dateOfBirth).toLocaleDateString() : ""}</td>
-                    <td className="px-4 py-2 border-b">{student.class}</td>
-                    <td className="px-4 py-2 border-b">{student.gender}</td>
-                    <td className="px-4 py-2 border-b">{student.category}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        </div>        
         </div>
       </div>
     </div>

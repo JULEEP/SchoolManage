@@ -1,59 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios'; // Ensure you have axios imported
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const AssignClassTeacherPage = () => {
   const [formData, setFormData] = useState({
     className: '',
     sectionName: '',
-    teacher: '', // Changed to "teacher" instead of "teacherName"
+    teacher: '',
   });
 
   const [classTeacherAssignments, setClassTeacherAssignments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Dropdown options states
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
   const [teachers, setTeachers] = useState([]);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [assignmentsPerPage] = useState(5);
 
-  // Fetch data for classes, sections, and teachers on component mount
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        // Fetch classes
         const classResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
         const classData = await classResponse.json();
-        if (classResponse.ok) {
-          setClasses(classData.classes || []);
-        } else {
-          throw new Error('Failed to fetch classes');
-        }
-
-        // Fetch sections using axios
+        setClasses(classData.classes || []);
+        
         const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
-        setSections(response.data.sections || []); // Set sections
+        setSections(response.data.sections || []);
 
-        // Fetch teachers
         const teacherResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
         const teacherData = await teacherResponse.json();
-        if (teacherResponse.ok) {
-          // Extract only the teacher names
-          const teacherNames = teacherData.data.map((teacher) => teacher.teacher); // Extracting only the teacher name
-          setTeachers(teacherNames || []);
-        } else {
-          throw new Error('Failed to fetch teachers');
-        }
+        const teacherNames = teacherData.data.map((teacher) => teacher.teacher);
+        setTeachers(teacherNames || []);
       } catch (error) {
         setError(error.message);
       }
     };
-
     fetchDropdownData();
   }, []);
 
@@ -85,16 +72,8 @@ const AssignClassTeacherPage = () => {
         }
 
         const data = await response.json();
-        setClassTeacherAssignments([
-          ...classTeacherAssignments,
-          {
-            id: classTeacherAssignments.length + 1, 
-            className: formData.className,
-            sectionName: formData.sectionName,
-            teacherName: formData.teacher,
-          },
-        ]);
-        setFormData({ className: '', sectionName: '', teacher: '' }); // Clear the form
+        setClassTeacherAssignments([...classTeacherAssignments, { ...data.assignment }]);
+        setFormData({ className: '', sectionName: '', teacher: '' });
       } catch (error) {
         setError(error.message || 'An unexpected error occurred.');
       } finally {
@@ -109,91 +88,113 @@ const AssignClassTeacherPage = () => {
     setClassTeacherAssignments(classTeacherAssignments.filter((assignment) => assignment.id !== id));
   };
 
-  // Pagination logic
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const indexOfLastAssignment = currentPage * assignmentsPerPage;
   const indexOfFirstAssignment = indexOfLastAssignment - assignmentsPerPage;
   const currentAssignments = classTeacherAssignments.slice(indexOfFirstAssignment, indexOfLastAssignment);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   return (
-    <div className="flex h-screen">
-      <Sidebar />
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
 
-      <div className="flex-1 p-6 ml-64">
-        <div className="flex gap-6">
-          <div className="w-1/3 bg-white p-6 rounded-md shadow-md">
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Assign Class Teacher</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
+        <div className="max-w-6xl mx-auto">
+          {/* Form Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md mt-4">
             <h2 className="text-lg text-gray-700 mb-4">Assign Class Teacher</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <form className="space-y-4">
-              {/* Class Dropdown */}
-              <div>
-                <label htmlFor="className" className="text-sm text-gray-600">Class *</label>
-                <select
-                  id="className"
-                  name="className"
-                  value={formData.className}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="">Select Class</option>
-                  {classes.length > 0 ? (
-                    classes.map((classOption, index) => (
-                      <option key={index} value={classOption.className}>{classOption.className}</option>
-                    ))
-                  ) : (
-                    <option value="">Loading Classes...</option>
-                  )}
-                </select>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Class Dropdown */}
+                <div>
+                  <label htmlFor="className" className="text-sm text-gray-600">Class *</label>
+                  <select
+                    id="className"
+                    name="className"
+                    value={formData.className}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  >
+                    <option value="">Select Class</option>
+                    {classes.length > 0 ? (
+                      classes.map((classOption, index) => (
+                        <option key={index} value={classOption.className}>{classOption.className}</option>
+                      ))
+                    ) : (
+                      <option value="">Loading Classes...</option>
+                    )}
+                  </select>
+                </div>
+
+                {/* Section Dropdown */}
+                <div>
+                  <label htmlFor="sectionName" className="text-sm text-gray-600">Section *</label>
+                  <select
+                    id="sectionName"
+                    name="sectionName"
+                    value={formData.sectionName}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  >
+                    <option value="">Select Section</option>
+                    {sections.length > 0 ? (
+                      sections.map((sectionOption, index) => (
+                        <option key={index} value={sectionOption.name}>{sectionOption.name}</option>
+                      ))
+                    ) : (
+                      <option value="">Loading Sections...</option>
+                    )}
+                  </select>
+                </div>
+
+                {/* Teacher Dropdown */}
+                <div>
+                  <label htmlFor="teacher" className="text-sm text-gray-600">Teacher *</label>
+                  <select
+                    id="teacher"
+                    name="teacher"
+                    value={formData.teacher}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  >
+                    <option value="">Select Teacher</option>
+                    {teachers.length > 0 ? (
+                      teachers.map((teacher, index) => (
+                        <option key={index} value={teacher}>{teacher}</option>
+                      ))
+                    ) : (
+                      <option value="">Loading Teachers...</option>
+                    )}
+                  </select>
+                </div>
               </div>
 
-              {/* Section Dropdown */}
-              <div>
-                <label htmlFor="sectionName" className="text-sm text-gray-600">Section *</label>
-                <select
-                  id="sectionName"
-                  name="sectionName"
-                  value={formData.sectionName}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="">Select Section</option>
-                  {sections.length > 0 ? (
-                    sections.map((sectionOption, index) => (
-                      <option key={index} value={sectionOption.name}>{sectionOption.name}</option>
-                    ))
-                  ) : (
-                    <option value="">Loading Sections...</option>
-                  )}
-                </select>
-              </div>
-
-              {/* Teacher Dropdown */}
-              <div>
-                <label htmlFor="teacher" className="text-sm text-gray-600">Teacher *</label>
-                <select
-                  id="teacher"
-                  name="teacher"
-                  value={formData.teacher}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="">Select Teacher</option>
-                  {teachers.length > 0 ? (
-                    teachers.map((teacher, index) => (
-                      <option key={index} value={teacher}>{teacher}</option>
-                    ))
-                  ) : (
-                    <option value="">Loading Teachers...</option>
-                  )}
-                </select>
-              </div>
-
-              {/* Save Assignment Button */}
-              <div>
+              {/* Save Button */}
+              <div className="mt-4">
                 <button
                   type="button"
                   onClick={handleSaveAssignment}
@@ -206,7 +207,8 @@ const AssignClassTeacherPage = () => {
             </form>
           </div>
 
-          <div className="w-2/3 bg-white p-6 rounded-md shadow-lg">
+          {/* Assignments Table */}
+          <div className="bg-white p-6 rounded-lg shadow-md mt-8">
             <h2 className="text-lg text-gray-700 mb-4">Class Teacher List</h2>
             <table className="min-w-full table-auto">
               <thead>
@@ -221,7 +223,7 @@ const AssignClassTeacherPage = () => {
                 {currentAssignments.length === 0 ? (
                   <tr>
                     <td colSpan="4" className="text-center text-gray-500">
-                      No Data Available In Table
+                      No Data Available
                     </td>
                   </tr>
                 ) : (
@@ -243,24 +245,26 @@ const AssignClassTeacherPage = () => {
                 )}
               </tbody>
             </table>
+          </div>
 
-            {/* Pagination Controls */}
-            <div className="mt-4 flex justify-center">
+          {/* Pagination */}
+          <div className="flex justify-center mt-4">
+            <nav className="inline-flex space-x-2">
               <button
                 onClick={() => paginate(currentPage - 1)}
+                className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentPage === 1 && 'opacity-50 cursor-not-allowed'}`}
                 disabled={currentPage === 1}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md mr-2"
               >
-                Prev
+                Previous
               </button>
               <button
                 onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage * assignmentsPerPage >= classTeacherAssignments.length}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md"
+                className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentAssignments.length < assignmentsPerPage && 'opacity-50 cursor-not-allowed'}`}
+                disabled={currentAssignments.length < assignmentsPerPage}
               >
                 Next
               </button>
-            </div>
+            </nav>
           </div>
         </div>
       </div>

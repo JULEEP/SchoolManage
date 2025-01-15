@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const StudentList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Fetch students from API
   useEffect(() => {
@@ -74,99 +76,117 @@ const StudentList = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="ml-64 p-4 w-full">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Student List</h1>
-          <button
-            onClick={exportToCSV}
-            className="bg-purple-600 text-white px-4 py-2 mr-80 rounded-md hover:bg-purple-700 focus:outline-none"
-          >
-            Download CSV
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Student List</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Search Section */}
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search by Name or Roll"
-            value={searchTerm}
-            onChange={handleSearch}
-            className="border border-gray-300 rounded-md p-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-        </div>
+        {/* Page Content */}
+        <div className="p-6">
+          {/* Title */}
+          <h2 className="text-center text-3xl font-semibold text-gray-500 mb-6">Student List</h2>
 
-        {/* Table Section */}
-        <div className="bg-white p-6 rounded-md shadow-md">
-          {loading ? (
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto border-collapse">
-                <thead>
-                  <tr className="bg-gray-100 text-gray-700">
-                    <th className="px-6 py-3 text-left">SL</th>
-                    <th className="px-6 py-3 text-left">First Name</th>
-                    <th className="px-6 py-3 text-left">Last Name</th>
-                    <th className="px-6 py-3 text-left">Roll</th>
-                    <th className="px-6 py-3 text-left">Class</th>
-                    <th className="px-6 py-3 text-left">Section</th>
-                    <th className="px-6 py-3 text-left">Gender</th>
-                    <th className="px-6 py-3 text-left">Date of Birth</th>
-                    <th className="px-6 py-3 text-left">Religion</th>
-                    <th className="px-6 py-3 text-left">Caste</th>
-                    <th className="px-6 py-3 text-left">Blood Group</th>
-                    <th className="px-6 py-3 text-left">Category</th>
-                    <th className="px-6 py-3 text-left">Height</th>
-                    <th className="px-6 py-3 text-left">Weight</th>
-                  </tr>
-                </thead>
+          {/* Search Section */}
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Search by Name or Roll"
+              value={searchTerm}
+              onChange={handleSearch}
+              className="border border-gray-300 rounded-md p-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
 
-                <tbody>
-                  {filteredStudents.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="14"
-                        className="text-center text-gray-500 py-3"
-                      >
-                        No Data Available
-                      </td>
+          {/* Download Button */}
+          <div className="flex justify-between items-center mb-6">
+            <button
+              onClick={exportToCSV}
+              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 focus:outline-none"
+            >
+              Download CSV
+            </button>
+          </div>
+
+          {/* Table Section */}
+          <div className="bg-white p-6 rounded-md shadow-md">
+            {loading ? (
+              <p className="text-center text-gray-500">Loading...</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100 text-gray-700">
+                      <th className="px-6 py-3 text-left">SL</th>
+                      <th className="px-6 py-3 text-left">First Name</th>
+                      <th className="px-6 py-3 text-left">Last Name</th>
+                      <th className="px-6 py-3 text-left">Roll</th>
+                      <th className="px-6 py-3 text-left">Class</th>
+                      <th className="px-6 py-3 text-left">Section</th>
+                      <th className="px-6 py-3 text-left">Gender</th>
+                      <th className="px-6 py-3 text-left">Date of Birth</th>
+                      <th className="px-6 py-3 text-left">Religion</th>
+                      <th className="px-6 py-3 text-left">Caste</th>
+                      <th className="px-6 py-3 text-left">Blood Group</th>
+                      <th className="px-6 py-3 text-left">Category</th>
+                      <th className="px-6 py-3 text-left">Height</th>
+                      <th className="px-6 py-3 text-left">Weight</th>
                     </tr>
-                  ) : (
-                    filteredStudents.map((student, index) => (
-                      <tr
-                        key={student._id}
-                        className="border-b hover:bg-gray-50"
-                      >
-                        <td className="px-6 py-3">{index + 1}</td>
-                        <td className="px-6 py-3">{student.firstName || "N/A"}</td>
-                        <td className="px-6 py-3">{student.lastName || "N/A"}</td>
-                        <td className="px-6 py-3">{student.roll || "N/A"}</td>
-                        <td className="px-6 py-3">{student.class || "N/A"}</td>
-                        <td className="px-6 py-3">{student.section || "N/A"}</td>
-                        <td className="px-6 py-3">{student.gender || "N/A"}</td>
-                        <td className="px-6 py-3">
-                          {student.dateOfBirth
-                            ? new Date(student.dateOfBirth).toLocaleDateString()
-                            : "N/A"}
+                  </thead>
+
+                  <tbody>
+                    {filteredStudents.length === 0 ? (
+                      <tr>
+                        <td colSpan="14" className="text-center text-gray-500 py-3">
+                          No Data Available
                         </td>
-                        <td className="px-6 py-3">{student.religion || "N/A"}</td>
-                        <td className="px-6 py-3">{student.caste || "N/A"}</td>
-                        <td className="px-6 py-3">{student.bloodGroup || "N/A"}</td>
-                        <td className="px-6 py-3">{student.category || "N/A"}</td>
-                        <td className="px-6 py-3">{student.height || "N/A"}</td>
-                        <td className="px-6 py-3">{student.weight || "N/A"}</td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+                    ) : (
+                      filteredStudents.map((student, index) => (
+                        <tr key={student._id} className="border-b hover:bg-gray-50">
+                          <td className="px-6 py-3">{index + 1}</td>
+                          <td className="px-6 py-3">{student.firstName || "N/A"}</td>
+                          <td className="px-6 py-3">{student.lastName || "N/A"}</td>
+                          <td className="px-6 py-3">{student.roll || "N/A"}</td>
+                          <td className="px-6 py-3">{student.class || "N/A"}</td>
+                          <td className="px-6 py-3">{student.section || "N/A"}</td>
+                          <td className="px-6 py-3">{student.gender || "N/A"}</td>
+                          <td className="px-6 py-3">
+                            {student.dateOfBirth
+                              ? new Date(student.dateOfBirth).toLocaleDateString()
+                              : "N/A"}
+                          </td>
+                          <td className="px-6 py-3">{student.religion || "N/A"}</td>
+                          <td className="px-6 py-3">{student.caste || "N/A"}</td>
+                          <td className="px-6 py-3">{student.bloodGroup || "N/A"}</td>
+                          <td className="px-6 py-3">{student.category || "N/A"}</td>
+                          <td className="px-6 py-3">{student.height || "N/A"}</td>
+                          <td className="px-6 py-3">{student.weight || "N/A"}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

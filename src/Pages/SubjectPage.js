@@ -132,7 +132,7 @@ const SubjectPage = () => {
         </div>
 
         {/* Add Subject Form */}
-        <div className="bg-white p-6 rounded-md shadow-md mb-6 mx-4 lg:mx-0">
+        <div className="bg-white p-6 rounded-md shadow-md mb-6 mx-4 mt-4 lg:mx-0">
           <h2 className="text-lg text-gray-700 mb-4">Add Subject</h2>
           <form className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

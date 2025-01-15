@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";  // Import axios for making API requests
+import axios from "axios"; // Import axios for making API requests
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
 
 const AddHomework = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const AddHomework = () => {
     file: null,
     description: "",
   });
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -58,21 +61,42 @@ const AddHomework = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar /> {/* Sidebar added here */}
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64"> {/* Add ml-64 to shift the content right */}
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Add Homework</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
         {/* Title */}
-        <h1 className="text-xl text-gray-700">Add Homework</h1>
+        <h1 className="text-xl text-gray-700 p-6">Add Homework</h1>
 
         {/* Add Homework Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-6">
           {/* First Row */}
-          <div className="flex gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {/* Class */}
-            <div className="w-1/3">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Class *</label>
               <select
                 name="class"
@@ -87,7 +111,7 @@ const AddHomework = () => {
             </div>
 
             {/* Subject */}
-            <div className="w-1/3">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Subject *</label>
               <select
                 name="subject"
@@ -102,7 +126,7 @@ const AddHomework = () => {
             </div>
 
             {/* Section */}
-            <div className="w-1/3">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Section *</label>
               <select
                 name="section"
@@ -118,9 +142,9 @@ const AddHomework = () => {
           </div>
 
           {/* Second Row */}
-          <div className="flex gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {/* Select */}
-            <div className="w-1/4">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Select</label>
               <input
                 type="text"
@@ -133,7 +157,7 @@ const AddHomework = () => {
             </div>
 
             {/* Homework Date */}
-            <div className="w-1/4">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">
                 Homework Date *
               </label>
@@ -147,7 +171,7 @@ const AddHomework = () => {
             </div>
 
             {/* Submission Date */}
-            <div className="w-1/4">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">
                 Submission Date *
               </label>
@@ -161,7 +185,7 @@ const AddHomework = () => {
             </div>
 
             {/* Marks */}
-            <div className="w-1/4">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Marks *</label>
               <input
                 type="number"

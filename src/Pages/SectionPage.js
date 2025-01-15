@@ -115,7 +115,7 @@ const SectionPage = () => {
         </div>
 
         {/* Add Section Form */}
-        <div className="bg-white p-6 rounded-md shadow-md mb-6 mx-4 lg:mx-0">
+        <div className="bg-white p-6 rounded-md shadow-md mb-6 mx-4 mt-4 lg:mx-0">
           <h2 className="text-lg text-gray-700 mb-4">Add Section</h2>
           <form className="space-y-4">
             <div>

@@ -1,179 +1,259 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
-import axios from "axios";
+import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
 
 const AddAssignVehicle = () => {
-  const [selectedRoute, setSelectedRoute] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
-  const [assignedVehicles, setAssignedVehicles] = useState([]);
+  const [vehicleNumber, setVehicleNumber] = useState("");
+  const [vehicleModel, setVehicleModel] = useState("");
+  const [yearMade, setYearMade] = useState("");
+  const [driver, setDriver] = useState("");
+  const [note, setNote] = useState("");
   const [search, setSearch] = useState("");
+  const [vehicleList, setVehicleList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [drivers, setDrivers] = useState(["John Doe", "Jane Smith", "Mike Johnson"]);
+  const [isAddDriverPopupOpen, setIsAddDriverPopupOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
-  // Handle Save
-  const handleSaveAssignment = async () => {
-    if (selectedRoute && selectedVehicle) {
+  // Add Driver Form Fields
+  const [newDriverName, setNewDriverName] = useState("");
+  const [newDriverEmail, setNewDriverEmail] = useState("");
+  const [newDriverAge, setNewDriverAge] = useState("");
+  const [newDriverGender, setNewDriverGender] = useState("");
+  const [newDriverMobile, setNewDriverMobile] = useState(""); // New field
+  const [newDriverJoiningDate, setNewDriverJoiningDate] = useState(""); // New field
+
+  const handleSaveVehicle = async () => {
+    if (vehicleNumber && vehicleModel && yearMade && driver) {
+      setLoading(true);
+      setError("");
+      setSuccessMessage("");
+
       try {
-        const response = await axios.post(
-          "https://school-backend-1-2xki.onrender.com/api/admin/assign-vehicle",
-          {
-            route: selectedRoute,
-            vehicle: selectedVehicle,
-          }
-        );
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/add-vehicle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            vehicleNumber,
+            vehicleModel,
+            yearMade,
+            driver,
+            note,
+          }),
+        });
 
-        if (response.status === 201) {
-          const newAssignment = {
-            id: assignedVehicles.length + 1,
-            route: selectedRoute,
-            vehicle: selectedVehicle,
-          };
-          setAssignedVehicles([...assignedVehicles, newAssignment]);
-          setSelectedRoute("");
-          setSelectedVehicle("");
-        } else {
-          alert("Failed to assign vehicle.");
+        if (!response.ok) {
+          throw new Error("Failed to add vehicle");
         }
-      } catch (error) {
-        alert(
-          `Error assigning vehicle: ${error.response?.data?.message || error.message}`
-        );
+
+        const data = await response.json();
+        setVehicleList([...vehicleList, { ...data.vehicle, id: vehicleList.length + 1 }]);
+        setVehicleNumber("");
+        setVehicleModel("");
+        setYearMade("");
+        setDriver("");
+        setNote("");
+        setSuccessMessage(data.message);
+      } catch (err) {
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
       }
     } else {
-      alert("Please select both a route and a vehicle.");
+      setError("Please fill in all required fields.");
     }
   };
 
-  // Filter assigned vehicles based on search
-  const filteredAssignments = assignedVehicles.filter(
-    (assignment) =>
-      assignment.route.toLowerCase().includes(search.toLowerCase()) ||
-      assignment.vehicle.toLowerCase().includes(search.toLowerCase())
+  // Handle add new driver
+  const handleAddDriver = async () => {
+    if (
+      newDriverName &&
+      newDriverEmail &&
+      newDriverAge &&
+      newDriverGender &&
+      newDriverMobile &&
+      newDriverJoiningDate
+    ) {
+      const driverData = {
+        name: newDriverName,
+        email: newDriverEmail,
+        age: newDriverAge,
+        gender: newDriverGender,
+        mobileNumber: newDriverMobile,
+        joiningDate: newDriverJoiningDate,
+      };
+
+      setLoading(true);
+      setError("");
+      setSuccessMessage("");
+
+      try {
+        // Make API call to add the driver
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/add-driver", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(driverData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add driver");
+        }
+
+        const data = await response.json();
+        const newDriver = `${data.driver.name} (Email: ${data.driver.email}, Age: ${data.driver.age}, Gender: ${data.driver.gender}, Mobile: ${data.driver.mobileNumber}, Joining Date: ${data.driver.joiningDate})`;
+
+        setDrivers([...drivers, newDriver]);
+
+        // Reset form fields after adding the driver
+        setNewDriverName("");
+        setNewDriverEmail("");
+        setNewDriverAge("");
+        setNewDriverGender("");
+        setNewDriverMobile("");
+        setNewDriverJoiningDate("");
+        setIsAddDriverPopupOpen(false);
+
+        setSuccessMessage("Driver added successfully");
+      } catch (err) {
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Please fill in all fields.");
+    }
+  };
+
+  // Filter vehicle list based on search term
+  const filteredVehicles = vehicleList.filter((vehicle) =>
+    vehicle.vehicleNumber.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64">
-        <h1 className="text-xl text-gray-700 mb-4">Add Assign Vehicle</h1>
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Add Assign Vehicle</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
-        <div className="flex gap-8">
-          {/* Add Assign Vehicle Form */}
-          <div className="w-1/3 bg-gray-50 p-4 rounded shadow">
-            <h2 className="text-lg mb-4 text-gray-600">Add Assign Vehicle</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Select Route</label>
-                <select
-                  value={selectedRoute}
-                  onChange={(e) => setSelectedRoute(e.target.value)}
-                  className="w-full border border-gray-300 p-2 rounded"
-                >
-                  <option value="">Select Route</option>
-                  <option value="Route A">Route A</option>
-                  <option value="Route B">Route B</option>
-                  <option value="Route C">Route C</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Select Vehicle</label>
-                <div className="flex gap-4">
-                  <label>
-                    <input
-                      type="radio"
-                      value="Vehicle 1"
-                      checked={selectedVehicle === "Vehicle 1"}
-                      onChange={(e) => setSelectedVehicle(e.target.value)}
-                      className="mr-2"
-                    />
-                    Vehicle 1
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      value="Vehicle 2"
-                      checked={selectedVehicle === "Vehicle 2"}
-                      onChange={(e) => setSelectedVehicle(e.target.value)}
-                      className="mr-2"
-                    />
-                    Vehicle 2
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      value="Vehicle 3"
-                      checked={selectedVehicle === "Vehicle 3"}
-                      onChange={(e) => setSelectedVehicle(e.target.value)}
-                      className="mr-2"
-                    />
-                    Vehicle 3
-                  </label>
-                </div>
-              </div>
-
-              <button
-                onClick={handleSaveAssignment}
-                className="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-
-          {/* Assigned Vehicle List */}
-          <div className="w-2/3">
-            <h2 className="text-lg text-gray-600 mb-4">Assigned Vehicle List</h2>
-
-            {/* Search Input */}
+        {/* Main Form Section */}
+        <div className="space-y-4">
+          {/* Vehicle Form */}
+          <div>
+            <label className="block text-sm text-gray-600 mb-1 mt-2">Vehicle Number *</label>
             <input
               type="text"
-              placeholder="Search by Route or Vehicle"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="mb-4 w-full border border-gray-300 p-2 rounded"
+              value={vehicleNumber}
+              onChange={(e) => setVehicleNumber(e.target.value)}
+              placeholder="Enter vehicle number"
+              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Vehicle Model *</label>
+            <input
+              type="text"
+              value={vehicleModel}
+              onChange={(e) => setVehicleModel(e.target.value)}
+              placeholder="Enter vehicle model"
+              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Year Made</label>
+            <input
+              type="number"
+              value={yearMade}
+              onChange={(e) => setYearMade(e.target.value)}
+              placeholder="Enter year made"
+              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Driver *</label>
+            <select
+              value={driver}
+              onChange={(e) => setDriver(e.target.value)}
+              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="">Select Driver</option>
+              {drivers.map((driverName, index) => (
+                <option key={index} value={driverName}>
+                  {driverName}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Note</label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Enter any notes"
+              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
 
-            <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
-              <table className="min-w-full table-auto border border-gray-200">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Route</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Vehicle</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAssignments.length === 0 ? (
-                    <tr>
-                      <td colSpan="4" className="text-center py-4 text-gray-500">
-                        No Data Available In Table
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredAssignments.map((assignment, index) => (
-                      <tr key={assignment.id} className="border-t">
-                        <td className="px-4 py-2">{index + 1}</td>
-                        <td className="px-4 py-2">{assignment.route}</td>
-                        <td className="px-4 py-2">{assignment.vehicle}</td>
-                        <td className="px-4 py-2">
-                          <button className="text-purple-500 hover:text-purple-600">
-                            Edit
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+          {loading && <p className="text-gray-500 text-sm">Saving...</p>}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
 
-            <div className="mt-4 text-gray-500 text-sm">
-              Showing {filteredAssignments.length} entries
+          <button
+            onClick={handleSaveVehicle}
+            className="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
+          >
+            Save Vehicle
+          </button>
+        </div>
+
+        {/* Right Side - Vehicle List */}
+        <div className="w-full lg:w-2/3">
+          <div className="flex justify-between items-center mb-4 mt-4">
+            <h2 className="text-lg text-gray-600">Vehicle List</h2>
+            <div className="flex gap-4 items-center">
+              <input
+                type="text"
+                placeholder="Search by Vehicle Number"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
             </div>
           </div>
+          <ul>
+            {filteredVehicles.map((vehicle) => (
+              <li key={vehicle.id} className="p-4 border-b">
+                {vehicle.vehicleNumber} - {vehicle.vehicleModel} ({vehicle.yearMade})
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

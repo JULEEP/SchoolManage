@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; // For making API requests
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa"; // For sidebar toggle icons
 
 const Setting = () => {
   const [schoolName, setSchoolName] = useState("");
@@ -13,6 +14,7 @@ const Setting = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -74,141 +76,171 @@ const Setting = () => {
       setLoading(false);
     }
   };
-  
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar />
+      </div>
 
-      <div className="min-h-screen flex flex-col items-center bg-gray-50 py-10 w-full px-5">
-        <div className="bg-white p-8 ml-40 rounded-lg shadow-lg w-full max-w-4xl">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">School Details</h2>
-
-          {/* Success/Error Message */}
-          {successMessage && (
-            <div className="mb-4 text-center text-green-600">{successMessage}</div>
-          )}
-          {errorMessage && (
-            <div className="mb-4 text-center text-red-600">{errorMessage}</div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* School Name */}
-              <div>
-                <label className="block text-gray-600">School Name</label>
-                <input
-                  type="text"
-                  value={schoolName}
-                  onChange={(e) => setSchoolName(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                />
-              </div>
-
-              {/* Address */}
-              <div>
-                <label className="block text-gray-600">Address</label>
-                <textarea
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                ></textarea>
-              </div>
-
-              {/* Contact */}
-              <div>
-                <label className="block text-gray-600">Contact</label>
-                <input
-                  type="text"
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-gray-600">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-gray-600">School Description</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  required
-                ></textarea>
-              </div>
-
-              {/* Logo Image Upload */}
-              <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-                <label className="block text-gray-600">Upload Logo</label>
-                <input
-                  type="file"
-                  onChange={handleLogoChange}
-                  className="w-full mt-2 border-2 border-dashed border-gray-300 p-6 text-center rounded-md cursor-pointer"
-                  accept="image/*"
-                />
-                {logo && (
-                  <div className="mt-4 text-center">
-                    <img
-                      src={URL.createObjectURL(logo)}
-                      alt="Logo"
-                      className="w-32 h-32 object-cover rounded-full mx-auto"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* School Image Upload */}
-              <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-                <label className="block text-gray-600">Upload School Image</label>
-                <input
-                  type="file"
-                  onChange={handleSchoolImageChange}
-                  className="w-full mt-2 border-2 border-dashed border-gray-300 p-6 text-center rounded-md cursor-pointer"
-                  accept="image/*"
-                />
-                {schoolImage && (
-                  <div className="mt-4 text-center">
-                    <img
-                      src={URL.createObjectURL(schoolImage)}
-                      alt="School Image"
-                      className="w-32 h-32 object-cover rounded-md mx-auto"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="mt-6 flex justify-end">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`px-6 py-2 bg-purple-600 text-white rounded-md focus:outline-none ${
-                  loading ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700"
-                }`}
-              >
-                {loading ? "Updating..." : "Submit"}
-              </button>
-            </div>
-          </form>
+      {/* Main Content */}
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">School Details</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
+
+        {/* Title */}
+        <h1 className="text-2xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">School Details</h1>
+
+        {/* Success/Error Message */}
+        {successMessage && (
+          <div className="text-center text-green-600">{successMessage}</div>
+        )}
+        {errorMessage && (
+          <div className="text-center text-red-600">{errorMessage}</div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* School Name */}
+            <div className="w-full">
+              <label htmlFor="schoolName" className="block text-sm text-gray-600 mb-1">School Name</label>
+              <input
+                type="text"
+                id="schoolName"
+                value={schoolName}
+                onChange={(e) => setSchoolName(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+                placeholder="Enter School Name"
+                required
+              />
+            </div>
+
+            {/* Address */}
+            <div className="w-full">
+              <label htmlFor="address" className="block text-sm text-gray-600 mb-1">Address</label>
+              <textarea
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+                placeholder="Enter Address"
+                required
+              />
+            </div>
+
+            {/* Contact */}
+            <div className="w-full">
+              <label htmlFor="contact" className="block text-sm text-gray-600 mb-1">Contact</label>
+              <input
+                type="text"
+                id="contact"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+                placeholder="Enter Contact"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div className="w-full">
+              <label htmlFor="email" className="block text-sm text-gray-600 mb-1">Email</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+                placeholder="Enter Email"
+                required
+              />
+            </div>
+
+            {/* Description */}
+            <div className="w-full">
+              <label htmlFor="description" className="block text-sm text-gray-600 mb-1">Description</label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded"
+                placeholder="Enter School Description"
+                required
+              />
+            </div>
+
+            {/* Logo Image Upload */}
+            <div className="w-full">
+              <label htmlFor="logo" className="block text-sm text-gray-600 mb-1">Upload Logo</label>
+              <input
+                type="file"
+                id="logo"
+                onChange={handleLogoChange}
+                className="w-full mt-2 border-2 border-dashed border-gray-300 p-6 text-center rounded-md cursor-pointer"
+                accept="image/*"
+              />
+              {logo && (
+                <div className="mt-4 text-center">
+                  <img
+                    src={URL.createObjectURL(logo)}
+                    alt="Logo"
+                    className="w-32 h-32 object-cover rounded-full mx-auto"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* School Image Upload */}
+            <div className="w-full">
+              <label htmlFor="schoolImage" className="block text-sm text-gray-600 mb-1">Upload School Image</label>
+              <input
+                type="file"
+                id="schoolImage"
+                onChange={handleSchoolImageChange}
+                className="w-full mt-2 border-2 border-dashed border-gray-300 p-6 text-center rounded-md cursor-pointer"
+                accept="image/*"
+              />
+              {schoolImage && (
+                <div className="mt-4 text-center">
+                  <img
+                    src={URL.createObjectURL(schoolImage)}
+                    alt="School Image"
+                    className="w-32 h-32 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="mt-6 flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-6 py-2 bg-purple-600 text-white rounded-md focus:outline-none ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700"}`}
+            >
+              {loading ? "Updating..." : "Submit"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

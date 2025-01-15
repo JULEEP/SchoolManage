@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const MarksList = () => {
   const [marksList, setMarksList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchMarks();
@@ -68,17 +70,35 @@ const MarksList = () => {
 
   return (
     <div className="flex min-h-screen">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-800 text-white shadow-md">
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         <Sidebar />
-      </aside>
+      </div>
 
       {/* Main Content */}
-      <main className="flex-grow p-6 bg-gray-100 overflow-x-hidden">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 ml-20">Marks List</h1>
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Marks List</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
-        <div className="bg-white p-6 rounded-md shadow-md ml-20">
-          {/* CSV Export Button */}
+        {/* Page Content */}
+        <div className="p-6">
+          {/* Title */}
+          <h2 className="text-center text-3xl font-semibold text-gray-500 mb-6">Marks List</h2>
+
+          {/* Download CSV Button */}
           <div className="flex items-center justify-end mb-4">
             <button
               onClick={exportToCSV}
@@ -90,23 +110,23 @@ const MarksList = () => {
 
           {/* Marks Table */}
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse">
+            <table className="min-w-full table-auto border-collapse">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border-b px-4 py-2 text-left ml-16">SL</th>
-                  <th className="border-b px-4 py-2 text-left">First Name</th>
-                  <th className="border-b px-4 py-2 text-left">Last Name</th>
-                  <th className="border-b px-4 py-2 text-left">Class</th>
-                  <th className="border-b px-4 py-2 text-left">Roll</th>
-                  <th className="border-b px-4 py-2 text-left">Section</th>
-                  <th className="border-b px-4 py-2 text-left">Subject</th>
-                  <th className="border-b px-4 py-2 text-left">Marks Obtained</th>
-                  <th className="border-b px-4 py-2 text-left">Total Marks</th>
-                  <th className="border-b px-4 py-2 text-left">Percentage</th>
-                  <th className="border-b px-4 py-2 text-left">Grade</th>
-                  <th className="border-b px-4 py-2 text-left">Status</th>
-                  <th className="border-b px-4 py-2 text-left">Overall Percentage</th>
-                  <th className="border-b px-4 py-2 text-left">Overall Status</th>
+                <tr className="bg-gray-100 text-gray-700">
+                  <th className="px-4 py-2 text-left">SL</th>
+                  <th className="px-4 py-2 text-left">First Name</th>
+                  <th className="px-4 py-2 text-left">Last Name</th>
+                  <th className="px-4 py-2 text-left">Class</th>
+                  <th className="px-4 py-2 text-left">Roll</th>
+                  <th className="px-4 py-2 text-left">Section</th>
+                  <th className="px-4 py-2 text-left">Subject</th>
+                  <th className="px-4 py-2 text-left">Marks Obtained</th>
+                  <th className="px-4 py-2 text-left">Total Marks</th>
+                  <th className="px-4 py-2 text-left">Percentage</th>
+                  <th className="px-4 py-2 text-left">Grade</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Overall Percentage</th>
+                  <th className="px-4 py-2 text-left">Overall Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,51 +134,23 @@ const MarksList = () => {
                   currentMarks.flatMap((student, index) =>
                     student.subjects.map((subject, subIndex) => (
                       <tr key={`${student.student?._id}-${subIndex}`}>
+                        <td className="border-b px-4 py-2">{startIndex + index + 1}</td>
+                        <td className="border-b px-4 py-2">{student.student?.firstName || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{student.student?.lastName || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{student.student?.class || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{student.student?.roll || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{student.student?.section || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.subject || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.marksObtained || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.totalMarks || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.percentage || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.grade || "N/A"}</td>
+                        <td className="border-b px-4 py-2">{subject.status || "N/A"}</td>
                         <td className="border-b px-4 py-2">
-                          {startIndex + index + 1}
+                          {subIndex === 0 ? student.overallPercentage || "N/A" : ""}
                         </td>
                         <td className="border-b px-4 py-2">
-                          {student.student?.firstName || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {student.student?.lastName || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {student.student?.class || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {student.student?.roll || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {student.student?.section || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.subject || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.marksObtained || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.totalMarks || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.percentage || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.grade || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subject.status || "N/A"}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subIndex === 0
-                            ? student.overallPercentage || "N/A"
-                            : ""}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subIndex === 0
-                            ? student.overallStatus || "N/A"
-                            : ""}
+                          {subIndex === 0 ? student.overallStatus || "N/A" : ""}
                         </td>
                       </tr>
                     ))
@@ -176,7 +168,7 @@ const MarksList = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center mt-4">
+            <div className="mt-4 flex justify-center items-center space-x-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
@@ -184,7 +176,7 @@ const MarksList = () => {
               >
                 Previous
               </button>
-              <span className="mx-4 text-gray-600">
+              <span className="text-gray-600">
                 Page {currentPage} of {totalPages}
               </span>
               <button
@@ -197,7 +189,7 @@ const MarksList = () => {
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
   );
 };

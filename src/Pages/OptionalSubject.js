@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
+import { FaBars, FaTimes } from "react-icons/fa"; // Importing sidebar icons
 
 const OptionalSubject = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ const OptionalSubject = () => {
     section: "",
     subject: "",
   });
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   const classes = ["Class 1", "Class 2", "Class 3"];
   const sections = ["Section A", "Section B", "Section C"];
@@ -24,22 +27,42 @@ const OptionalSubject = () => {
     console.log("Searching...");
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="min-h-screen flex bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
+        onClick={toggleSidebar}
+      ></div>
+
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 bg-white shadow-lg w-64">
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="ml-72 flex-1">
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        {/* Mobile View: Header and Sidebar Toggle Icon */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Optional Subject</h1>
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
         {/* Main Wrapper */}
-        <div className="w-full max-w-5xl bg-white p-8 rounded-xl shadow-lg mt-4 ml-16">
+        <div className="w-full max-w-5xl bg-white p-8 rounded-xl shadow-lg mt-4 mx-auto lg:mx-16">
           {/* Select Criteria Section */}
           <div className="mb-8">
             <h2 className="text-lg text-gray-500 mb-4">Select Criteria</h2>
             <form className="space-y-4">
-              <div className="flex flex-row gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Class Dropdown */}
                 <div className="flex-1">
                   <label htmlFor="class" className="text-sm text-gray-600">
@@ -113,7 +136,7 @@ const OptionalSubject = () => {
           <div className="mb-4 flex justify-end">
             <button
               onClick={handleSearchClick}
-              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm"
+              className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm w-full sm:w-auto"
             >
               Search
             </button>

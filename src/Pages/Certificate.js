@@ -60,7 +60,7 @@ const CertificateTypePage = () => {
 
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">Certificate Type</h2>
 
-        <div className="flex space-x-8">
+        <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8">
           {/* Left Side - Add Certificate Type Form */}
           <div className="w-full lg:w-1/3 p-6 bg-gray-50 rounded-lg shadow">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Add Certificate Type</h3>

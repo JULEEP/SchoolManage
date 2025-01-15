@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const AddTopic = () => {
   const [selectedClass, setSelectedClass] = useState('');
@@ -15,6 +16,7 @@ const AddTopic = () => {
   const [sections, setSections] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [lessons, setLessons] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Fetch data for dropdowns and topics list
   useEffect(() => {
@@ -97,17 +99,36 @@ const AddTopic = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64">
-        <div className="flex gap-6">
-          <div className="w-full bg-white p-6 rounded-md shadow-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Add Topic</h2>
+      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Add Topic</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
-            <div className="grid grid-cols-4 gap-6">
+        {/* Page Content */}
+        <div className="p-6">
+          {/* Topic Form */}
+          <div className="bg-white p-6 rounded-md shadow-md">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Add Topic</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Class Dropdown */}
               <div>
                 <label htmlFor="class" className="block text-sm text-gray-600">
@@ -189,7 +210,7 @@ const AddTopic = () => {
               </div>
 
               {/* Topic Title */}
-              <div className="col-span-4">
+              <div className="col-span-2 sm:col-span-4">
                 <label htmlFor="topicTitle" className="block text-sm text-gray-600">
                   Add Topic <span className="text-red-500">*</span>
                 </label>
@@ -204,11 +225,11 @@ const AddTopic = () => {
               </div>
 
               {/* Save Button */}
-              <div className="col-span-4 mt-6">
+              <div className="col-span-2 sm:col-span-4 mt-6">
                 <button
                   type="button"
                   onClick={handleSaveTopic}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 w-full sm:w-auto"
                 >
                   Save Topic
                 </button>
@@ -216,52 +237,29 @@ const AddTopic = () => {
 
               {/* Feedback Messages */}
               {errorMessage && (
-                <div className="col-span-4 mt-4 text-red-600 text-sm">{errorMessage}</div>
+                <div className="text-red-500 text-sm mt-4">{errorMessage}</div>
               )}
               {successMessage && (
-                <div className="col-span-4 mt-4 text-green-600 text-sm">{successMessage}</div>
+                <div className="text-green-500 text-sm mt-4">{successMessage}</div>
               )}
             </div>
+          </div>
 
-            {/* Topic List */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold text-gray-700 mb-4">Topic List</h3>
-              <table className="w-full border-collapse">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="text-left px-4 py-2">SL</th>
-                    <th className="text-left px-4 py-2">Class</th>
-                    <th className="text-left px-4 py-2">Section</th>
-                    <th className="text-left px-4 py-2">Subject</th>
-                    <th className="text-left px-4 py-2">Lesson</th>
-                    <th className="text-left px-4 py-2">Topic</th>
-                    <th className="text-left px-4 py-2">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topics.length > 0 ? (
-                    topics.map((topic, index) => (
-                      <tr key={index}>
-                        <td className="px-4 py-2">{index + 1}</td>
-                        <td className="px-4 py-2">{topic.className}</td>
-                        <td className="px-4 py-2">{topic.section}</td>
-                        <td className="px-4 py-2">{topic.subject}</td>
-                        <td className="px-4 py-2">{topic.lesson}</td>
-                        <td className="px-4 py-2">{topic.topic}</td>
-                        <td className="px-4 py-2">
-                          <button className="text-red-600 hover:underline">Delete</button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="text-center px-4 py-2">
-                        No Data Available In Table
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+          {/* Topics List */}
+          <div className="mt-10">
+            <h2 className="text-lg font-semibold text-gray-700">Existing Topics</h2>
+            <div className="mt-4">
+              {topics.length === 0 ? (
+                <p>No topics available.</p>
+              ) : (
+                <ul>
+                  {topics.map((topic, index) => (
+                    <li key={index} className="p-2">
+                      {topic.topic} - {topic.lesson} - {topic.subject}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

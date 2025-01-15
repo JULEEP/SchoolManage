@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar'; // Assuming you have a Sidebar component
+import { FaBars, FaTimes } from "react-icons/fa"; // For sidebar toggle
 
 const ClassRoutineCreate = () => {
   const [selectedClass, setSelectedClass] = useState('');
@@ -18,6 +19,7 @@ const ClassRoutineCreate = () => {
 
   // Routine data to show below the form
   const [routines, setRoutines] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchDropdownData = async () => {
@@ -127,191 +129,240 @@ const ClassRoutineCreate = () => {
     }
   }, [selectedClass, selectedSection]); // Trigger when class or section changes
 
+  // Function to remove routine
+  const handleRemoveRoutine = async (routineId) => {
+    try {
+      const response = await axios.delete(`https://school-backend-1-2xki.onrender.com/api/admin/delete-routine/${routineId}`);
+      if (response.status === 200) {
+        setSuccessMessage('Routine removed successfully!');
+        setError('');
+        fetchRoutineData(); // Refresh the routine data after removal
+      } else {
+        setError('Failed to remove routine.');
+      }
+    } catch (error) {
+      setError('An error occurred while removing the routine.');
+      setSuccessMessage('');
+    }
+  };
+
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Class Routine Create</h2>
-          <h4 className="text-xl text-gray-700 mb-4">Select Criteria</h4>
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Class Routine Create</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
-          {/* Select Criteria Section */}
-          <div className="space-y-4">
-            <div className="flex gap-8">
-              {/* Class Dropdown */}
-              <div className="w-1/2">
-                <label htmlFor="class" className="block text-sm text-gray-600">Class *</label>
-                <select
-                  id="class"
-                  name="class"
-                  value={selectedClass}
-                  onChange={handleClassChange}
-                  className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="">Select Class</option>
-                  {classes.map((cls, idx) => (
-                    <option key={idx} value={cls._id}>{cls.className}</option> 
-                  ))}
-                </select>
-              </div>
-
-              {/* Section Dropdown */}
-              <div className="w-1/2">
-                <label htmlFor="section" className="block text-sm text-gray-600">Section *</label>
-                <select
-                  id="section"
-                  name="section"
-                  value={selectedSection}
-                  onChange={handleSectionChange}
-                  className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  required
-                >
-                  <option value="">Select Section</option>
-                  {sections.map((section, idx) => (
-                    <option key={idx} value={section._id}>{section.name}</option> 
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Routine Entries */}
-            <div>
-              {routine.map((r, index) => (
-                <div key={index} className="flex gap-6 mb-4">
-                  <div className="w-1/4">
-                    <label htmlFor={`day-${index}`} className="block text-sm text-gray-600">Day *</label>
-                    <select
-                      id={`day-${index}`}
-                      name="day"
-                      value={r.day}
-                      onChange={(e) => handleRoutineChange(index, e)}
-                      className="border border-gray-300 rounded-md p-3 w-full"
-                      required
-                    >
-                      <option value="">Select Day</option>
-                      {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day, idx) => (
-                        <option key={idx} value={day}>{day}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="w-1/4">
-                    <label htmlFor={`time-${index}`} className="block text-sm text-gray-600">Time *</label>
-                    <select
-                      id={`time-${index}`}
-                      name="time"
-                      value={r.time}
-                      onChange={(e) => handleRoutineChange(index, e)}
-                      className="border border-gray-300 rounded-md p-3 w-full"
-                      required
-                    >
-                      <option value="">Select Time</option>
-                      {[ 
-                        "09:00 AM - 09:45 AM", "10:00 AM - 10:45 AM", "11:00 AM - 11:45 AM", 
-                        "12:00 PM - 12:45 PM", "01:00 PM - 01:45 PM", "02:00 PM - 02:45 PM", 
-                        "03:00 PM - 03:45 PM"
-                      ].map((time, idx) => (
-                        <option key={idx} value={time}>{time}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="w-1/4">
-                    <label htmlFor={`subject-${index}`} className="block text-sm text-gray-600">Subject *</label>
-                    <select
-                      id={`subject-${index}`}
-                      name="subject"
-                      value={r.subject}
-                      onChange={(e) => handleRoutineChange(index, e)}
-                      className="border border-gray-300 rounded-md p-3 w-full"
-                      required
-                    >
-                      <option value="">Select Subject</option>
-                      {subjects.map((subject, idx) => (
-                        <option key={idx} value={subject}>{subject}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="w-1/4">
-                    <label htmlFor={`teacher-${index}`} className="block text-sm text-gray-600">Teacher *</label>
-                    <select
-                      id={`teacher-${index}`}
-                      name="teacher"
-                      value={r.teacher}
-                      onChange={(e) => handleRoutineChange(index, e)}
-                      className="border border-gray-300 rounded-md p-3 w-full"
-                      required
-                    >
-                      <option value="">Select Teacher</option>
-                      {teachers.map((teacher, idx) => (
-                        <option key={idx} value={teacher}>{teacher}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Remove Routine Button */}
-                  <button
-                    type="button"
-                    onClick={() => removeRoutine(index)}
-                    className="text-red-600 hover:text-red-800 mt-4"
+        <div className="max-w-6xl mx-auto">
+          {/* Form Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+            <h2 className="text-lg text-gray-700 mb-4">Select Criteria</h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-8">
+                {/* Class Dropdown */}
+                <div className="w-full sm:w-1/2">
+                  <label htmlFor="class" className="block text-sm text-gray-600">Class *</label>
+                  <select
+                    id="class"
+                    name="class"
+                    value={selectedClass}
+                    onChange={handleClassChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
                   >
-                    Remove
-                  </button>
+                    <option value="">Select Class</option>
+                    {classes.map((cls, idx) => (
+                      <option key={idx} value={cls._id}>{cls.className}</option> 
+                    ))}
+                  </select>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addNewRoutine}
-                className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 mt-4"
-              >
-                Add Another Routine
-              </button>
-            </div>
 
-            {/* Submit Button */}
-            <div className="mt-6 flex justify-end">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-              >
-                Submit Routine
-              </button>
+                {/* Section Dropdown */}
+                <div className="w-full sm:w-1/2">
+                  <label htmlFor="section" className="block text-sm text-gray-600">Section *</label>
+                  <select
+                    id="section"
+                    name="section"
+                    value={selectedSection}
+                    onChange={handleSectionChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  >
+                    <option value="">Select Section</option>
+                    {sections.map((section, idx) => (
+                      <option key={idx} value={section._id}>{section.name}</option> 
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Routine Entries */}
+              <div>
+                {routine.map((r, index) => (
+                  <div key={index} className="flex flex-col sm:flex-row gap-6 mb-4">
+                    <div className="w-full sm:w-1/4">
+                      <label htmlFor={`day-${index}`} className="block text-sm text-gray-600">Day *</label>
+                      <select
+                        id={`day-${index}`}
+                        name="day"
+                        value={r.day}
+                        onChange={(e) => handleRoutineChange(index, e)}
+                        className="border border-gray-300 rounded-md p-3 w-full"
+                        required
+                      >
+                        <option value="">Select Day</option>
+                        {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day, idx) => (
+                          <option key={idx} value={day}>{day}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="w-full sm:w-1/4">
+                      <label htmlFor={`time-${index}`} className="block text-sm text-gray-600">Time *</label>
+                      <select
+                        id={`time-${index}`}
+                        name="time"
+                        value={r.time}
+                        onChange={(e) => handleRoutineChange(index, e)}
+                        className="border border-gray-300 rounded-md p-3 w-full"
+                        required
+                      >
+                        <option value="">Select Time</option>
+                        {[ 
+                          "09:00 AM - 09:45 AM", "10:00 AM - 10:45 AM", "11:00 AM - 11:45 AM", 
+                          "12:00 PM - 12:45 PM", "01:00 PM - 01:45 PM", "02:00 PM - 02:45 PM"
+                        ].map((time, idx) => (
+                          <option key={idx} value={time}>{time}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="w-full sm:w-1/4">
+                      <label htmlFor={`subject-${index}`} className="block text-sm text-gray-600">Subject *</label>
+                      <select
+                        id={`subject-${index}`}
+                        name="subject"
+                        value={r.subject}
+                        onChange={(e) => handleRoutineChange(index, e)}
+                        className="border border-gray-300 rounded-md p-3 w-full"
+                        required
+                      >
+                        <option value="">Select Subject</option>
+                        {subjects.map((subject, idx) => (
+                          <option key={idx} value={subject}>{subject}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="w-full sm:w-1/4">
+                      <label htmlFor={`teacher-${index}`} className="block text-sm text-gray-600">Teacher *</label>
+                      <select
+                        id={`teacher-${index}`}
+                        name="teacher"
+                        value={r.teacher}
+                        onChange={(e) => handleRoutineChange(index, e)}
+                        className="border border-gray-300 rounded-md p-3 w-full"
+                        required
+                      >
+                        <option value="">Select Teacher</option>
+                        {teachers.map((teacher, idx) => (
+                          <option key={idx} value={teacher}>{teacher}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Remove Button */}
+                    <button
+                      type="button"
+                      onClick={() => removeRoutine(index)}
+                      className="mt-4 text-red-500"
+                    >
+                      Remove Routine
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Routine Button */}
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={addNewRoutine}
+                  className="px-6 py-2 rounded-md text-white bg-purple-600 hover:bg-purple-700"
+                >
+                  Add Another Routine
+                </button>
+              </div>
+
+              {/* Submit Button */}
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="px-6 py-2 rounded-md text-white bg-purple-600 hover:bg-purple-700"
+                >
+                  Save Routine
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Error or Success Message */}
-          {error && <div className="text-red-600 mt-2">{error}</div>}
-          {successMessage && <div className="text-green-600 mt-2">{successMessage}</div>}
-
-          {/* Display Fetched Routine Data */}
-          <div className="mt-8">
-            <h4 className="text-xl text-gray-700 mb-4">Existing Routine</h4>
-            {routines.length > 0 ? (
-              <ul className="space-y-4">
-                {routines.map((routine, idx) => (
-                  <li key={idx} className="border-b pb-4">
-                    <h5 className="font-semibold text-lg">Section: {routine.section}</h5>
-                    <ul className="space-y-2">
-                      {routine.routine.map((r, index) => (
-                        <li key={index}>
-                          <div>Day: {r.day}</div>
-                          <div>Time: {r.time}</div>
-                          <div>Subject: {r.subject}</div>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No routines available.</p>
-            )}
+          {/* Routine List Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md mt-8">
+            <h2 className="text-lg text-gray-700 mb-4">Existing Routines</h2>
+            <table className="min-w-full table-auto">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="px-4 py-2 text-gray-600">Class</th>
+                  <th className="px-4 py-2 text-gray-600">Section</th>
+                  <th className="px-4 py-2 text-gray-600">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {routines.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="text-center text-gray-500">
+                      No Routine Available
+                    </td>
+                  </tr>
+                ) : (
+                  routines.map((routine, index) => (
+                    <tr key={index} className="border-t border-gray-300">
+                      <td className="px-4 py-2 text-gray-600 text-center">{routine.class}</td>
+                      <td className="px-4 py-2 text-gray-600 text-center">{routine.section}</td>
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          onClick={() => handleRemoveRoutine(routine._id)} // Pass routine ID to remove
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
