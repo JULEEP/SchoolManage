@@ -87,7 +87,7 @@ const CertificatePage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4">
+      <div className="flex-1">
         {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Add Certificate</h1>
@@ -96,10 +96,9 @@ const CertificatePage = () => {
           </button>
         </div>
 
-        <h2 className="text-3xl font-semibold text-gray-800 mb-4">Add Certificate</h2>
 
         {/* Form Section */}
-        <div className="bg-white p-6 rounded-md shadow-md">
+        <div className="bg-white p-6 rounded-md shadow-md mt-4">
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="text-sm text-gray-600">Certificate Name *</label>

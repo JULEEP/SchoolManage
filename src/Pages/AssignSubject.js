@@ -115,7 +115,7 @@ const AssignSubjectPage = () => {
 
         <div className="max-w-6xl mx-auto">
           {/* Form Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-lg shadow-md mt-4">
             <h2 className="text-lg text-gray-700 mb-4">Assign Subject to Teacher</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             {success && <p className="text-green-500 mb-4">{success}</p>}

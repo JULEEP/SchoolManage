@@ -43,7 +43,7 @@ const PostalReceive = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen">
       {/* Sidebar Overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
@@ -67,8 +67,7 @@ const PostalReceive = () => {
           </button>
         </div>
 
-        <h2 className="text-3xl font-semibold text-gray-800 mb-8">Add Postal Receive</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-4">
           <div>
             <label htmlFor="fromTitle" className="text-sm text-gray-600">From Title *</label>
             <input

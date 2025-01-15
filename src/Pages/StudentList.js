@@ -75,7 +75,7 @@ const StudentList = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen">
       {/* Sidebar Overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
@@ -125,68 +125,69 @@ const StudentList = () => {
             </button>
           </div>
 
-          {/* Table Section */}
-          <div className="bg-white p-6 rounded-md shadow-md">
-            {loading ? (
-              <p className="text-center text-gray-500">Loading...</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full table-auto border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100 text-gray-700">
-                      <th className="px-6 py-3 text-left">SL</th>
-                      <th className="px-6 py-3 text-left">First Name</th>
-                      <th className="px-6 py-3 text-left">Last Name</th>
-                      <th className="px-6 py-3 text-left">Roll</th>
-                      <th className="px-6 py-3 text-left">Class</th>
-                      <th className="px-6 py-3 text-left">Section</th>
-                      <th className="px-6 py-3 text-left">Gender</th>
-                      <th className="px-6 py-3 text-left">Date of Birth</th>
-                      <th className="px-6 py-3 text-left">Religion</th>
-                      <th className="px-6 py-3 text-left">Caste</th>
-                      <th className="px-6 py-3 text-left">Blood Group</th>
-                      <th className="px-6 py-3 text-left">Category</th>
-                      <th className="px-6 py-3 text-left">Height</th>
-                      <th className="px-6 py-3 text-left">Weight</th>
-                    </tr>
-                  </thead>
+{/* Table Section */}
+<div className="bg-white p-6 rounded-md shadow-md">
+  {loading ? (
+    <p className="text-center text-gray-500">Loading...</p>
+  ) : (
+    // Wrapping the table in a scrollable container
+    <div className="overflow-x-auto">
+      <table className="min-w-full table-auto border-collapse">
+        <thead>
+          <tr className="bg-gray-100 text-gray-700">
+            <th className="px-6 py-3 text-left">SL</th>
+            <th className="px-6 py-3 text-left">First Name</th>
+            <th className="px-6 py-3 text-left">Last Name</th>
+            <th className="px-6 py-3 text-left">Roll</th>
+            <th className="px-6 py-3 text-left">Class</th>
+            <th className="px-6 py-3 text-left">Section</th>
+            <th className="px-6 py-3 text-left">Gender</th>
+            <th className="px-6 py-3 text-left">Date of Birth</th>
+            <th className="px-6 py-3 text-left">Religion</th>
+            <th className="px-6 py-3 text-left">Caste</th>
+            <th className="px-6 py-3 text-left">Blood Group</th>
+            <th className="px-6 py-3 text-left">Category</th>
+            <th className="px-6 py-3 text-left">Height</th>
+            <th className="px-6 py-3 text-left">Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredStudents.length === 0 ? (
+            <tr>
+              <td colSpan="14" className="text-center text-gray-500 py-3">
+                No Data Available
+              </td>
+            </tr>
+          ) : (
+            filteredStudents.map((student, index) => (
+              <tr key={student._id} className="border-b hover:bg-gray-50">
+                <td className="px-6 py-3">{index + 1}</td>
+                <td className="px-6 py-3">{student.firstName || "N/A"}</td>
+                <td className="px-6 py-3">{student.lastName || "N/A"}</td>
+                <td className="px-6 py-3">{student.roll || "N/A"}</td>
+                <td className="px-6 py-3">{student.class || "N/A"}</td>
+                <td className="px-6 py-3">{student.section || "N/A"}</td>
+                <td className="px-6 py-3">{student.gender || "N/A"}</td>
+                <td className="px-6 py-3">
+                  {student.dateOfBirth
+                    ? new Date(student.dateOfBirth).toLocaleDateString()
+                    : "N/A"}
+                </td>
+                <td className="px-6 py-3">{student.religion || "N/A"}</td>
+                <td className="px-6 py-3">{student.caste || "N/A"}</td>
+                <td className="px-6 py-3">{student.bloodGroup || "N/A"}</td>
+                <td className="px-6 py-3">{student.category || "N/A"}</td>
+                <td className="px-6 py-3">{student.height || "N/A"}</td>
+                <td className="px-6 py-3">{student.weight || "N/A"}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
 
-                  <tbody>
-                    {filteredStudents.length === 0 ? (
-                      <tr>
-                        <td colSpan="14" className="text-center text-gray-500 py-3">
-                          No Data Available
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredStudents.map((student, index) => (
-                        <tr key={student._id} className="border-b hover:bg-gray-50">
-                          <td className="px-6 py-3">{index + 1}</td>
-                          <td className="px-6 py-3">{student.firstName || "N/A"}</td>
-                          <td className="px-6 py-3">{student.lastName || "N/A"}</td>
-                          <td className="px-6 py-3">{student.roll || "N/A"}</td>
-                          <td className="px-6 py-3">{student.class || "N/A"}</td>
-                          <td className="px-6 py-3">{student.section || "N/A"}</td>
-                          <td className="px-6 py-3">{student.gender || "N/A"}</td>
-                          <td className="px-6 py-3">
-                            {student.dateOfBirth
-                              ? new Date(student.dateOfBirth).toLocaleDateString()
-                              : "N/A"}
-                          </td>
-                          <td className="px-6 py-3">{student.religion || "N/A"}</td>
-                          <td className="px-6 py-3">{student.caste || "N/A"}</td>
-                          <td className="px-6 py-3">{student.bloodGroup || "N/A"}</td>
-                          <td className="px-6 py-3">{student.category || "N/A"}</td>
-                          <td className="px-6 py-3">{student.height || "N/A"}</td>
-                          <td className="px-6 py-3">{student.weight || "N/A"}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

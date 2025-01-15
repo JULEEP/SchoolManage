@@ -31,7 +31,7 @@ const SharedContentPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen">
       {/* Sidebar Overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
@@ -81,6 +81,7 @@ const SharedContentPage = () => {
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Content List</h3>
 
             {/* Table */}
+            <div className="overflow-x-auto">
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100">
                 <tr>
@@ -119,6 +120,7 @@ const SharedContentPage = () => {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
 
           {/* Pagination */}

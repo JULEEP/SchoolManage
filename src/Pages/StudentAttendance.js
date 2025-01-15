@@ -200,7 +200,7 @@ const StudentAttendance = () => {
             <h2 className="text-lg text-gray-700 mb-4">Attendance Records</h2>
 
             {/* Scrollable Table Wrapper */}
-            <div className="overflow-x-auto max-h-96">
+            <div className="overflow-x-auto">
               {/* Table */}
               <table className="w-full border-collapse">
                 <thead>

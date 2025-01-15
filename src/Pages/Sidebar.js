@@ -201,9 +201,6 @@ const toggleWalletDropdown = () => {
               <Link to="/visitor" className="hover:text-gray-400">
               <li className="py-2"><a href="#" className="hover:text-gray-400">Admin Setup</a></li>
               </Link>
-              <Link to="/cardList" className="hover:text-gray-400">
-              <li className="py-2"><a href="#" className="hover:text-gray-400">ID Card</a></li>
-              </Link>
               <Link to="/certificate" className="hover:text-gray-400">
               <li className="py-2"><a href="#" className="hover:text-gray-400">Certificate</a></li>
               </Link>

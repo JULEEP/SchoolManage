@@ -120,7 +120,7 @@ const Teacher = () => {
         </div>
 
         {/* Title Section */}
-        <h1 className="text-3xl font-semibold text-gray-800 mb-8">Teacher List</h1>
+        <h1 className="text-3xl font-semibold text-gray-800 mb-8 mt-4">Teacher List</h1>
 
         {/* Add Teacher Form */}
         <div className="bg-white p-6 rounded-md shadow-md mb-8 w-full max-w-5xl">
@@ -174,6 +174,7 @@ const Teacher = () => {
 
         {/* Teacher List Table */}
         <h2 className="text-lg text-gray-700 mb-4">Teacher List</h2>
+        <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
@@ -214,6 +215,7 @@ const Teacher = () => {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

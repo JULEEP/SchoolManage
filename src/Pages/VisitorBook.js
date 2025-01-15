@@ -117,7 +117,6 @@ const VisitorBook = () => {
         </div>
 
         {/* Title Section */}
-        <h1 className="text-3xl font-semibold text-gray-800 mb-8">Visitor Book</h1>
 
         {/* Form Section */}
         <div className="bg-white p-6 rounded-md shadow-md mb-8">
@@ -162,7 +161,6 @@ const VisitorBook = () => {
 
         {/* Visitor List Section */}
         <div className="bg-white p-6 rounded-md shadow-md">
-          <h2 className="text-lg text-gray-700 mb-4">Visitor List</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto">
               <thead>

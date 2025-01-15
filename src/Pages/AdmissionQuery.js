@@ -41,7 +41,7 @@ const AdmissionQuery = () => {
           </div>
 
           {/* Title Section */}
-          <h1 className="text-3xl font-semibold text-gray-800 mb-8 lg:mb-8">Admission Query</h1>
+          <h1 className="text-3xl font-semibold text-gray-800 mb-8 lg:mb-8 mt-4">Admission Query</h1>
 
           {/* Form Section */}
           <div className="bg-white p-8 rounded-md shadow-md mb-8">
