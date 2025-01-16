@@ -178,6 +178,8 @@ import TeacherComingSoon from './Teacher/comingsoon';
 import FeesManagement from './Pages/Fees'
 import FeeDetails from './Pages/FeeDetails';
 import StudentFees from './Student/StudentFees';
+import CommunicationForm from './Parents/ComunicateWithTeacher';
+import TeacherCommunication from './Teacher/TeacherCommunication';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -359,6 +361,8 @@ function App() {
            <Route path="/parent-transport" element={<ParentTransportPage/>} />
            <Route path="/mychild-exam-schedules" element={<MyChildMarksPage/>} />
            <Route path="/parent-login" element={<ParentLogin/>} />
+           <Route path="/ask-queries" element={<CommunicationForm/>} />
+
 
 
 
@@ -376,6 +380,8 @@ function App() {
           <Route path="/teacher-marks" element={<TeacherMarks/>} />
           <Route path="/teacher-login" element={<TeacherLogin/>} />
           <Route path="/teacher-coming-soon" element={<TeacherComingSoon/>} />
+          <Route path="/teacher-queries" element={<TeacherCommunication/>} />
+
 
 
 

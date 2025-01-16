@@ -6,9 +6,11 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const MarksList = () => {
   const [marksList, setMarksList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [itemsPerPage] = useState(10);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch marks
   useEffect(() => {
     fetchMarks();
   }, []);
@@ -22,14 +24,26 @@ const MarksList = () => {
     } catch (error) {
       console.error("Error fetching marks:", error);
       alert("Error fetching marks. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  // Pagination calculations
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentMarks = marksList.slice(startIndex, endIndex);
   const totalPages = Math.ceil(marksList.length / itemsPerPage);
 
+  const formatDate = (date) => {
+    return date ? new Date(date).toLocaleDateString() : "N/A";
+  };
+
+  // Export to CSV
   const exportToCSV = () => {
     const headers = [
       "SL,First Name,Last Name,Class,Roll,Section,Father's Name,Mother's Name,Subject,Marks Obtained,Total Marks,Percentage,Grade,Status,Overall Percentage,Overall Status",
@@ -69,125 +83,151 @@ const MarksList = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-        onClick={() => setIsSidebarOpen(false)}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
+          isSidebarOpen ? "block" : "hidden"
+        }`}
+        onClick={toggleSidebar}
       ></div>
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-        {/* Mobile Header */}
+      <div
+        className={`flex-grow overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
+        {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Marks List</h1>
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+          <button
+            onClick={toggleSidebar}
+            className="text-2xl focus:outline-none"
+          >
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Page Content */}
-        <div className="p-6">
-          {/* Title */}
-          <h2 className="text-center text-3xl font-semibold text-gray-500 mb-6">Marks List</h2>
+        {/* Search and Export */}
+        <div className="mb-6 flex justify-between items-center">
 
-          {/* Download CSV Button */}
-          <div className="flex items-center justify-end mb-4">
-            <button
-              onClick={exportToCSV}
-              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 focus:outline-none"
-            >
-              Download CSV
-            </button>
-          </div>
+          <button
+            onClick={exportToCSV}
+            className="ml-4 px-4 py-2 bg-purple-600 mt-4 text-white rounded-md hover:bg-purple-700"
+          >
+            Export CSV
+          </button>
+        </div>
 
-          {/* Marks Table */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto border-collapse">
+        {/* Marks Table */}
+        <div className="overflow-x-auto mb-8">
+          {loading ? (
+            <p className="text-center text-gray-500">Loading...</p>
+          ) : (
+            <table className="w-full border-collapse border border-gray-300">
               <thead>
-                <tr className="bg-gray-100 text-gray-700">
-                  <th className="px-4 py-2 text-left">SL</th>
-                  <th className="px-4 py-2 text-left">First Name</th>
-                  <th className="px-4 py-2 text-left">Last Name</th>
-                  <th className="px-4 py-2 text-left">Class</th>
-                  <th className="px-4 py-2 text-left">Roll</th>
-                  <th className="px-4 py-2 text-left">Section</th>
-                  <th className="px-4 py-2 text-left">Subject</th>
-                  <th className="px-4 py-2 text-left">Marks Obtained</th>
-                  <th className="px-4 py-2 text-left">Total Marks</th>
-                  <th className="px-4 py-2 text-left">Percentage</th>
-                  <th className="px-4 py-2 text-left">Grade</th>
-                  <th className="px-4 py-2 text-left">Status</th>
-                  <th className="px-4 py-2 text-left">Overall Percentage</th>
-                  <th className="px-4 py-2 text-left">Overall Status</th>
+                <tr className="bg-gray-100">
+                  <th className="px-4 py-2 border-b">SL</th>
+                  <th className="px-4 py-2 border-b">First Name</th>
+                  <th className="px-4 py-2 border-b">Last Name</th>
+                  <th className="px-4 py-2 border-b">Class</th>
+                  <th className="px-4 py-2 border-b">Roll</th>
+                  <th className="px-4 py-2 border-b">Section</th>
+                  <th className="px-4 py-2 border-b">Father's Name</th>
+                  <th className="px-4 py-2 border-b">Mother's Name</th>
+                  <th className="px-4 py-2 border-b">Subject</th>
+                  <th className="px-4 py-2 border-b">Marks Obtained</th>
+                  <th className="px-4 py-2 border-b">Total Marks</th>
+                  <th className="px-4 py-2 border-b">Percentage</th>
+                  <th className="px-4 py-2 border-b">Grade</th>
+                  <th className="px-4 py-2 border-b">Status</th>
+                  <th className="px-4 py-2 border-b">Overall Percentage</th>
+                  <th className="px-4 py-2 border-b">Overall Status</th>
                 </tr>
               </thead>
               <tbody>
-                {currentMarks.length > 0 ? (
-                  currentMarks.flatMap((student, index) =>
-                    student.subjects.map((subject, subIndex) => (
-                      <tr key={`${student.student?._id}-${subIndex}`}>
-                        <td className="border-b px-4 py-2">{startIndex + index + 1}</td>
-                        <td className="border-b px-4 py-2">{student.student?.firstName || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{student.student?.lastName || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{student.student?.class || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{student.student?.roll || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{student.student?.section || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.subject || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.marksObtained || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.totalMarks || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.percentage || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.grade || "N/A"}</td>
-                        <td className="border-b px-4 py-2">{subject.status || "N/A"}</td>
-                        <td className="border-b px-4 py-2">
-                          {subIndex === 0 ? student.overallPercentage || "N/A" : ""}
-                        </td>
-                        <td className="border-b px-4 py-2">
-                          {subIndex === 0 ? student.overallStatus || "N/A" : ""}
-                        </td>
-                      </tr>
-                    ))
-                  )
-                ) : (
-                  <tr>
-                    <td colSpan="14" className="text-center text-gray-500 py-4">
-                      No marks found.
-                    </td>
-                  </tr>
+                {currentMarks.map((student, index) =>
+                  student.subjects.map((subject, subIndex) => (
+                    <tr key={`${student._id}-${subIndex}`}>
+                      <td className="px-4 py-2 border-b">{index + 1}</td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.firstName || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.lastName || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.class || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.roll || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.section || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.fatherName || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.student?.motherName || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.subject || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.marksObtained || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.totalMarks || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.percentage || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.grade || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {subject.status || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.overallPercentage || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border-b">
+                        {student.overallStatus || "N/A"}
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-4 flex justify-center items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className="text-gray-600">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
           )}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center space-x-4">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded-md ${
+                currentPage === i + 1
+                  ? "bg-purple-600 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
     </div>

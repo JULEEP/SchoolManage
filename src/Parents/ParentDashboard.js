@@ -14,6 +14,7 @@ const book = 'https://static.vecteezy.com/system/resources/previews/003/812/674/
 const transport = 'https://static.vecteezy.com/system/resources/previews/002/373/903/large_2x/cartoon-school-bus-with-children-free-vector.jpg';
 const fees = 'https://th.bing.com/th/id/R.9e223a9b2c0ef9a333764f8c4a87dbd2?rik=ftPQ%2fejiRTWnHw&riu=http%3a%2f%2f4b.lucknowpublicschool.com%2fimages%2ffees.jpg&ehk=18%2b%2b2uaQnzOeBJRpMqhHoLI18ASFTGhI8lWxGvTEfP4%3d&risl=&pid=ImgRaw&r=0';
 const pendingHomework = 'https://th.bing.com/th/id/R.c1a735d2fa8cba39f15d088f3ea069f0?rik=fa6UqGzr2a49ww&riu=http%3a%2f%2fwikiclipart.com%2fwp-content%2fuploads%2f2017%2f09%2fStudent-thinking-students-images-clip-art-clipart-collection.jpg&ehk=bL3ekc6319OyCeNLIQldxn6RYl7IQRc6q2a73cPEnhg%3d&risl=&pid=ImgRaw&r=0';
+const queries = 'https://cdn-icons-png.flaticon.com/512/5013/5013104.png';
 
 const bestCategories = [
   { img: subject, name: "Subjects", link: "/parent-subjects" },
@@ -26,6 +27,8 @@ const bestCategories = [
   { img: transport, name: "Transport", link: "/parent-transport" },
   { img: fees, name: "Fees", link: "/mychild-fees" },
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
+  { img: queries, name: "Ask Queries", link: "/ask-queries" },
+
 ];
 
 const ParentDashboard = () => {

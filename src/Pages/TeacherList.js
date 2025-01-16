@@ -5,34 +5,48 @@ import { FaBars, FaTimes } from "react-icons/fa";
 
 const TeacherList = () => {
   const [teacherList, setTeacherList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [searchTerm, setSearchTerm] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch teachers
   useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await axios.get(
+          "https://school-backend-1-2xki.onrender.com/api/admin/get-teacher"
+        );
+        setTeacherList(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching teachers:", error);
+        alert("Error fetching teachers. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchTeachers();
   }, []);
 
-  const fetchTeachers = async () => {
-    try {
-      const response = await axios.get(
-        "https://school-backend-1-2xki.onrender.com/api/admin/get-teacher"
-      );
-      setTeacherList(response.data.data || []);
-    } catch (error) {
-      console.error("Error fetching teachers:", error);
-      alert("Error fetching teachers. Please try again.");
-    }
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTeachers = teacherList.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(teacherList.length / itemsPerPage);
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredTeachers = teacherList.filter(
+    (teacher) =>
+      teacher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.phone?.toString().includes(searchTerm)
+  );
 
   const exportToCSV = () => {
-    const headers = ["SL,Name,Email,Phone,Address,Experience,Age,Gender,Education,Joining Date"];
-    const rows = teacherList.map((teacher, index) => [
+    const headers = [
+      "SL,Name,Email,Phone,Address,Experience,Age,Gender,Education,Joining Date",
+    ];
+    const rows = filteredTeachers.map((teacher, index) => [
       index + 1,
       teacher.name || "N/A",
       teacher.email || "N/A",
@@ -42,7 +56,9 @@ const TeacherList = () => {
       teacher.age || "N/A",
       teacher.gender || "N/A",
       teacher.education || "N/A",
-      teacher.joiningDate || "N/A",
+      teacher.joiningDate
+        ? new Date(teacher.joiningDate).toLocaleDateString()
+        : "N/A",
     ]);
 
     const csvContent =
@@ -59,113 +75,101 @@ const TeacherList = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-        onClick={() => setIsSidebarOpen(false)}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
+          isSidebarOpen ? "block" : "hidden"
+        }`}
+        onClick={toggleSidebar}
       ></div>
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-        {/* Mobile Header */}
+      <div
+        className={`flex-grow overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
+        {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Teacher List</h1>
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+          <button
+            onClick={toggleSidebar}
+            className="text-2xl focus:outline-none"
+          >
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Page Content */}
-        <div className="p-6">
-          {/* Title */}
-          <h2 className="text-center text-3xl font-semibold text-gray-500 mb-6">Teacher List</h2>
+        {/* Search and Export */}
+        <div className="mb-6 flex justify-between items-center">
+          <button
+            onClick={exportToCSV}
+            className="ml-4 px-4 py-2 bg-purple-600 text-white mt-4 rounded-md hover:bg-purple-700"
+          >
+            Export CSV
+          </button>
+        </div>
 
-          {/* Download CSV Button */}
-          <div className="flex items-center justify-end mb-4">
-            <button
-              onClick={exportToCSV}
-              className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 focus:outline-none"
-            >
-              Download CSV
-            </button>
-          </div>
-
-          {/* Table Section */}
-          <div className="bg-white p-6 rounded-md shadow-md">
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto border-collapse">
-                <thead>
-                  <tr className="bg-gray-100 text-gray-700">
-                    <th className="px-6 py-3 text-left">SL</th>
-                    <th className="px-6 py-3 text-left">Name</th>
-                    <th className="px-6 py-3 text-left">Email</th>
-                    <th className="px-6 py-3 text-left">Phone</th>
-                    <th className="px-6 py-3 text-left">Address</th>
-                    <th className="px-6 py-3 text-left">Experience</th>
-                    <th className="px-6 py-3 text-left">Age</th>
-                    <th className="px-6 py-3 text-left">Gender</th>
-                    <th className="px-6 py-3 text-left">Education</th>
-                    <th className="px-6 py-3 text-left">Joining Date</th>
+        {/* Teacher Table */}
+        <div className="overflow-x-auto mb-8">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-2 border-b">SL</th>
+                <th className="px-4 py-2 border-b">Name</th>
+                <th className="px-4 py-2 border-b">Email</th>
+                <th className="px-4 py-2 border-b">Phone</th>
+                <th className="px-4 py-2 border-b">Address</th>
+                <th className="px-4 py-2 border-b">Experience</th>
+                <th className="px-4 py-2 border-b">Age</th>
+                <th className="px-4 py-2 border-b">Gender</th>
+                <th className="px-4 py-2 border-b">Education</th>
+                <th className="px-4 py-2 border-b">Joining Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTeachers.length > 0 ? (
+                filteredTeachers.map((teacher, index) => (
+                  <tr key={teacher._id}>
+                    <td className="px-4 py-2 border-b">{index + 1}</td>
+                    <td className="px-4 py-2 border-b">{teacher.name}</td>
+                    <td className="px-4 py-2 border-b">{teacher.email}</td>
+                    <td className="px-4 py-2 border-b">{teacher.phone}</td>
+                    <td className="px-4 py-2 border-b">{teacher.address}</td>
+                    <td className="px-4 py-2 border-b">
+                      {teacher.lastExperience || "N/A"}
+                    </td>
+                    <td className="px-4 py-2 border-b">{teacher.age || "N/A"}</td>
+                    <td className="px-4 py-2 border-b">{teacher.gender || "N/A"}</td>
+                    <td className="px-4 py-2 border-b">
+                      {teacher.education || "N/A"}
+                    </td>
+                    <td className="px-4 py-2 border-b">
+                      {teacher.joiningDate
+                        ? new Date(teacher.joiningDate).toLocaleDateString()
+                        : "N/A"}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {currentTeachers.length > 0 ? (
-                    currentTeachers.map((teacher, index) => (
-                      <tr key={teacher._id} className="border-b hover:bg-gray-50">
-                        <td className="px-6 py-3">{startIndex + index + 1}</td>
-                        <td className="px-6 py-3">{teacher.name || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.email || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.phone || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.address || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.lastExperience || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.age || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.gender || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.education || "N/A"}</td>
-                        <td className="px-6 py-3">{teacher.joiningDate || "N/A"}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="10" className="px-6 py-3 text-center text-gray-500">
-                        No teachers found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-4 flex justify-center items-center space-x-4">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className="text-gray-600">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          )}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="10" className="text-center text-gray-500">
+                    No teachers found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

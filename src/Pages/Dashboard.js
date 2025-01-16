@@ -42,60 +42,6 @@ const Dashboard = () => {
   const lineChartInstanceRef = useRef(null); // Store line chart instance
 
   useEffect(() => {
-    const pieCtx = pieChartRef.current.getContext('2d');
-
-    // Destroy any previous chart instance to avoid conflicts
-    if (pieChartInstanceRef.current) {
-      pieChartInstanceRef.current.destroy();
-    }
-
-    // Create Pie Chart with static data for Students, Teachers, and Subjects
-    pieChartInstanceRef.current = new Chart(pieCtx, {
-      type: 'pie',
-      data: {
-        labels: ['Students', 'Teachers', 'Subjects'], // Labels for the segments
-        datasets: [
-          {
-            label: 'School Data Distribution',
-            data: [500, 50, 10], // Static data: [Students, Teachers, Subjects]
-            backgroundColor: ['#FF5733', '#1E90FF', '#FFD700'], // Slice colors
-            borderWidth: 1, // Adds a border around the segments
-            hoverOffset: 10, // Hover effect - creates 3D-like separation
-          },
-        ],
-      },
-      options: {
-        responsive: true, // Makes the chart responsive
-        plugins: {
-          legend: {
-            position: 'top', // Position the legend at the top
-          },
-          tooltip: {
-            enabled: true, // Enable tooltips
-          },
-        },
-        elements: {
-          arc: {
-            borderWidth: 6, // Thicker border to create a 3D effect
-            borderColor: '#fff', // White border color
-          },
-        },
-        animation: {
-          animateRotate: true, // Rotation effect when chart is drawn
-          animateScale: true,  // Scale effect when chart is drawn
-        },
-      },
-    });
-
-    // Cleanup: Destroy chart when component unmounts
-    return () => {
-      if (pieChartInstanceRef.current) {
-        pieChartInstanceRef.current.destroy();
-      }
-    };
-  }, []); // Empty dependency array ensures this effect runs only once
-
-  useEffect(() => {
     const lineCtx = lineChartRef.current.getContext('2d');
 
     // Destroy any previous chart instance to avoid conflicts
@@ -334,32 +280,6 @@ const Dashboard = () => {
         <canvas ref={lineChartRef} className="w-full h-full" />
       </div>
     </div>
-
-    <div className="bg-white p-6 shadow-md rounded-md mt-6">
-    <h2 className="text-xl font-semibold text-gray-700 mb-4">3D-like Pie Chart: Students, Teachers, Subjects</h2>
-    <div className="flex items-center justify-between">
-      {/* Left side: Labels for Students, Teachers, Subjects */}
-      <div className="space-y-2">
-        <div className="flex items-center">
-          <span className="inline-block w-3 h-3 bg-[#FF5733] rounded-full mr-2"></span>
-          <span>Students</span>
-        </div>
-        <div className="flex items-center">
-          <span className="inline-block w-3 h-3 bg-[#1E90FF] rounded-full mr-2"></span>
-          <span>Teachers</span>
-        </div>
-        <div className="flex items-center">
-          <span className="inline-block w-3 h-3 bg-[#FFD700] rounded-full mr-2"></span>
-          <span>Subjects</span>
-        </div>
-      </div>
-
-      {/* Right side: Pie Chart */}
-      <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px]">
-        <canvas ref={pieChartRef} className="w-full h-full mr-8" />
-      </div>
-    </div>
-  </div>
         {/* Notice Board Section */}
         <div className="bg-white p-6 shadow-md mt-28 rounded-md mb-6">
           <h2 className="text-xl text-gray-500">Notice Board</h2>
