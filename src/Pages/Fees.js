@@ -140,7 +140,6 @@ const FeeManagement = () => {
 
         {/* Title and Filter Section */}
         <div className="p-6">
-          <h1 className="text-2xl font-semibold text-gray-700 mb-6">Fee Management</h1>
 
           {/* Filter Section */}
           <div className="flex flex-col sm:flex-row sm:gap-6 sm:items-center mb-6">

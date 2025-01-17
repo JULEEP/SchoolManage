@@ -45,9 +45,6 @@ const ConditionalCertificatePage = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        <h2 className="text-2xl font-semibold text-gray-700 mb-6">Generate Certificate</h2>
-
         {/* Select Criteria Section */}
         <div className="p-6 bg-gray-50 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Select Criteria</h3>

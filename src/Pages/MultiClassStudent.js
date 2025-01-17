@@ -12,6 +12,8 @@ const MultiClassStudent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [studentsPerPage] = useState(10);
 
   // Fetch students data from API
   useEffect(() => {
@@ -40,6 +42,14 @@ const MultiClassStudent = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
   };
+
+  // Pagination logic
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex min-h-screen">
@@ -130,36 +140,59 @@ const MultiClassStudent = () => {
             {error && <p className="text-red-500">{error}</p>}
 
             {/* Table for Student List */}
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border px-4 py-2 text-left">Admission No</th>
-                  <th className="border px-4 py-2 text-left">Name</th>
-                  <th className="border px-4 py-2 text-left">Class(Section)</th>
-                  <th className="border px-4 py-2 text-left">Gender</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students
-                  .filter(
-                    (student) =>
-                      (academicYear === "" || student.class === academicYear) &&
-                      (classValue === "" || student.class === classValue) &&
-                      (section === "" || student.classSection.includes(section)) &&
-                      (search === "" ||
-                        student.firstName.toLowerCase().includes(search.toLowerCase()) ||
-                        student.lastName.toLowerCase().includes(search.toLowerCase()))
-                  )
-                  .map((student) => (
-                    <tr key={student._id} className="hover:bg-gray-50">
-                      <td className="border px-4 py-2">{student.admissionNumber || "N/A"}</td>
-                      <td className="border px-4 py-2">{`${student.firstName} ${student.lastName}`}</td>
-                      <td className="border px-4 py-2">{student.class}</td>
-                      <td className="border px-4 py-2">{student.gender}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border px-4 py-2 text-left">Admission No</th>
+                    <th className="border px-4 py-2 text-left">Name</th>
+                    <th className="border px-4 py-2 text-left">Class</th>
+                    <th className="border px-4 py-2 text-left">Gender</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentStudents
+                    .filter(
+                      (student) =>
+                        (academicYear === "" || student.class === academicYear) &&
+                        (classValue === "" || student.class === classValue) &&
+                        (section === "" || student.classSection.includes(section)) &&
+                        (search === "" ||
+                          student.firstName.toLowerCase().includes(search.toLowerCase()) ||
+                          student.lastName.toLowerCase().includes(search.toLowerCase()))
+                    )
+                    .map((student) => (
+                      <tr key={student._id} className="hover:bg-gray-50">
+                        <td className="border px-4 py-2">{student.admissionNumber || "N/A"}</td>
+                        <td className="border px-4 py-2">{`${student.firstName} ${student.lastName}`}</td>
+                        <td className="border px-4 py-2">{student.class}</td>
+                        <td className="border px-4 py-2">{student.gender}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="bg-purple-500 text-white px-4 py-2 rounded mx-2"
+            >
+              Prev
+            </button>
+            <span className="text-gray-700">
+              Page {currentPage}
+            </span>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage * studentsPerPage >= students.length}
+              className="bg-purple-500 text-white px-4 py-2 rounded mx-2"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

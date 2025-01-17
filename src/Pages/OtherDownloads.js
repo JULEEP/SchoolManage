@@ -37,7 +37,6 @@ const OtherDownloadsList = () => {
 
         {/* Title and Search */}
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Other Downloads List</h1>
           <div className="mb-4 flex flex-col lg:flex-row lg:items-center lg:gap-4">
             <label htmlFor="search" className="text-gray-600 text-sm mb-2 lg:mb-0">Quick Search:</label>
             <input

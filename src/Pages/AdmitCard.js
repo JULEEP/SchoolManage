@@ -42,7 +42,6 @@ const GenerateAdmitCard = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">Generate Admit Card</h1>
 
         {/* Select Criteria */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">

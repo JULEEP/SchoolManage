@@ -204,7 +204,6 @@ const Dashboard = () => {
         {/* Content */}
         <div className="p-4 sm:p-6 bg-gray-100 flex-1">
           <div className="font-sans">
-            <h1 className="text-center text-2xl font-bold mb-6">Admin Dashboard</h1>
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -266,22 +265,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <div className="bg-white p-6 shadow-md rounded-md mt-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Dashboard Analytics</h2>
-        <div className="relative w-full max-w-full h-[300px] sm:h-[400px]">
-          <canvas ref={chartRef} className="w-full h-full" />
-        </div>
-      </div>
-
-      <div className="bg-white p-6 shadow-md rounded-md mt-6">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Growth Over Time</h2>
-      <div className="relative w-full max-w-full h-[200px] sm:h-[300px] md:h-[400px]">
-        <canvas ref={lineChartRef} className="w-full h-full" />
-      </div>
-    </div>
         {/* Notice Board Section */}
-        <div className="bg-white p-6 shadow-md mt-28 rounded-md mb-6">
+        <div className="bg-white p-6 shadow-md mt-8 rounded-md mb-6">
           <h2 className="text-xl text-gray-500">Notice Board</h2>
 
           {/* Button for adding new item */}

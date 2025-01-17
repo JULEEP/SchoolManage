@@ -30,7 +30,9 @@ const ContentTypePg = () => {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
+          isSidebarOpen ? "block" : "hidden"
+        }`}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
 
@@ -60,8 +62,7 @@ const ContentTypePg = () => {
         <div className="p-6">
           {/* Search Section */}
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Content Type</h2>
-            <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
+            <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:items-center sm:space-x-4">
               <input
                 type="text"
                 placeholder="Search by Name"
@@ -69,7 +70,7 @@ const ContentTypePg = () => {
                 onChange={(e) => setSearchName(e.target.value)}
                 className="flex-grow p-2 border rounded-md"
               />
-              <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+              <button className="bg-purple-600 text-white px-3 py-1 text-sm rounded-lg hover:bg-purple-700 sm:w-auto w-24">
                 Search
               </button>
             </div>

@@ -11,7 +11,7 @@ const ManageStudent = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Fetch students data from API
   useEffect(() => {
@@ -39,11 +39,11 @@ const ManageStudent = () => {
   }, []);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
@@ -62,7 +62,11 @@ const ManageStudent = () => {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+      <div
+        className={`flex-grow overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
         {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Manage Student</h1>
@@ -151,44 +155,50 @@ const ManageStudent = () => {
           ) : error ? (
             <div className="text-red-500">{error}</div>
           ) : (
-            <table className="w-full border-collapse overflow-x-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border px-4 py-2 text-left">Admission No</th>
-                  <th className="border px-4 py-2 text-left">Name</th>
-                  <th className="border px-4 py-2 text-left">Father Name</th>
-                  <th className="border px-4 py-2 text-left">DOB</th>
-                  <th className="border px-4 py-2 text-left">Class(Section)</th>
-                  <th className="border px-4 py-2 text-left">Gender</th>
-                  <th className="border px-4 py-2 text-left">Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students
-                  .filter(
-                    (student) =>
-                      (searchByName === "" ||
-                        student.firstName.toLowerCase().includes(searchByName.toLowerCase())) &&
-                      (searchByRoll === "" ||
-                        student.admissionNumber.includes(searchByRoll))
-                  )
-                  .map((student) => (
-                    <tr key={student._id} className="hover:bg-gray-50">
-                      <td className="border px-4 py-2">{student.admissionNumber}</td>
-                      <td className="border px-4 py-2">{student.firstName} {student.lastName}</td>
-                      <td className="border px-4 py-2">{student.fatherName}</td>
-                      <td className="border px-4 py-2">
-                        {student.dateOfBirth
-                          ? new Date(student.dateOfBirth).toLocaleDateString()
-                          : ""}
-                      </td>
-                      <td className="border px-4 py-2">{student.class}</td>
-                      <td className="border px-4 py-2">{student.gender}</td>
-                      <td className="border px-4 py-2">{student.category}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border-b px-4 py-2 text-left">Admission No</th>
+                    <th className="border-b px-4 py-2 text-left">Name</th>
+                    <th className="border-b px-4 py-2 text-left">Father Name</th>
+                    <th className="border-b px-4 py-2 text-left">DOB</th>
+                    <th className="border-b px-4 py-2 text-left">Class(Section)</th>
+                    <th className="border-b px-4 py-2 text-left">Gender</th>
+                    <th className="border-b px-4 py-2 text-left">Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students
+                    .filter(
+                      (student) =>
+                        (searchByName === "" ||
+                          student.firstName
+                            .toLowerCase()
+                            .includes(searchByName.toLowerCase())) &&
+                        (searchByRoll === "" ||
+                          student.admissionNumber.includes(searchByRoll))
+                    )
+                    .map((student) => (
+                      <tr key={student._id} className="hover:bg-gray-50">
+                        <td className="border-b px-4 py-2">{student.admissionNumber}</td>
+                        <td className="border-b px-4 py-2">
+                          {student.firstName} {student.lastName}
+                        </td>
+                        <td className="border-b px-4 py-2">{student.fatherName}</td>
+                        <td className="border-b px-4 py-2">
+                          {student.dateOfBirth
+                            ? new Date(student.dateOfBirth).toLocaleDateString()
+                            : ""}
+                        </td>
+                        <td className="border-b px-4 py-2">{student.class}</td>
+                        <td className="border-b px-4 py-2">{student.gender}</td>
+                        <td className="border-b px-4 py-2">{student.category}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>        
         </div>

@@ -130,7 +130,6 @@ function FeeDetails() {
 
         {/* Title and Filter Section */}
         <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-4">Fee Details</h2>
 
           {/* Filters for Class and Section */}
           <div className="mb-4 flex flex-col sm:flex-row sm:gap-6 sm:items-center">

@@ -165,7 +165,7 @@ const VehiclePage = () => {
 
         <div className="space-y-4">
           {/* Vehicle Form */}
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             <div>
               <label className="block text-sm text-gray-600 mb-1 mt-2">Vehicle Number *</label>
               <input

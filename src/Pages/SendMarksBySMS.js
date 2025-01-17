@@ -44,7 +44,6 @@ const SendMarksBySms = () => {
 
         {/* Title and Form */}
         <div className="p-6">
-          <h1 className="text-2xl font-semibold text-gray-700 mb-6">Send Marks By SMS</h1>
 
           {/* Form */}
           <div className="bg-white p-6 rounded-lg shadow-md">

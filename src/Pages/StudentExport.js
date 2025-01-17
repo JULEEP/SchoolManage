@@ -75,7 +75,6 @@ const StudentExport = () => {
 
         {/* Title and Export Section */}
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Student Export</h1>
 
           <div className="bg-white p-6 shadow-md rounded space-y-6">
             <h2 className="text-lg text-gray-700">All Student Export</h2>

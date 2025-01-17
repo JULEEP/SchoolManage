@@ -47,7 +47,6 @@ const LessonPlanCreate = () => {
         {/* Page Content */}
         <div className="p-6">
           {/* Title */}
-          <h2 className="text-center text-3xl font-semibold mb-6">Lesson Plan Create</h2>
 
           {/* Select Criteria Section */}
           <div className="p-4 shadow-lg rounded-lg mb-6 bg-white">

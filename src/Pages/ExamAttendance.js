@@ -45,7 +45,6 @@ const ExamAttendance = () => {
 
         {/* Exam Attendance Form Section */}
         <div className="space-y-6 p-4 lg:p-6">
-          <h1 className="text-xl text-gray-700 font-semibold mb-4">Exam Attendance</h1>
 
           {/* Select Criteria Section */}
           <div className="bg-white p-6 rounded-lg shadow-lg mb-6">

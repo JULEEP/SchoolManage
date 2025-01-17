@@ -78,7 +78,6 @@ const VideoPage = () => {
         <div className="p-6">
           {/* Search Section */}
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Video</h2>
             <div className="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
               <input
                 type="text"

@@ -82,7 +82,6 @@ const ExamSetup = () => {
 
         {/* Main Form Section */}
         <div className="space-y-4">
-          <h1 className="text-xl text-gray-700 mb-4">Exam Setup</h1>
           <div className="flex gap-8 flex-wrap">
             {/* Left Side - Add Exam Form */}
             <div className="w-full lg:w-1/3 bg-gray-50 p-4 rounded shadow">

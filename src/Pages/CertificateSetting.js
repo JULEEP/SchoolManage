@@ -40,9 +40,6 @@ const CertificateSettings = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        <h2 className="text-2xl font-semibold text-gray-700 mb-6">Certificate Settings</h2>
-
         {/* Update Settings Section */}
         <div className="p-6 bg-gray-50 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">Update Settings</h3>

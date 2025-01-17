@@ -47,7 +47,6 @@ const StudentGroup = () => {
 
         {/* Title and Add Group */}
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Student Group</h1>
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Add Student Group Form */}

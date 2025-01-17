@@ -50,7 +50,6 @@ const LessonPlanOverview = () => {
         {/* Page Content */}
         <div className="p-6">
           {/* Title */}
-          <h2 className="text-center text-3xl font-semibold text-gray-500 mb-6">Lesson Plan Overview</h2>
 
           {/* Select Criteria Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

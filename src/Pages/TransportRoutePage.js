@@ -71,11 +71,10 @@ const TransportRoutePage = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-xl text-gray-700 p-6">Transport Route</h1>
 
         <div className="flex flex-wrap gap-8 px-6">
           {/* Left Side - Add Route Form */}
-          <div className="w-full sm:w-1/3 bg-gray-50 p-4 rounded shadow">
+          <div className="w-full sm:w-1/3 bg-gray-50 p-4 rounded shadow mt-4">
             <h2 className="text-lg mb-4 text-gray-600">Add Route</h2>
             <div className="space-y-4">
               <div>

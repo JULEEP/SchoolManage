@@ -67,7 +67,6 @@ const MarksGrade = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">Marks Grade</h1>
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Side Form */}

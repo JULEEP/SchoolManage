@@ -63,7 +63,6 @@ const GenerateCertificate = () => {
 
         {/* Title */}
         <div className="bg-white p-6 rounded-md shadow-md mt-4 mx-4 lg:mx-0">
-          <h2 className="text-lg text-gray-700 mb-4">Generate Certificate</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Class, Section, and Certificate in one row */}
             <div className="flex flex-col lg:flex-row gap-4">

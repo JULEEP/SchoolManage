@@ -49,7 +49,6 @@ const StudentPromote = () => {
 
         {/* Title and Form */}
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Student Promote</h1>
 
           <div className="bg-white p-6 shadow-md rounded space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -119,7 +118,7 @@ const StudentPromote = () => {
                 onClick={handleSearch}
                 className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded"
               >
-                Search
+                Promote
               </button>
             </div>
           </div>

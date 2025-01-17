@@ -78,7 +78,6 @@ const CertificateTemplatesPage = () => {
           </button>
         </div>
 
-        <h2 className="text-2xl font-semibold text-gray-700 mb-6">Certificate Templates</h2>
 
         <div className="flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8">
           {/* Left Side - Search and Action Button */}

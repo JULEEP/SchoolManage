@@ -43,7 +43,6 @@ const MarksRegister = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">Marks Register</h1>
 
         {/* Select Criteria Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">

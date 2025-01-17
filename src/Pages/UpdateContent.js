@@ -82,15 +82,17 @@ const UploadContent = () => {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'
-          }`}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
+          isSidebarOpen ? 'block' : 'hidden'
+        }`}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <Sidebar />
       </div>
@@ -112,18 +114,18 @@ const UploadContent = () => {
         <div className="bg-white p-6 rounded-lg shadow-md mb-6 mt-4">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Upload New Content</h2>
           {message && <p className="mb-4 text-green-500">{message}</p>}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <input
               type="text"
               placeholder="Content Title"
               value={contentTitle}
               onChange={(e) => setContentTitle(e.target.value)}
-              className="border border-gray-300 rounded-md p-3"
+              className="border border-gray-300 rounded-md p-3 w-full"
             />
             <select
               value={contentType}
               onChange={(e) => setContentType(e.target.value)}
-              className="border border-gray-300 rounded-md p-3"
+              className="border border-gray-300 rounded-md p-3 w-full"
             >
               <option value="">Select Content Type</option>
               <option value="Document">Document</option>
@@ -133,7 +135,7 @@ const UploadContent = () => {
             <select
               value={availableFor}
               onChange={(e) => setAvailableFor(e.target.value)}
-              className="border border-gray-300 rounded-md p-3"
+              className="border border-gray-300 rounded-md p-3 w-full"
             >
               <option value="All">All</option>
               <option value="Admin">Admin</option>
@@ -143,7 +145,7 @@ const UploadContent = () => {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="border border-gray-300 rounded-md p-3"
+              className="border border-gray-300 rounded-md p-3 w-full"
             />
           </div>
           <textarea
