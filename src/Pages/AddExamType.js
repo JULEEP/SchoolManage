@@ -72,6 +72,7 @@ const AddExamType = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Side - Add Exam Type Form */}
             <div className="w-full lg:w-1/3 bg-gray-50 p-4 rounded shadow mb-6 lg:mb-0">
+              <h2 className="text-lg mb-4 text-gray-600">Add Exam Type</h2>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">Exam Name *</label>
