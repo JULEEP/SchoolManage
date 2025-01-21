@@ -49,7 +49,7 @@ const ParentDashboard = () => {
     const fetchComparisonData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/parent/my-child-marks/676cf56dfd1eb1caa8426205"
+          "https://school-backend-1-2xki.onrender.com/api/parent/my-child-marks/676cf56dfd1eb1caa8426205"
         );
         const data = await response.json();
   
