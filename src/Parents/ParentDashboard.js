@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import ParentSidebar from './ParentSidebar'; // Assuming you have this component
+import { Bar } from "react-chartjs-2"; // Importing Bar chart
 import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import ParentSidebar from "./ParentSidebar";
 import subject from "../Images/subject.jpeg";
 import teacher from "../Images/teacher.jpeg";
 import notice from "../Images/notice.jpeg";
@@ -28,15 +29,86 @@ const bestCategories = [
   { img: fees, name: "Fees", link: "/mychild-fees" },
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
-
 ];
 
 const ParentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [comparisonData, setComparisonData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [comparisonText, setComparisonText] = useState("");  // State for comparison text
+  const [suggestionText, setSuggestionText] = useState("");  // State for suggestion text
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    // Fetch comparison data
+    const fetchComparisonData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/api/parent/my-child-marks/676cf56dfd1eb1caa8426205"
+        );
+        const data = await response.json();
+  
+        if (data.message === "Subject-wise comparison with topper retrieved successfully") {
+          const comparisonResult = data.comparisonResult;
+  
+          // Prepare data for the chart
+          const chartComparisonData = comparisonResult.subjectWiseComparison.map((subjectData) => ({
+            subject: subjectData.subject,
+            childMarks: subjectData.studentMarks,
+            topperMarks: subjectData.topperMarks,
+          }));
+  
+          // Add overall percentage comparison
+          chartComparisonData.unshift({
+            subject: "Overall Percentage",
+            childMarks: parseFloat(comparisonResult.studentPercentage),
+            topperMarks: parseFloat(comparisonResult.topperPercentage),
+          });
+  
+          setComparisonData(chartComparisonData); // Set the chart data
+          setComparisonText(comparisonResult.overallComparison); // Set overall comparison text
+          setSuggestionText(comparisonResult.suggestion); // Set suggestion text
+          setLoading(false);
+        } else {
+          setError(data.message || "Error fetching comparison data");
+          setLoading(false);
+        }
+      } catch (err) {
+        setError("Error fetching comparison data");
+        setLoading(false);
+      }
+    };
+  
+    fetchComparisonData();
+  }, []);
+  
+
+  const chartData = comparisonData
+  ? {
+      labels: comparisonData.map((item) => item.subject),
+      datasets: [
+        {
+          label: "Your Child's Marks",
+          data: comparisonData.map((item) => item.childMarks),
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+        {
+          label: "Topper's Marks",
+          data: comparisonData.map((item) => item.topperMarks),
+          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
+    }
+  : null;
 
   // Sample data for tables
   const subjectsData = [
@@ -85,15 +157,10 @@ const ParentDashboard = () => {
         </div>
 
         {/* Content Area */}
-        <Container
-          maxWidth="xl"
-          style={{
-            padding: "20px",
-            textAlign: "center",
-            backgroundColor: "#e0c8a0",
-            marginTop: "12px",
-          }}
-        >
+        <Container maxWidth="xl" style={{ padding: "20px", marginTop: "12px" }}>
+          <h1 className="text-center text-2xl font-bold mb-6">Parent Dashboard</h1>
+
+          {/* Categories Grid */}
           <Box
             display="grid"
             gridTemplateColumns="repeat(7, 1fr)"
@@ -108,11 +175,7 @@ const ParentDashboard = () => {
             }}
           >
             {bestCategories.map((category) => (
-              <NavLink
-                to={category.link}
-                key={category.name}
-                style={{ textDecoration: "none", padding: "5px" }}
-              >
+              <NavLink to={category.link} key={category.name} style={{ textDecoration: "none", padding: "5px" }}>
                 <Box
                   style={{
                     display: "flex",
@@ -155,6 +218,59 @@ const ParentDashboard = () => {
             ))}
           </Box>
 
+          <Box mt={5} style={{ backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}>
+          <h3 className="text-xl font-bold mb-4">Comparison with Topper</h3>
+          {loading && <p>Loading chart data...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+        
+          {chartData && (
+            <>
+              <Bar
+                data={chartData}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: "top",
+                    },
+                    title: {
+                      display: true,
+                      text: "Percentage Comparison",
+                    },
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: "Percentage",
+                      },
+                    },
+                  },
+                }}
+              />
+        
+              {/* Display percentage above bars */}
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+                {comparisonData.map((item, index) => (
+                  <div key={index} style={{ textAlign: "center", margin: "0 10px" }}>
+                    <strong>{item.subject}</strong>
+                    <div>
+                      <span>{item.childMarks}%</span> vs. <span>{item.topperMarks}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+        
+              {/* Display comparison and suggestion below the graph */}
+              <div style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
+                <p>{comparisonText}</p>
+                <p>{suggestionText}</p>
+              </div>
+            </>
+          )}
+        </Box>
+        
           {/* Tables for Parent Dashboard */}
           <Box mt={5}>
             {/* Subjects Table */}
@@ -214,9 +330,9 @@ const ParentDashboard = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Class Name</TableCell>
+                      <TableCell>Class</TableCell>
                       <TableCell>Teacher</TableCell>
-                      <TableCell>Number of Students</TableCell>
+                      <TableCell>Students</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

@@ -31,7 +31,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 justify-center items-center">
+    <div className="flex h-screen mt-8 justify-center items-center">
       <div className="flex flex-col lg:flex-row w-11/12 md:w-3/4 h-auto md:h-3/4 bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Left Side: Form */}
         <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-8">
@@ -62,11 +62,23 @@ const AdminLogin = () => {
             {error && <p className="text-red-500">{error}</p>}
             <button
               type="submit"
-              className="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+              className="w-full bg-purple-500 text-white py-2 px-4 rounded-lg transition duration-200"
             >
               Login
             </button>
           </form>
+
+         {/* Additional Button */}
+<div className="mt-4 w-3/4 mx-auto">
+<a
+href="https://wa.me/919111897177?text=Hi,%20I%20need%20help%20with%20Teacher%20Login%20credentials."
+target="_blank"
+  rel="noopener noreferrer"
+  className="block text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200"
+>
+  Ask for Login ID/Password
+</a>
+</div>
         </div>
 
         {/* Right Side: Image */}
