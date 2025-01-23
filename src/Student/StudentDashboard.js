@@ -28,6 +28,8 @@ const notice = 'https://i.pinimg.com/originals/fb/11/55/fb1155591460c455edf3ced1
 const exam = 'https://cdn.dribbble.com/users/957210/screenshots/2475142/untitled-2.gif';
 const attendance = 'https://cdn.dribbble.com/users/1244169/screenshots/4494753/attendance_final.gif';
 const fee = 'https://cdn-icons-gif.flaticon.com/9908/9908553.gif';
+const holidays = 'https://media.tenor.com/KnM_tzEvCrQAAAAC/holiday-season.gif';
+
 
 
 const bestCategories = [
@@ -42,6 +44,8 @@ const bestCategories = [
   { img: routine, name: "Routines", link: "/class-routine" },
   { img: result, name: "Results", link: "/student-result" },
   { img: fee, name: "My Fees", link: "/student-fees" },
+  { img: holidays, name: "Holidays", link: "/student-holidays" },
+
 
 
 

@@ -7,7 +7,8 @@ import {
   FaPlaneDeparture,
   FaBars,
   FaTimes,
-  FaQuestionCircle
+  FaQuestionCircle,
+  FaCalendarAlt
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import TeacherSidebar from "./TeacherSidebar";
@@ -71,6 +72,8 @@ const TeacherDashboard = () => {
               { title: "Total Reports", value: "22", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
               { title: "Total Feedback", value: "30", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-coming-soon" },
               { title: "Total Queries", value: "50", icon: <FaQuestionCircle className="text-3xl" />, link: "/teacher-queries" },
+              { title: "Total Holidays", value: "5", icon: <FaCalendarAlt className="text-3xl" />, link: "/teacher-holidays" },
+
 
             ].map((item, index) => (
               <NavLink

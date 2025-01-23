@@ -180,6 +180,10 @@ import FeeDetails from './Pages/FeeDetails';
 import StudentFees from './Student/StudentFees';
 import CommunicationForm from './Parents/ComunicateWithTeacher';
 import TeacherCommunication from './Teacher/TeacherCommunication';
+import HolidayPage from './Pages/Holidays';
+import TeacherHolidayPage from './Teacher/TeacherHolidayPage';
+import StudentHolidayPage from './Student/StudentHolidaysPage';
+import ParentHolidayPage from './Parents/ParentHolidaysPage';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -320,6 +324,7 @@ function App() {
             <Route path="/student-booklist" element={<StudentBookListPage/>} />
             <Route path="/student-dormitory" element={<DormitoryPage/>} />
             <Route path="/student-fees" element={<StudentFees/>} />
+            <Route path="/student-holidays" element={<StudentHolidayPage/>} />
             <Route path="/teacher" element={<Teacher/>} />
             <Route path="/sidebar" element={<Sidebar/>} />
             <Route path="/student-login" element={<StudentLogin/>} />
@@ -330,6 +335,8 @@ function App() {
             <Route path="/coming-soon" element={<ImageDisplay/>} />
             <Route path="/fees" element={<FeesManagement/>} />
             <Route path="/fees-details" element={<FeeDetails/>} />
+            <Route path="/holidays" element={<HolidayPage/>} />
+
 
 
 
@@ -362,6 +369,8 @@ function App() {
            <Route path="/mychild-exam-schedules" element={<MyChildMarksPage/>} />
            <Route path="/parent-login" element={<ParentLogin/>} />
            <Route path="/ask-queries" element={<CommunicationForm/>} />
+           <Route path="/children-holidays" element={<ParentHolidayPage/>} />
+
 
 
 
@@ -381,6 +390,8 @@ function App() {
           <Route path="/teacher-login" element={<TeacherLogin/>} />
           <Route path="/teacher-coming-soon" element={<TeacherComingSoon/>} />
           <Route path="/teacher-queries" element={<TeacherCommunication/>} />
+          <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
+
 
 
 

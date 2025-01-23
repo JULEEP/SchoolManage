@@ -186,6 +186,9 @@ const toggleWalletDropdown = () => {
            <Link to="/staff" className="hover:text-gray-400">
            <li className="py-2"><a href="#" className="hover:text-gray-400">Add Staff</a></li>
            </Link>
+           <Link to="/holidays" className="hover:text-gray-400">
+           <li className="py-2"><a href="#" className="hover:text-gray-400">Holidays</a></li>
+           </Link>
            <Link to="/complaint" className="hover:text-gray-400">
               <li className="py-2"><a href="#" className="hover:text-gray-400">Complaint</a></li>
               </Link>

@@ -256,6 +256,13 @@ const Dashboard = () => {
                 <p className="text-2xl font-bold">8</p>
               </div>
 
+               {/* Staff Section (Light Green) */}
+               <div className="bg-green-100 p-4 shadow-md rounded-md">
+               <h2 className="font-semibold text-lg">Holidays</h2>
+               <p className="text-gray-500">Total Holidays</p>
+               <p className="text-2xl font-bold">0</p>
+             </div>
+
               {/* Vehicles Section (Light Teal) */}
               <div className="bg-teal-100 p-4 shadow-md rounded-md">
                 <h2 className="font-semibold text-lg">Vehicles</h2>
