@@ -130,11 +130,6 @@ const AddAssignVehicle = () => {
     }
   };
 
-  // Filter vehicle list based on search term
-  const filteredVehicles = vehicleList.filter((vehicle) =>
-    vehicle.vehicleNumber.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
     <div className="flex min-h-screen">
       {/* Sidebar Overlay for Mobile */}
@@ -164,7 +159,7 @@ const AddAssignVehicle = () => {
         </div>
 
         {/* Main Form Section */}
-        <div className="space-y-4">
+        <div className="max-w-3xl mx-auto mt-4 p-6 bg-gray-100 rounded-lg shadow-lg">
           {/* Vehicle Form */}
           <div>
             <label className="block text-sm text-gray-600 mb-1 mt-2">Vehicle Number *</label>
@@ -227,33 +222,10 @@ const AddAssignVehicle = () => {
 
           <button
             onClick={handleSaveVehicle}
-            className="w-full bg-purple-500 text-white p-2 rounded hover:bg-purple-600"
+            className="w-32 bg-purple-500 text-white p-2 rounded hover:bg-purple-600 float-right mt-8"
           >
             Save Vehicle
           </button>
-        </div>
-
-        {/* Right Side - Vehicle List */}
-        <div className="w-full lg:w-2/3">
-          <div className="flex justify-between items-center mb-4 mt-4">
-            <h2 className="text-lg text-gray-600">Vehicle List</h2>
-            <div className="flex gap-4 items-center">
-              <input
-                type="text"
-                placeholder="Search by Vehicle Number"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-          </div>
-          <ul>
-            {filteredVehicles.map((vehicle) => (
-              <li key={vehicle.id} className="p-4 border-b">
-                {vehicle.vehicleNumber} - {vehicle.vehicleModel} ({vehicle.yearMade})
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </div>

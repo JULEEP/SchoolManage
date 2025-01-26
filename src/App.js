@@ -184,6 +184,20 @@ import HolidayPage from './Pages/Holidays';
 import TeacherHolidayPage from './Teacher/TeacherHolidayPage';
 import StudentHolidayPage from './Student/StudentHolidaysPage';
 import ParentHolidayPage from './Parents/ParentHolidaysPage';
+import AddTeacher from './Pages/AddTeacher';
+import HolidayForm from './Pages/HolidayForm';
+import Staffs from './Pages/Staffs';
+import SectionListPage from './Pages/SectionList';
+import ClassListPage from './Pages/ClassList';
+import SubjectListPage from './Pages/SubjectList';
+import RoutineList from './Pages/RoutineList';
+import ContentList from './Pages/ContentList';
+import LessonList from './Pages/LessonList';
+import TopicList from './Pages/TopicList';
+import TransportRouteListPage from './Pages/TransportRouteList';
+import VehicleListPage from './Pages/VehicleList';
+import ExamTypeList from './Pages/ExamTypeList';
+import ExamScheduleList from './Pages/ExamSheduleList';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -206,18 +220,24 @@ function App() {
             <Route path="/generate-idcard" element={<GenerateIdCard/>} />
             <Route path="/optional-subject" element={<OptionalSubject/>} />
             <Route path="/section" element={<SectionPage/>} />
+            <Route path="/sections" element={<SectionListPage/>} />
             <Route path="/class" element={<ClassPage/>} />
+            <Route path="/classlist" element={<ClassListPage/>} />
             <Route path="/subject" element={<SubjectPage/>} />
+            <Route path="/subjectlist" element={<SubjectListPage/>} />
             <Route path="/assign-teacher" element={<AssignClassTeacherPage/>} />
             <Route path="/assign-subject" element={<AssignSubjectPage/>} />
             <Route path="/classroom" element={<ClassRoomPage/>} />
             <Route path="/classroutine" element={<ClassRoutineCreate/>} />
+            <Route path="/classroutinelist" element={<RoutineList/>} />
             <Route path="/updatecontent" element={<UploadContent/>} />
             <Route path="/assignment" element={<AssignmentList/>} />
             <Route path="/syllabus" element={<SyllabusList/>} />
             <Route path="/downloads" element={<OtherDownloadsList/>} />
             <Route path="/lesson" element={<AddLesson/>} />
+            <Route path="/lessonlist" element={<LessonList/>} />
             <Route path="/topic" element={<AddTopic/>} />
+            <Route path="/topiclist" element={<TopicList/>} />
             <Route path="/topicoverview" element={<TopicOverview/>} />
             <Route path="/lessonplan" element={<LessonPlanCreate/>} />
             <Route path="/lessonplanoverview" element={<LessonPlanOverview/>} />
@@ -225,6 +245,7 @@ function App() {
             <Route path="/feesinvoice" element={<FeesInvoiceBulkPrint/>} />
             <Route path="/feesinvoicesetting" element={<FeesInvoiceSettings/>} />
             <Route path="/content" element={<ContentTypePage/>} />
+            <Route path="/contentlist" element={<ContentList/>} />
             <Route path="/contenttopic" element={<ContentTypePg/>} />
             <Route path="/sharedcontent" element={<SharedContentPage/>} />
             <Route path="/video" element={<VideoPage/>} />
@@ -261,11 +282,15 @@ function App() {
             <Route path="/issuebooklist" element={<IssuedBookList/>} />
             <Route path="/subjectpage" element={<Subject/>} />
             <Route path="/transport" element={<TransportRoutePage/>} />
+            <Route path="/transportlist" element={<TransportRouteListPage/>} />
             <Route path="/vehicle" element={<VehiclePage/>} />
+            <Route path="/vehiclelist" element={<VehicleListPage/>} />
             <Route path="/assignvehicle" element={<AddAssignVehicle/>} />
             <Route path="/addexam" element={<AddExamType/>} />
+            <Route path="/examtypelist" element={<ExamTypeList/>} />
             <Route path="/examsetup" element={<ExamSetup/>} />
             <Route path="/examshedule" element={<ExamSchedule/>} />
+            <Route path="/examshedulelist" element={<ExamScheduleList/>} />
             <Route path="/examattendance" element={<ExamAttendance/>} />
             <Route path="/markregister" element={<MarksRegister/>} />
             <Route path="/marksgrade" element={<MarksGrade/>} />
@@ -330,12 +355,16 @@ function App() {
             <Route path="/student-login" element={<StudentLogin/>} />
             <Route path="/marks" element={<MarksList/>} />
             <Route path="/staff" element={<AddStaffForm/>} />
+            <Route path="/staffs" element={<Staffs/>} />
             <Route path="/staffList" element={<StaffList/>} />
             <Route path="/settings" element={<Setting/>} />
             <Route path="/coming-soon" element={<ImageDisplay/>} />
             <Route path="/fees" element={<FeesManagement/>} />
             <Route path="/fees-details" element={<FeeDetails/>} />
+            <Route path="/add-holiday" element={<HolidayForm/>} />
             <Route path="/holidays" element={<HolidayPage/>} />
+            <Route path="/add-teacher" element={<AddTeacher/>} />
+
 
 
 

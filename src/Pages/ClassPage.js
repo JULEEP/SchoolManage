@@ -11,7 +11,6 @@ const ClassPage = () => {
 
   const [sections, setSections] = useState([]);
   const [selectedSections, setSelectedSections] = useState([]);
-  const [classes, setClasses] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -27,19 +26,6 @@ const ClassPage = () => {
     fetchSections();
   }, []);
 
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
-        setClasses(response.data.classes);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-      }
-    };
-
-    fetchClasses();
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'section') {
@@ -50,16 +36,6 @@ const ClassPage = () => {
     }
   };
 
-  const handleEditClass = (id) => {
-    const classItem = classes.find((c) => c._id === id);
-    if (classItem) {
-      setFormData({ name: classItem.className, section: '' });
-      setSelectedSections(classItem.sections); // Populate the selected sections
-    }
-  };
-
-  
-
   const handleSaveClass = async () => {
     if (formData.name && selectedSections.length > 0) {
       try {
@@ -67,24 +43,11 @@ const ClassPage = () => {
           className: formData.name,
           sections: selectedSections,
         });
-        setClasses([
-          ...classes,
-          { _id: response.data.class._id, className: formData.name, sections: selectedSections, students: 0 },
-        ]);
         setFormData({ name: '', section: '' });
         setSelectedSections([]);
       } catch (error) {
         console.error('Error adding class:', error);
       }
-    }
-  };
-
-  const handleRemoveClass = async (id) => {
-    try {
-      await axios.delete(`https://school-backend-1-2xki.onrender.com/api/admin/remove-class/${id}`);
-      setClasses(classes.filter((classItem) => classItem._id !== id));
-    } catch (error) {
-      console.error('Error removing class:', error);
     }
   };
 
@@ -96,17 +59,13 @@ const ClassPage = () => {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar overlay for mobile */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
-          isSidebarOpen ? 'block' : 'hidden'
-        }`}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
         onClick={toggleSidebar}
       ></div>
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <Sidebar />
       </div>
@@ -186,52 +145,6 @@ const ClassPage = () => {
               </button>
             </div>
           </form>
-        </div>
-
-        {/* Class List */}
-        <div className="bg-white p-6 rounded-md shadow-lg mx-4 lg:mx-0">
-          <h2 className="text-lg text-gray-700 mb-4">Class List</h2>
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2 text-gray-600">Class</th>
-                <th className="px-4 py-2 text-gray-600">Sections</th>
-                <th className="px-4 py-2 text-gray-600">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {classes.length === 0 ? (
-                <tr>
-                  <td colSpan="3" className="text-center text-gray-500">
-                    No Data Available In Table
-                  </td>
-                </tr>
-              ) : (
-                classes.map((classItem) => (
-                  <tr key={classItem._id} className="border-t border-gray-300">
-                    <td className="px-4 py-2 text-gray-600 text-center">{classItem.className}</td>
-                    <td className="px-4 py-2 text-gray-600 text-center">
-                      {classItem.sections.join(', ')}
-                    </td>
-                    <td className="px-4 py-2 text-gray-600 text-center">
-                      <button
-                        onClick={() => handleEditClass(classItem._id)}
-                        className="text-blue-600 hover:text-blue-800 mr-4"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleRemoveClass(classItem._id)}
-                        className="text-red-600 hover:text-red-800 ml-4"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

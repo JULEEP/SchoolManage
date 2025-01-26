@@ -13,6 +13,10 @@ function FeeDetails() {
   const [classFilter, setClassFilter] = useState('');
   const [sectionFilter, setSectionFilter] = useState('');
 
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5); // Show 5 items per page
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
 
   useEffect(() => {
@@ -41,6 +45,7 @@ function FeeDetails() {
     }
 
     setFilteredData(filtered);
+    setCurrentPage(1); // Reset to the first page whenever filter is applied
   };
 
   // Handle Class and Section Filter Change
@@ -91,6 +96,14 @@ function FeeDetails() {
     link.click();
     document.body.removeChild(link);
   };
+
+  // Get current items to display based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return <div className="text-center p-4">Loading...</div>;
@@ -196,7 +209,7 @@ function FeeDetails() {
 
               {/* Table Body */}
               <tbody>
-                {filteredData.map((fee) => (
+                {currentItems.map((fee) => (
                   <tr key={fee._id} className="border-b hover:bg-gray-50">
                     <td className="px-6 py-3">{fee.studentId.firstName} {fee.studentId.lastName}</td>
                     <td className="px-6 py-3">{fee.studentId.class}</td>
@@ -216,6 +229,24 @@ function FeeDetails() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-gray-300 text-black rounded-md"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === Math.ceil(filteredData.length / itemsPerPage)}
+              className="px-4 py-2 bg-gray-300 text-black rounded-md"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

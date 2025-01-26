@@ -167,60 +167,6 @@ const ExamSetup = () => {
                 </button>
               </div>
             </div>
-
-            {/* Right Side - Exam List */}
-            <div className="w-full lg:w-2/3">
-              <h2 className="text-lg text-gray-600 mb-4">Exam List</h2>
-
-              {/* Search Input */}
-              <input
-                type="text"
-                placeholder="Search by Exam Title"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="mb-4 w-full border border-gray-300 p-2 rounded"
-              />
-
-              <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
-                <table className="min-w-full table-auto border border-gray-200">
-                  <thead className="bg-gray-200">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                      <th className="px-4 py-2 text-left text-gray-600">Exam Title</th>
-                      <th className="px-4 py-2 text-left text-gray-600">Class</th>
-                      <th className="px-4 py-2 text-left text-gray-600">Section</th>
-                      <th className="px-4 py-2 text-left text-gray-600">Subject</th>
-                      <th className="px-4 py-2 text-left text-gray-600">Total Marks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredExamList.length === 0 ? (
-                      <tr>
-                        <td colSpan="6" className="text-center py-4 text-gray-500">
-                          No Data Available In Table
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredExamList.map((exam, index) => (
-                        <tr key={exam.id} className="border-t">
-                          <td className="px-4 py-2">{index + 1}</td>
-                          <td className="px-4 py-2">{exam.examTitle}</td>
-                          <td className="px-4 py-2">One</td>
-                          <td className="px-4 py-2">A</td>
-                          <td className="px-4 py-2">Bangla</td>
-                          <td className="px-4 py-2">{exam.totalMarks}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Footer */}
-              <div className="mt-4 text-gray-500 text-sm">
-                Showing {filteredExamList.length} entries
-              </div>
-            </div>
           </div>
         </div>
       </div>

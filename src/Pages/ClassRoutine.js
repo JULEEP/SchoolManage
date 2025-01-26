@@ -326,44 +326,6 @@ const ClassRoutineCreate = () => {
               </div>
             </div>
           </div>
-
-          {/* Routine List Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md mt-8">
-            <h2 className="text-lg text-gray-700 mb-4">Existing Routines</h2>
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-2 text-gray-600">Class</th>
-                  <th className="px-4 py-2 text-gray-600">Section</th>
-                  <th className="px-4 py-2 text-gray-600">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {routines.length === 0 ? (
-                  <tr>
-                    <td colSpan="3" className="text-center text-gray-500">
-                      No Routine Available
-                    </td>
-                  </tr>
-                ) : (
-                  routines.map((routine, index) => (
-                    <tr key={index} className="border-t border-gray-300">
-                      <td className="px-4 py-2 text-gray-600 text-center">{routine.class}</td>
-                      <td className="px-4 py-2 text-gray-600 text-center">{routine.section}</td>
-                      <td className="px-4 py-2 text-center">
-                        <button
-                          onClick={() => handleRemoveRoutine(routine._id)} // Pass routine ID to remove
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </div>

@@ -6,8 +6,7 @@ import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
 const TransportRoutePage = () => {
   const [routeTitle, setRouteTitle] = useState("");
   const [fare, setFare] = useState("");
-  const [search, setSearch] = useState("");
-  const [routeList, setRouteList] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   // Handle save route
   const handleSaveRoute = async () => {
@@ -22,8 +21,6 @@ const TransportRoutePage = () => {
         );
 
         if (response.status === 201) {
-          // If the route is successfully added, update the route list
-          setRouteList([...routeList, response.data.route]);
           setRouteTitle("");
           setFare("");
         }
@@ -34,13 +31,6 @@ const TransportRoutePage = () => {
       alert("Please provide both route title and fare.");
     }
   };
-
-  // Filter routes based on search term
-  const filteredRoutes = routeList.filter((route) =>
-    route.routeTitle.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   return (
     <div className="flex min-h-screen">
@@ -71,7 +61,6 @@ const TransportRoutePage = () => {
         </div>
 
         {/* Title */}
-
         <div className="flex flex-wrap gap-8 px-6">
           {/* Left Side - Add Route Form */}
           <div className="w-full sm:w-1/3 bg-gray-50 p-4 rounded shadow mt-4">
@@ -105,60 +94,6 @@ const TransportRoutePage = () => {
               >
                 Save Route
               </button>
-            </div>
-          </div>
-
-          {/* Right Side - Route List */}
-          <div className="w-full sm:w-2/3">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg text-gray-600">Route List</h2>
-              <input
-                type="text"
-                placeholder="Search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="border border-gray-300 p-2 rounded w-full sm:w-1/3"
-              />
-            </div>
-
-            <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
-              <table className="min-w-full table-auto border border-gray-200">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Route Title</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Fare</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredRoutes.length === 0 ? (
-                    <tr>
-                      <td colSpan="4" className="text-center py-4 text-gray-500">
-                        No Data Available In Table
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredRoutes.map((route, index) => (
-                      <tr key={route.id} className="border-t">
-                        <td className="px-4 py-2">{index + 1}</td>
-                        <td className="px-4 py-2">{route.routeTitle}</td>
-                        <td className="px-4 py-2">{route.fare}</td>
-                        <td className="px-4 py-2">
-                          <button className="text-red-500 hover:underline">
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Footer */}
-            <div className="mt-4 text-gray-500 text-sm px-6">
-              Showing {filteredRoutes.length} entries
             </div>
           </div>
         </div>

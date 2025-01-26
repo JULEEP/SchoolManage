@@ -244,24 +244,6 @@ const AddTopic = () => {
               )}
             </div>
           </div>
-
-          {/* Topics List */}
-          <div className="mt-10">
-            <h2 className="text-lg font-semibold text-gray-700">Existing Topics</h2>
-            <div className="mt-4">
-              {topics.length === 0 ? (
-                <p>No topics available.</p>
-              ) : (
-                <ul>
-                  {topics.map((topic, index) => (
-                    <li key={index} className="p-2">
-                      {topic.topic} - {topic.lesson} - {topic.subject}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>
