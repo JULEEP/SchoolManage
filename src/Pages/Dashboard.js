@@ -3,6 +3,9 @@ import Navbar from './Navbar'; // Import Navbar component
 import Sidebar from './Sidebar';
 import axios from 'axios'; // We'll use axios to make API calls
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom'; // For navigation links
+import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide } from 'react-icons/fa'; // For icons
+
 
 import {
   Chart,
@@ -10,11 +13,11 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
- LineController, LineElement,  PointElement, PieController, ArcElement, Tooltip, Legend,
+  LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend,
 } from 'chart.js';
 
 // Registering necessary components for Bar chart
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend );
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend);
 
 
 const Dashboard = () => {
@@ -171,121 +174,178 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar - Always visible on large screens */}
+    {/* Sidebar - Always visible on large screens */}
+    <div
+      className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg w-64 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform lg:transform-none lg:block`}
+    >
+      <Sidebar />
+    </div>
+  
+    {/* Overlay for small screens */}
+    {isSidebarOpen && (
       <div
-        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg lg:translate-x-0 lg:static lg:shadow-none w-64 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform lg:transform-none`}
-      >
-        <Sidebar />
+        className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
+    )}
+  
+    {/* Main Content */}
+    <div className={`flex-1 flex flex-col ${isSidebarOpen ? "pl-64" : ""} lg:pl-64`}>
+      {/* Header (only visible on small screens) */}
+      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+        <h1 className="text-lg font-bold">Admin Dashboard</h1>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-2xl focus:outline-none"
+        >
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
-
-      {/* Overlay for small screens */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header (only visible on small screens) */}
-        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Admin Dashboard</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-2xl focus:outline-none"
-          >
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 sm:p-6 bg-gray-100 flex-1">
-          <div className="font-sans">
+  
+      {/* Content */}
+      <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
+        <div className="font-sans">
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {/* Student Section (Light Blue) */}
-              <div className="bg-blue-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Students</h2>
-                <p className="text-gray-500">Total Students</p>
-                <p className="text-2xl font-bold">0</p>
+              <div className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/managestudent" className="flex flex-col items-center">
+                  <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
+                  <h2 className="font-semibold text-xl text-white">Students</h2>
+                  <p className="text-gray-200">Total Students</p>
+                  <p className="text-2xl font-bold text-white">0</p>
+                </NavLink>
               </div>
+
 
               {/* Teacher Section (Black) */}
-              <div className="bg-black text-white p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Teachers</h2>
-                <p className="text-gray-300">Total Teachers</p>
-                <p className="text-2xl font-bold">50</p>
+              <div className="bg-gradient-to-r from-black to-gray-800 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/teacher" className="flex flex-col items-center">
+                  <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
+                  <h2 className="font-semibold text-xl text-white">Teachers</h2>
+                  <p className="text-gray-300">Total Teachers</p>
+                  <p className="text-2xl font-bold text-white">50</p>
+                </NavLink>
               </div>
-
               {/* Parent Section (Light Red) */}
-              <div className="bg-red-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Parents</h2>
-                <p className="text-gray-500">Total Parents</p>
-                <p className="text-2xl font-bold">0</p>
+              <div className="bg-gradient-to-r from-red-300 to-red-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/parents" className="flex flex-col items-center">
+                  <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
+                  <h2 className="font-semibold text-xl text-white">Parents</h2>
+                  <p className="text-gray-200">Total Parents</p>
+                  <p className="text-2xl font-bold text-white">0</p>
+                </NavLink>
               </div>
 
               {/* Staff Section (Light Green) */}
-              <div className="bg-green-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Staffs</h2>
-                <p className="text-gray-500">Total Staffs</p>
-                <p className="text-2xl font-bold">0</p>
+              <div className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/staffs" className="flex flex-col items-center">
+                  <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
+                  <h2 className="font-semibold text-xl text-white">Staffs</h2>
+                  <p className="text-gray-200">Total Staffs</p>
+                  <p className="text-2xl font-bold text-white">0</p>
+                </NavLink>
               </div>
-
               {/* Subjects Section (Light Yellow) */}
-              <div className="bg-yellow-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Subjects</h2>
-                <p className="text-gray-500">Total Subjects</p>
-                <p className="text-2xl font-bold">10</p>
+              <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/subjectlist" className="flex flex-col items-center">
+                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
+                  <h2 className="font-semibold text-xl text-white">Subjects</h2>
+                  <p className="text-gray-200">Total Subjects</p>
+                  <p className="text-2xl font-bold text-white">10</p>
+                </NavLink>
               </div>
 
               {/* Classes Section (Light Purple) */}
-              <div className="bg-purple-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Classes</h2>
-                <p className="text-gray-500">Total Classes</p>
-                <p className="text-2xl font-bold">5</p>
+              <div className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/classlist" className="flex flex-col items-center">
+                  <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
+                  <h2 className="font-semibold text-xl text-white">Classes</h2>
+                  <p className="text-gray-200">Total Classes</p>
+                  <p className="text-2xl font-bold text-white">5</p>
+                </NavLink>
               </div>
 
               {/* Sections Section (Light Orange) */}
-              <div className="bg-orange-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Sections</h2>
-                <p className="text-gray-500">Total Sections</p>
-                <p className="text-2xl font-bold">8</p>
+              <div className="bg-gradient-to-r from-orange-300 to-orange-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/sections" className="flex flex-col items-center">
+                  <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
+                  <h2 className="font-semibold text-xl text-white">Sections</h2>
+                  <p className="text-gray-200">Total Sections</p>
+                  <p className="text-2xl font-bold text-white">8</p>
+                </NavLink>
               </div>
 
-               {/* Staff Section (Light Green) */}
-               <div className="bg-green-100 p-4 shadow-md rounded-md">
-               <h2 className="font-semibold text-lg">Holidays</h2>
-               <p className="text-gray-500">Total Holidays</p>
-               <p className="text-2xl font-bold">0</p>
-             </div>
+              {/* Lesson Section (Unique Gradient with Modern Touch) */}
+              <div className="bg-gradient-to-r from-teal-400 via-purple-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/lessonlist" className="flex flex-col items-center">
+                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Lesson */}
+                  <h2 className="font-semibold text-xl text-white">Lesson</h2>
+                  <p className="text-gray-200">View Lessons</p>
+                  <p className="text-2xl font-bold text-white">Explore Now</p>
+                </NavLink>
+              </div>
+
+              {/* Holidays Section (Light Green) */}
+              <div className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/holidays" className="flex flex-col items-center">
+                  <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
+                  <h2 className="font-semibold text-xl text-white">Holidays</h2>
+                  <p className="text-gray-200">Total Holidays</p>
+                  <p className="text-2xl font-bold text-white">0</p>
+                </NavLink>
+              </div>
+
+              {/* Fees Record Section (Light Blue) */}
+              <div className="bg-gradient-to-r from-teal-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/fees-details" className="flex flex-col items-center">
+                  <FaDollarSign className="text-4xl text-white mb-3" /> {/* Icon for Fees Record */}
+                  <h2 className="font-semibold text-xl text-white">Fees Record</h2>
+                  <p className="text-gray-200">Total Fees Records</p>
+                  <p className="text-2xl font-bold text-white">0</p>
+                </NavLink>
+              </div>
+
+              {/* Routine Section (Unique Gradient with Modern Touch) */}
+              <div className="bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/classroutinelist" className="flex flex-col items-center">
+                  <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
+                  <h2 className="font-semibold text-xl text-white">Student Routine</h2>
+                  <p className="text-gray-200">Student Routine</p>
+                  <p className="text-2xl font-bold text-white">View Routine</p>
+                </NavLink>
+              </div>
+
+
 
               {/* Vehicles Section (Light Teal) */}
-              <div className="bg-teal-100 p-4 shadow-md rounded-md">
-                <h2 className="font-semibold text-lg">Vehicles</h2>
-                <p className="text-gray-500">Total Vehicles</p>
-                <p className="text-2xl font-bold">4</p>
+              <div className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/vehiclelist" className="flex flex-col items-center">
+                  <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
+                  <h2 className="font-semibold text-xl text-white">Vehicles</h2>
+                  <p className="text-gray-200">Total Vehicles</p>
+                  <p className="text-2xl font-bold text-white">4</p>
+                </NavLink>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-md rounded-md mt-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Dashboard Analytics</h2>
-        <div className="relative w-full max-w-full h-[300px] sm:h-[400px]">
-          <canvas ref={chartRef} className="w-full h-full" />
+        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Dashboard Analytics</h2>
+          <div className="relative w-full h-[300px] sm:h-[400px] overflow-x-auto">
+            <canvas ref={chartRef} className="w-full h-full max-w-full" />
+          </div>
         </div>
-      </div>
 
-      <div className="bg-white p-6 shadow-md rounded-md mt-6">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Growth Over Time</h2>
-      <div className="relative w-full max-w-full h-[200px] sm:h-[300px] md:h-[400px]">
-        <canvas ref={lineChartRef} className="w-full h-full" />
-      </div>
-    </div>
+        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Growth Over Time</h2>
+          <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-x-auto">
+            <canvas ref={lineChartRef} className="w-full h-full max-w-full" />
+          </div>
+        </div>
         {/* Notice Board Section */}
         <div className="bg-white p-6 shadow-md mt-28 rounded-md mb-6">
           <h2 className="text-xl text-gray-500">Notice Board</h2>
@@ -300,95 +360,95 @@ const Dashboard = () => {
             </button>
           </div>
 
-       {/* Modal for form */}
-{formVisible && (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
-    <div className="bg-white rounded-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3">
-      <h3 className="text-xl font-semibold mb-4">Create Notice</h3>
-      <form onSubmit={handleFormSubmit}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            placeholder="Title"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            placeholder="Description"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleInputChange}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <input
-            type="text"
-            name="class"
-            value={formData.class}
-            onChange={handleInputChange}
-            placeholder="Class"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <input
-            type="text"
-            name="section"
-            value={formData.section}
-            onChange={handleInputChange}
-            placeholder="Section"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <input
-            type="text"
-            name="targetAudience"
-            value={formData.targetAudience}
-            onChange={handleInputChange}
-            placeholder="Target Audience"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-          />
-          <input
-            type="text"
-            name="postedBy"
-            value={formData.postedBy}
-            onChange={handleInputChange}
-            placeholder="Posted By"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm"
-            required
-          />
-          <div className="flex justify-end col-span-2 mt-4">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      </form>
-      <div className="flex justify-end mt-4">
-        <button
-          onClick={() => setFormVisible(false)}
-          className="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 text-sm"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+          {/* Modal for form */}
+          {formVisible && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+              <div className="bg-white rounded-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3">
+                <h3 className="text-xl font-semibold mb-4">Create Notice</h3>
+                <form onSubmit={handleFormSubmit}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      placeholder="Title"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      placeholder="Description"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <input
+                      type="date"
+                      name="date"
+                      value={formData.date}
+                      onChange={handleInputChange}
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="class"
+                      value={formData.class}
+                      onChange={handleInputChange}
+                      placeholder="Class"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="section"
+                      value={formData.section}
+                      onChange={handleInputChange}
+                      placeholder="Section"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="targetAudience"
+                      value={formData.targetAudience}
+                      onChange={handleInputChange}
+                      placeholder="Target Audience"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                    />
+                    <input
+                      type="text"
+                      name="postedBy"
+                      value={formData.postedBy}
+                      onChange={handleInputChange}
+                      placeholder="Posted By"
+                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      required
+                    />
+                    <div className="flex justify-end col-span-2 mt-4">
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => setFormVisible(false)}
+                    className="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 text-sm"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Table with gray borders */}
           <div className="overflow-x-auto">

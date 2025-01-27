@@ -106,7 +106,6 @@ const Setting = () => {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-semibold text-gray-700 mb-6 p-4 lg:p-6">School Details</h1>
 
         {/* Success/Error Message */}
         {successMessage && (
