@@ -87,9 +87,9 @@ const StudentLogin = () => {
           </form>
 
           {/* Additional Button */}
-          <div className="mt-4 w-3/4 mx-auto">
+          <div className="mt-4 mx-auto w-full sm:w-3/4">
             <a
-              href="https://wa.me/qr/P6PN4QJUSW3AN1?text=Hi,%20I%20need%20help%20with%20Student%20Login%20id/password."
+              href="https://wa.me/919424977848?text=Hi,%20I%20need%20help%20with%20Student%20Login%20id/password."
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200"

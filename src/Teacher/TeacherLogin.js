@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaWhatsapp } from 'react-icons/fa';
 import axios from "axios";
 
 const TeacherLogin = () => {
@@ -78,13 +79,14 @@ const TeacherLogin = () => {
           </form>
 
           {/* Additional Button */}
-          <div className="mt-4 w-3/4 mx-auto">
-            <a
-              href="https://wa.me/919424977848?text=Hi,%20I%20need%20help%20with%20Teacher%20Login%20credentials."
+          <div className="mt-4 mx-auto w-full sm:w-3/4">
+<a
+              href="https://wa.me/919424977848?text=Hi,%20I%20need%20help%20with%20Teacher%20Login%20id/password."
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full block text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200"
+              className="block text-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200"
             >
+              <FaWhatsapp size={20} className="mr-2 inline" />
               Ask for Login ID/Password
             </a>
           </div>
