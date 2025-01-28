@@ -5,6 +5,14 @@ import { FaBars, FaTimes } from "react-icons/fa";
 
 const MarksList = () => {
   const [marksList, setMarksList] = useState([]);
+  const [filteredMarks, setFilteredMarks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    class: "",
+    section: "",
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,6 +29,7 @@ const MarksList = () => {
         "https://school-backend-1-2xki.onrender.com/api/admin/marks"
       );
       setMarksList(response.data.marks || []);
+      setFilteredMarks(response.data.marks || []);
     } catch (error) {
       console.error("Error fetching marks:", error);
       alert("Error fetching marks. Please try again.");
@@ -33,11 +42,39 @@ const MarksList = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Search filter logic
+  const handleSearchChange = (e) => {
+    const { name, value } = e.target;
+    setSearchTerm((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  useEffect(() => {
+    const filteredData = marksList.filter((student) => {
+      const fullName =
+        (student.student?.firstName || "").toLowerCase() +
+        " " +
+        (student.student?.lastName || "").toLowerCase();
+      const email = (student.student?.email || "").toLowerCase();
+      const studentClass = (student.student?.class || "").toLowerCase();
+      const studentSection = (student.student?.section || "").toLowerCase();
+
+      return (
+        fullName.includes(searchTerm.firstName.toLowerCase()) &&
+        fullName.includes(searchTerm.lastName.toLowerCase()) &&
+        email.includes(searchTerm.email.toLowerCase()) &&
+        studentClass.includes(searchTerm.class.toLowerCase()) &&
+        studentSection.includes(searchTerm.section.toLowerCase())
+      );
+    });
+    setFilteredMarks(filteredData);
+    setCurrentPage(1); // Reset to page 1 when filters change
+  }, [searchTerm, marksList]);
+
   // Pagination calculations
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentMarks = marksList.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(marksList.length / itemsPerPage);
+  const currentMarks = filteredMarks.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredMarks.length / itemsPerPage);
 
   const formatDate = (date) => {
     return date ? new Date(date).toLocaleDateString() : "N/A";
@@ -48,7 +85,7 @@ const MarksList = () => {
     const headers = [
       "SL,First Name,Last Name,Class,Roll,Section,Father's Name,Mother's Name,Subject,Marks Obtained,Total Marks,Percentage,Grade,Status,Overall Percentage,Overall Status",
     ];
-    const rows = marksList.flatMap((student, index) =>
+    const rows = filteredMarks.flatMap((student, index) =>
       student.subjects.map((subject) => [
         index + 1,
         student.student?.firstName || "N/A",
@@ -118,12 +155,51 @@ const MarksList = () => {
           </button>
         </div>
 
-        {/* Search and Export */}
-        <div className="mb-6 flex justify-between items-center">
-
+        {/* Search Filters */}
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          <input
+            type="text"
+            name="firstName"
+            placeholder="Search by First Name"
+            value={searchTerm.firstName}
+            onChange={handleSearchChange}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full"
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Search by Last Name"
+            value={searchTerm.lastName}
+            onChange={handleSearchChange}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full"
+          />
+          <input
+            type="text"
+            name="email"
+            placeholder="Search by Email"
+            value={searchTerm.email}
+            onChange={handleSearchChange}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full"
+          />
+          <input
+            type="text"
+            name="class"
+            placeholder="Search by Class"
+            value={searchTerm.class}
+            onChange={handleSearchChange}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full"
+          />
+          <input
+            type="text"
+            name="section"
+            placeholder="Search by Section"
+            value={searchTerm.section}
+            onChange={handleSearchChange}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full"
+          />
           <button
             onClick={exportToCSV}
-            className="ml-4 px-4 py-2 bg-purple-600 mt-4 text-white rounded-md hover:bg-purple-700"
+            className="ml-6 px-4 py-2 mr-8 bg-purple-600 text-white rounded-md hover:bg-purple-700 col-span-2 sm:col-span-1"
           >
             Export CSV
           </button>
@@ -214,20 +290,22 @@ const MarksList = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center space-x-4">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded-md ${
-                currentPage === i + 1
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
+        <div className="flex justify-between items-center">
+          <button
+            className="bg-purple-600 text-white py-2 px-4 rounded-md"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <button
+            className="bg-purple-600 text-white py-2 px-4 rounded-md"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

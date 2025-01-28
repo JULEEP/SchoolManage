@@ -78,40 +78,36 @@ const TeacherList = () => {
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
-          isSidebarOpen ? "block" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
         onClick={toggleSidebar}
       ></div>
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div
-        className={`flex-grow overflow-y-auto transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Teacher List</h1>
-          <button
-            onClick={toggleSidebar}
-            className="text-2xl focus:outline-none"
-          >
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Search and Export */}
+        {/* Search Bar */}
         <div className="mb-6 flex justify-between items-center">
+          <input
+            type="text"
+            placeholder="Search by Name, Email, or Phone"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="px-4 py-2 border border-gray-300 rounded-md w-1/3"
+          />
           <button
             onClick={exportToCSV}
             className="ml-4 px-4 py-2 bg-purple-600 text-white mt-4 rounded-md hover:bg-purple-700"
@@ -146,14 +142,10 @@ const TeacherList = () => {
                     <td className="px-4 py-2 border-b">{teacher.email}</td>
                     <td className="px-4 py-2 border-b">{teacher.phone}</td>
                     <td className="px-4 py-2 border-b">{teacher.address}</td>
-                    <td className="px-4 py-2 border-b">
-                      {teacher.lastExperience || "N/A"}
-                    </td>
+                    <td className="px-4 py-2 border-b">{teacher.lastExperience || "N/A"}</td>
                     <td className="px-4 py-2 border-b">{teacher.age || "N/A"}</td>
                     <td className="px-4 py-2 border-b">{teacher.gender || "N/A"}</td>
-                    <td className="px-4 py-2 border-b">
-                      {teacher.education || "N/A"}
-                    </td>
+                    <td className="px-4 py-2 border-b">{teacher.education || "N/A"}</td>
                     <td className="px-4 py-2 border-b">
                       {teacher.joiningDate
                         ? new Date(teacher.joiningDate).toLocaleDateString()

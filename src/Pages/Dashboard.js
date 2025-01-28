@@ -231,7 +231,7 @@ const Dashboard = () => {
               </div>
               {/* Parent Section (Light Red) */}
               <div className="bg-gradient-to-r from-red-300 to-red-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/parents" className="flex flex-col items-center">
+                <NavLink to="/parentlist" className="flex flex-col items-center">
                   <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
                   <h2 className="font-semibold text-xl text-white">Parents</h2>
                   <p className="text-gray-200">Total Parents</p>

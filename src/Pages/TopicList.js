@@ -48,18 +48,22 @@ const TopicList = () => {
 
         {/* Page Content */}
         <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-700">Existing Topics</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Existing Topics</h2>
+          
           <div className="mt-4">
             {topics.length === 0 ? (
-              <p>No topics available.</p>
+              <div className="text-center text-gray-500 bg-gray-100 p-4 rounded-lg shadow-md">
+                No topics available.
+              </div>
             ) : (
-              <ul>
+              <div className="space-y-4">
                 {topics.map((topic, index) => (
-                  <li key={index} className="p-2">
-                    {topic.topic} - {topic.lesson} - {topic.subject}
-                  </li>
+                  <div key={index} className="border rounded-lg shadow-md hover:shadow-xl transition-all p-4 bg-white">
+                    <h3 className="text-lg font-semibold text-gray-800">{topic.topic}</h3>
+                    <p className="text-sm text-gray-600">{topic.lesson} - {topic.subject}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         </div>

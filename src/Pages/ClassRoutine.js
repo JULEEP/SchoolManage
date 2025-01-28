@@ -38,8 +38,9 @@ const ClassRoutineCreate = () => {
 
         // Fetching teacher data
         const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
-        const teacherData = teacherResponse.data.data.map((teacher) => teacher.teacher);
+        const teacherData = teacherResponse.data.data.map((teacher) => teacher.name);
         setTeachers(teacherData || []);
+
 
         setIsDataLoaded(true);
       } catch (error) {
@@ -52,12 +53,15 @@ const ClassRoutineCreate = () => {
   }, []);
 
   const handleClassChange = (e) => {
-    setSelectedClass(e.target.value);
+    const selected = classes.find(cls => cls._id === e.target.value);
+    setSelectedClass(selected ? selected.className : '');
   };
-
+  
   const handleSectionChange = (e) => {
-    setSelectedSection(e.target.value);
+    const selected = sections.find(sec => sec._id === e.target.value);
+    setSelectedSection(selected ? selected.name : '');
   };
+  
 
   const handleRoutineChange = (index, e) => {
     const { name, value } = e.target;
@@ -192,7 +196,7 @@ const ClassRoutineCreate = () => {
                   >
                     <option value="">Select Class</option>
                     {classes.map((cls, idx) => (
-                      <option key={idx} value={cls._id}>{cls.className}</option> 
+                      <option key={idx} value={cls._id}>{cls.className}</option>
                     ))}
                   </select>
                 </div>
@@ -210,7 +214,7 @@ const ClassRoutineCreate = () => {
                   >
                     <option value="">Select Section</option>
                     {sections.map((section, idx) => (
-                      <option key={idx} value={section._id}>{section.name}</option> 
+                      <option key={idx} value={section._id}>{section.name}</option>
                     ))}
                   </select>
                 </div>
@@ -248,8 +252,8 @@ const ClassRoutineCreate = () => {
                         required
                       >
                         <option value="">Select Time</option>
-                        {[ 
-                          "09:00 AM - 09:45 AM", "10:00 AM - 10:45 AM", "11:00 AM - 11:45 AM", 
+                        {[
+                          "09:00 AM - 09:45 AM", "10:00 AM - 10:45 AM", "11:00 AM - 11:45 AM",
                           "12:00 PM - 12:45 PM", "01:00 PM - 01:45 PM", "02:00 PM - 02:45 PM"
                         ].map((time, idx) => (
                           <option key={idx} value={time}>{time}</option>

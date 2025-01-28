@@ -2,23 +2,55 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar'; // Import Sidebar
 import { FaBars, FaTimes } from 'react-icons/fa';
 
-const HolidayForm = ({ setHolidays }) => {
+const HolidayForm = () => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [holidayName, setHolidayName] = useState('');
   const [holidayMessage, setHolidayMessage] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const handleAddHoliday = (e) => {
+  // Function to handle the form submission
+  const handleAddHoliday = async (e) => {
     e.preventDefault();
     if (holidayName && holidayMessage && fromDate && toDate) {
-      const newHoliday = { fromDate, toDate, holidayName, holidayMessage };
-      setHolidays((prev) => [...prev, newHoliday]);
-      setFromDate('');
-      setToDate('');
-      setHolidayName('');
-      setHolidayMessage('');
-      alert('Holiday added successfully!');
+      const holidayData = {
+        fromDate,
+        toDate,
+        holidayName,
+        holidayMessage,
+      };
+
+      try {
+        // Making the POST request to the API
+        const response = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/add-holidays', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(holidayData),
+        });
+
+        // Debugging: Log the response status and body
+        console.log('Response Status:', response.status);
+        const data = await response.json();
+        console.log('Response Data:', data);
+
+        // Check if the response is successful (status 200 or 201)
+        if (response.status === 201) {
+          alert('Holiday added successfully!');
+          
+          // Reset form fields
+          setFromDate('');
+          setToDate('');
+          setHolidayName('');
+          setHolidayMessage('');
+        } else {
+          alert('Failed to add holiday. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error adding holiday:', error);
+        alert('An error occurred while adding the holiday.');
+      }
     } else {
       alert('Please fill in all fields');
     }

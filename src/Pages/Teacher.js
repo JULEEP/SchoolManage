@@ -25,12 +25,21 @@ const Teacher = () => {
     }
   };
 
+  const totalTeachers = teacherList.length;
+  const totalPages = Math.ceil(totalTeachers / itemsPerPage);
+  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTeachers = teacherList.slice(startIndex, endIndex);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -102,6 +111,25 @@ const Teacher = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-4 py-2 bg-purple-700 text-white rounded-lg mr-2 disabled:opacity-50"
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span className="text-lg">{currentPage} of {totalPages}</span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-4 py-2 bg-purple-700 text-white rounded-lg ml-2 disabled:opacity-50"
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

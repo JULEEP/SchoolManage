@@ -13,9 +13,9 @@ const TransportRouteListPage = () => {
     const fetchRoutes = async () => {
       try {
         const response = await axios.get(
-          "https://school-backend-1-2xki.onrender.com/api/admin/transport-routes"
+          "https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route"
         );
-        setRouteList(response.data.routes);
+        setRouteList(response.data.routes); // Assuming response data contains 'routes' array
       } catch (error) {
         console.error("Error fetching route list:", error);
       }
@@ -26,7 +26,7 @@ const TransportRouteListPage = () => {
 
   // Filter routes based on search term
   const filteredRoutes = routeList.filter((route) =>
-    route.routeTitle.toLowerCase().includes(search.toLowerCase())
+    route.routeTitle ? route.routeTitle.toLowerCase().includes(search.toLowerCase()) : true
   );
 
   return (
@@ -76,21 +76,27 @@ const TransportRouteListPage = () => {
                     <th className="px-4 py-2 text-left text-gray-600">SL</th>
                     <th className="px-4 py-2 text-left text-gray-600">Route Title</th>
                     <th className="px-4 py-2 text-left text-gray-600">Fare</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Driver</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Pickup Time</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Drop Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredRoutes.length === 0 ? (
                     <tr>
-                      <td colSpan="3" className="text-center py-4 text-gray-500">
+                      <td colSpan="6" className="text-center py-4 text-gray-500">
                         No Data Available In Table
                       </td>
                     </tr>
                   ) : (
                     filteredRoutes.map((route, index) => (
-                      <tr key={route.id} className="border-t">
+                      <tr key={route._id} className="border-t">
                         <td className="px-4 py-2">{index + 1}</td>
-                        <td className="px-4 py-2">{route.routeTitle}</td>
-                        <td className="px-4 py-2">{route.fare}</td>
+                        <td className="px-4 py-2">{route.routeTitle || "N/A"}</td>
+                        <td className="px-4 py-2">{route.fare || "N/A"}</td>
+                        <td className="px-4 py-2">{route.driver?.name || "N/A"}</td>
+                        <td className="px-4 py-2">{route.pickupTime || "N/A"}</td>
+                        <td className="px-4 py-2">{route.dropTime || "N/A"}</td>
                       </tr>
                     ))
                   )}

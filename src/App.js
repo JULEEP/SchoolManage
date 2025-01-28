@@ -198,6 +198,7 @@ import TransportRouteListPage from './Pages/TransportRouteList';
 import VehicleListPage from './Pages/VehicleList';
 import ExamTypeList from './Pages/ExamTypeList';
 import ExamScheduleList from './Pages/ExamSheduleList';
+import Parents from './Pages/ParentList';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -302,6 +303,7 @@ function App() {
             <Route path="/department" element={<DepartmentPage/>} />
             <Route path="/addnewstaff" element={<AddNewStaffPage/>} />
             <Route path="/stafflist" element={<StaffListPage/>} />
+            <Route path="/parentlist" element={<Parents/>} />
             <Route path="/staffattendance" element={<StaffAttendancePage/>} />
             <Route path="/generatepayroll" element={<GeneratePayrollPage/>} />
             <Route path="/approvalleave" element={<ApproveLeaveRequestPage/>} />

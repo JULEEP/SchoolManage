@@ -119,13 +119,26 @@ const StaffList = () => {
 
         {/* Search and Export */}
         <div className="mb-6 flex justify-between items-center">
+          {/* Search Filter */}
+          <div className="w-full sm:w-1/2 md:w-1/3 mt-2">
+            <input
+              type="text"
+              placeholder="Search by Name or Email"
+              className="ml-4 px-4 py-2 bg-white border rounded-md w-70"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
 
-          <button
-            onClick={exportToCSV}
-            className="ml-4 px-4 py-2 bg-purple-600 mt-4 text-white rounded-md hover:bg-purple-700"
-          >
-            Export CSV
-          </button>
+          {/* Export Button */}
+          <div className="w-full sm:w-1/3 md:w-1/4 mr-8">
+            <button
+              onClick={exportToCSV}
+              className="ml-4 px-4 py-2 mt-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 w-full"
+            >
+              Export CSV
+            </button>
+          </div>
         </div>
 
         {/* Staff Table */}

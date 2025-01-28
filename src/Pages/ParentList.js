@@ -3,30 +3,28 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
 
-const Staffs = () => {
-  const [staffList, setStaffList] = useState([]);
+const Parents = () => {
+  const [parentList, setParentList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Fetch staff
+  // Fetch parents
   useEffect(() => {
-    const fetchStaff = async () => {
+    const fetchParents = async () => {
       try {
-        const response = await axios.get(
-          "https://school-backend-1-2xki.onrender.com/api/admin/staffs"
-        );
-        setStaffList(response.data.staff || []);
+        const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/parents");
+        setParentList(response.data.parents || []);
       } catch (error) {
-        console.error("Error fetching staff:", error);
-        alert("Error fetching staff. Please try again.");
+        console.error("Error fetching parents:", error);
+        alert("Error fetching parents. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-    fetchStaff();
+    fetchParents();
   }, []);
 
   const toggleSidebar = () => {
@@ -37,11 +35,11 @@ const Staffs = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredStaff = staffList.filter(
-    (staff) =>
-      staff.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staff.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staff.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredParents = parentList.filter(
+    (parent) =>
+      parent.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      parent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      parent.role?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (date) => {
@@ -51,9 +49,9 @@ const Staffs = () => {
   // Pagination Logic
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentStaff = filteredStaff.slice(startIndex, endIndex);
+  const currentParents = filteredParents.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(filteredStaff.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredParents.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -84,9 +82,9 @@ const Staffs = () => {
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        {/* Mobile View: Header and Sidebar Toggle Icon */}
+        {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Staff List</h1>
+          <h1 className="text-lg font-bold">Parents List</h1>
           <button
             onClick={toggleSidebar}
             className="text-2xl focus:outline-none"
@@ -99,60 +97,46 @@ const Staffs = () => {
         <div className="mb-6 flex justify-between items-center mt-4">
           <input
             type="text"
-            placeholder="Search staff..."
+            placeholder="Search parents..."
             value={searchTerm}
             onChange={handleSearch}
             className="border border-gray-300 rounded-lg px-4 py-2"
           />
         </div>
 
-        {/* Staff Table */}
+        {/* Parents Table */}
         <div className="overflow-x-auto mb-8">
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
                 <th className="px-4 py-2 border-b">SL</th>
-                <th className="px-4 py-2 border-b">First Name</th>
-                <th className="px-4 py-2 border-b">Last Name</th>
+                <th className="px-4 py-2 border-b">Name</th>
                 <th className="px-4 py-2 border-b">Email</th>
-                <th className="px-4 py-2 border-b">Phone</th>
-                <th className="px-4 py-2 border-b">Position</th>
-                <th className="px-4 py-2 border-b">Department</th>
-                <th className="px-4 py-2 border-b">Gender</th>
-                <th className="px-4 py-2 border-b">Date of Birth</th>
-                <th className="px-4 py-2 border-b">Joining Date</th>
-                <th className="px-4 py-2 border-b">Salary</th>
-                <th className="px-4 py-2 border-b">Employee ID</th>
-                <th className="px-4 py-2 border-b">Profile Picture</th>
-                <th className="px-4 py-2 border-b">Qualifications</th>
+                <th className="px-4 py-2 border-b">Role</th>
+                <th className="px-4 py-2 border-b">Students</th>
                 <th className="px-4 py-2 border-b">Created At</th>
               </tr>
             </thead>
             <tbody>
-              {currentStaff.length > 0 ? (
-                currentStaff.map((staff, index) => (
-                  <tr key={staff._id}>
+              {currentParents.length > 0 ? (
+                currentParents.map((parent, index) => (
+                  <tr key={parent._id}>
                     <td className="px-4 py-2 border-b">{startIndex + index + 1}</td>
-                    <td className="px-4 py-2 border-b">{staff.firstName}</td>
-                    <td className="px-4 py-2 border-b">{staff.lastName}</td>
-                    <td className="px-4 py-2 border-b">{staff.email}</td>
-                    <td className="px-4 py-2 border-b">{staff.phone}</td>
-                    <td className="px-4 py-2 border-b">{staff.position}</td>
-                    <td className="px-4 py-2 border-b">{staff.department}</td>
-                    <td className="px-4 py-2 border-b">{staff.gender}</td>
-                    <td className="px-4 py-2 border-b">{formatDate(staff.dateOfBirth)}</td>
-                    <td className="px-4 py-2 border-b">{formatDate(staff.joiningDate)}</td>
-                    <td className="px-4 py-2 border-b">{staff.salary}</td>
-                    <td className="px-4 py-2 border-b">{staff.employeeId}</td>
-                    <td className="px-4 py-2 border-b">{staff.profilePicture}</td>
-                    <td className="px-4 py-2 border-b">{staff.qualifications?.join(", ") || "N/A"}</td>
-                    <td className="px-4 py-2 border-b">{formatDate(staff.createdAt)}</td>
+                    <td className="px-4 py-2 border-b">{parent.name}</td>
+                    <td className="px-4 py-2 border-b">{parent.email}</td>
+                    <td className="px-4 py-2 border-b">{parent.role}</td>
+                    <td className="px-4 py-2 border-b">
+                      {parent.myStudents.length > 0
+                        ? parent.myStudents.join(", ")
+                        : "No Students"}
+                    </td>
+                    <td className="px-4 py-2 border-b">{formatDate(parent.createdAt)}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="15" className="text-center text-gray-500">
-                    No staff found.
+                  <td colSpan="6" className="text-center text-gray-500">
+                    No parents found.
                   </td>
                 </tr>
               )}
@@ -173,7 +157,9 @@ const Staffs = () => {
             <button
               key={pageNumber}
               onClick={() => handlePageChange(pageNumber + 1)}
-              className={`px-4 py-2 mx-1 rounded-lg ${currentPage === pageNumber + 1 ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}
+              className={`px-4 py-2 mx-1 rounded-lg ${
+                currentPage === pageNumber + 1 ? "bg-purple-500 text-white" : "bg-gray-200"
+              }`}
             >
               {pageNumber + 1}
             </button>
@@ -191,4 +177,4 @@ const Staffs = () => {
   );
 };
 
-export default Staffs;
+export default Parents;

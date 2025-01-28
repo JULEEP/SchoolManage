@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
-import axios from 'axios'; 
+import axios from 'axios';
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const AssignSubjectPage = () => {
@@ -28,14 +28,14 @@ const AssignSubjectPage = () => {
       try {
         const classResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
         setClasses(classResponse.data.classes || []);
-        
+
         const sectionResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
         setSections(sectionResponse.data.sections || []);
-        
+
         const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
-        const teacherData = teacherResponse.data.data.map((teacher) => teacher.teacher);
+        const teacherData = teacherResponse.data.data.map((teacher) => teacher.name);
         setTeachers(teacherData || []);
-        
+
         const subjectResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-subjects-names');
         const uniqueSubjects = [...new Set(subjectResponse.data.subjectNames.filter((name) => name))];
         setSubjects(uniqueSubjects || []);
@@ -224,69 +224,69 @@ const AssignSubjectPage = () => {
             </form>
           </div>
 
-       {/* Assigned Subjects Table */}
-<div className="bg-white p-6 rounded-lg shadow-md mt-8">
-<h2 className="text-lg text-gray-700 mb-4">Assigned Subjects</h2>
-<div className="overflow-x-auto">
-  <table className="min-w-full table-auto">
-    <thead>
-      <tr className="bg-gray-100">
-        <th className="px-4 py-2 text-gray-600">Class</th>
-        <th className="px-4 py-2 text-gray-600">Section</th>
-        <th className="px-4 py-2 text-gray-600">Subject</th>
-        <th className="px-4 py-2 text-gray-600">Teacher</th>
-        <th className="px-4 py-2 text-gray-600">Assigned On</th>
-      </tr>
-    </thead>
-  </table>
-  <div className="max-h-64">
-    <table className="min-w-full table-auto">
-      <tbody>
-        {currentRecords.length === 0 ? (
-          <tr>
-            <td colSpan="5" className="text-center text-gray-500">
-              No Data Available
-            </td>
-          </tr>
-        ) : (
-          currentRecords.map((assignment, index) => (
-            <tr key={index} className="border-t border-gray-300">
-              <td className="px-4 py-2 text-gray-600">{assignment.class}</td>
-              <td className="px-4 py-2 text-gray-600">{assignment.section}</td>
-              <td className="px-4 py-2 text-gray-600">{assignment.subject}</td>
-              <td className="px-4 py-2 text-gray-600">{assignment.teacher}</td>
-              <td className="px-4 py-2 text-gray-600">{new Date(assignment.createdAt).toLocaleDateString()}</td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-  </div>
-</div>
+          {/* Assigned Subjects Table */}
+          <div className="bg-white p-6 rounded-lg shadow-md mt-8">
+            <h2 className="text-lg text-gray-700 mb-4">Assigned Subjects</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="px-4 py-2 text-gray-600">Class</th>
+                    <th className="px-4 py-2 text-gray-600">Section</th>
+                    <th className="px-4 py-2 text-gray-600">Subject</th>
+                    <th className="px-4 py-2 text-gray-600">Teacher</th>
+                    <th className="px-4 py-2 text-gray-600">Assigned On</th>
+                  </tr>
+                </thead>
+              </table>
+              <div className="max-h-64">
+                <table className="min-w-full table-auto">
+                  <tbody>
+                    {currentRecords.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" className="text-center text-gray-500">
+                          No Data Available
+                        </td>
+                      </tr>
+                    ) : (
+                      currentRecords.map((assignment, index) => (
+                        <tr key={index} className="border-t border-gray-300">
+                          <td className="px-4 py-2 text-gray-600 text-center">{assignment.class}</td>
+                          <td className="px-4 py-2 text-gray-600 text-center">{assignment.section}</td>
+                          <td className="px-4 py-2 text-gray-600 text-center">{assignment.subject}</td>
+                          <td className="px-4 py-2 text-gray-600 text-center">{assignment.teacher}</td>
+                          <td className="px-4 py-2 text-gray-600 ml-8">{new Date(assignment.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-{/* Pagination */}
-<div className="flex justify-center mt-4">
-  <nav className="inline-flex space-x-2">
-    <button
-      onClick={() => handlePageChange(currentPage - 1)}
-      className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentPage === 1 && 'opacity-50 cursor-not-allowed'}`}
-      disabled={currentPage === 1}
-    >
-      Previous
-    </button>
-    <button
-      onClick={() => handlePageChange(currentPage + 1)}
-      className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentRecords.length < recordsPerPage && 'opacity-50 cursor-not-allowed'}`}
-      disabled={currentRecords.length < recordsPerPage}
-    >
-      Next
-    </button>
-  </nav>
-</div>
-</div>
-</div>      
-</div>
-</div>
+            {/* Pagination */}
+            <div className="flex justify-center mt-4">
+              <nav className="inline-flex space-x-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentPage === 1 && 'opacity-50 cursor-not-allowed'}`}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentRecords.length < recordsPerPage && 'opacity-50 cursor-not-allowed'}`}
+                  disabled={currentRecords.length < recordsPerPage}
+                >
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

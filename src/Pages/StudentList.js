@@ -6,9 +6,10 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
 
   // Fetch students
   useEffect(() => {
@@ -40,9 +41,11 @@ const StudentList = () => {
 
   const filteredStudents = students.filter(
     (student) =>
-      student.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.roll?.toString().includes(searchTerm)
+      (student.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.roll?.toString().includes(searchTerm)) &&
+      (selectedClass ? student.class === selectedClass : true) &&
+      (selectedSection ? student.section === selectedSection : true)
   );
 
   const exportToCSV = () => {
@@ -118,13 +121,65 @@ const StudentList = () => {
         </div>
 
         {/* Search and Export */}
-        <div className="mb-6 flex justify-between items-center">
-          <button
-            onClick={exportToCSV}
-            className="ml-4 px-4 py-2 mt-4 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-          >
-            Export CSV
-          </button>
+        <div className="mb-6 flex flex-wrap justify-between items-center">
+          {/* Search Filter */}
+          <div className="w-full sm:w-1/2 md:w-auto mb-4 sm:mb-0 mt-4">
+            <input
+              type="text"
+              placeholder="Search by Name, Roll"
+              className="ml-4 px-4 py-2 bg-white border rounded-md w-70"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
+
+          {/* Class Filter */}
+          <div className="w-full sm:w-1/2 md:w-auto mb-4 sm:mb-0">
+            <select
+              className="ml-4 px-4 py-2 bg-white border rounded-md w-70"
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+            >
+              <option value="">All Classes</option>
+              {/* Add class options here */}
+              <option value="1">Class 1</option>
+              <option value="2">Class 2</option>
+              <option value="3">Class 3</option>
+              <option value="4">Class 4</option>
+              <option value="5">Class 5</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+
+            </select>
+          </div>
+
+          {/* Section Filter */}
+          <div className="w-full sm:w-1/2 md:w-auto mb-4 sm:mb-0">
+            <select
+              className="ml-4 px-4 py-2 bg-white border rounded-md w-70"
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+            >
+              <option value="">All Sections</option>
+              {/* Add section options here */}
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="C">Section C</option>
+            </select>
+          </div>
+
+          {/* Export Button */}
+          <div className="w-full sm:w-1/2 md:w-auto mb-4 sm:mb-0">
+            <button
+              onClick={exportToCSV}
+              className="ml-4 px-4 py-2 mt-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 w-70"
+            >
+              Export CSV
+            </button>
+          </div>
         </div>
 
         {/* Student Table */}
@@ -174,7 +229,7 @@ const StudentList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="14" className="text-center text-gray-500">
+                  <td colSpan="14" className="text-center py-4">
                     No students found.
                   </td>
                 </tr>

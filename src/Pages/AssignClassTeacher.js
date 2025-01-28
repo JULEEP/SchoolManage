@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
-import axios from 'axios'; // Ensure you have axios imported
+import axios from 'axios';
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const AssignClassTeacherPage = () => {
   const [formData, setFormData] = useState({
     className: '',
     sectionName: '',
-    teacher: '',
+    name: '', // Changed 'teacher' to 'name'
+    subject: '', // Added subject
   });
 
   const [classTeacherAssignments, setClassTeacherAssignments] = useState([]);
@@ -17,6 +18,7 @@ const AssignClassTeacherPage = () => {
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [assignmentsPerPage] = useState(5);
@@ -29,19 +31,34 @@ const AssignClassTeacherPage = () => {
         const classResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
         const classData = await classResponse.json();
         setClasses(classData.classes || []);
-        
-        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
-        setSections(response.data.sections || []);
+
+        const sectionResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
+        setSections(sectionResponse.data.sections || []);
 
         const teacherResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
         const teacherData = await teacherResponse.json();
-        const teacherNames = teacherData.data.map((teacher) => teacher.teacher);
+        const teacherNames = teacherData.data.map((teacher) => teacher.name);
         setTeachers(teacherNames || []);
+
+        const subjectResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-subjects-names');
+        setSubjects(subjectResponse.data.subjectNames || []);
       } catch (error) {
         setError(error.message);
       }
     };
     fetchDropdownData();
+  }, []);
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-assign-teacher');
+        setClassTeacherAssignments(response.data.assignments || []);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchAssignments();
   }, []);
 
   const handleChange = (e) => {
@@ -54,7 +71,7 @@ const AssignClassTeacherPage = () => {
 
   const handleSaveAssignment = async () => {
     setError('');
-    if (formData.className && formData.sectionName && formData.teacher) {
+    if (formData.className && formData.sectionName && formData.name && formData.subject) {
       setIsLoading(true);
       try {
         const response = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/assign-teacher', {
@@ -63,7 +80,8 @@ const AssignClassTeacherPage = () => {
           body: JSON.stringify({
             class: formData.className,
             section: formData.sectionName,
-            teacher: formData.teacher,
+            name: formData.name,
+            subject: formData.subject,
           }),
         });
 
@@ -73,7 +91,7 @@ const AssignClassTeacherPage = () => {
 
         const data = await response.json();
         setClassTeacherAssignments([...classTeacherAssignments, { ...data.assignment }]);
-        setFormData({ className: '', sectionName: '', teacher: '' });
+        setFormData({ className: '', sectionName: '', name: '', subject: '' });
       } catch (error) {
         setError(error.message || 'An unexpected error occurred.');
       } finally {
@@ -172,11 +190,11 @@ const AssignClassTeacherPage = () => {
 
                 {/* Teacher Dropdown */}
                 <div>
-                  <label htmlFor="teacher" className="text-sm text-gray-600">Teacher *</label>
+                  <label htmlFor="name" className="text-sm text-gray-600">Teacher *</label>
                   <select
-                    id="teacher"
-                    name="teacher"
-                    value={formData.teacher}
+                    id="name"
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
                     className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
                     required
@@ -188,6 +206,28 @@ const AssignClassTeacherPage = () => {
                       ))
                     ) : (
                       <option value="">Loading Teachers...</option>
+                    )}
+                  </select>
+                </div>
+
+                {/* Subject Dropdown */}
+                <div>
+                  <label htmlFor="subject" className="text-sm text-gray-600">Subject *</label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  >
+                    <option value="">Select Subject</option>
+                    {subjects.length > 0 ? (
+                      subjects.map((subject, index) => (
+                        <option key={index} value={subject}>{subject}</option>
+                      ))
+                    ) : (
+                      <option value="">Loading Subjects...</option>
                     )}
                   </select>
                 </div>
@@ -216,30 +256,23 @@ const AssignClassTeacherPage = () => {
                   <th className="px-4 py-2 text-gray-600">Class</th>
                   <th className="px-4 py-2 text-gray-600">Section</th>
                   <th className="px-4 py-2 text-gray-600">Teacher</th>
-                  <th className="px-4 py-2 text-gray-600">Action</th>
+                  <th className="px-4 py-2 text-gray-600">Subject</th>
                 </tr>
               </thead>
               <tbody>
                 {currentAssignments.length === 0 ? (
                   <tr>
-                    <td colSpan="4" className="text-center text-gray-500">
+                    <td colSpan="5" className="text-center text-gray-500">
                       No Data Available
                     </td>
                   </tr>
                 ) : (
                   currentAssignments.map((assignment) => (
                     <tr key={assignment.id} className="border-t border-gray-300">
-                      <td className="px-4 py-2 text-gray-600">{assignment.className}</td>
-                      <td className="px-4 py-2 text-gray-600">{assignment.sectionName}</td>
-                      <td className="px-4 py-2 text-gray-600">{assignment.teacherName}</td>
-                      <td className="px-4 py-2 text-gray-600">
-                        <button
-                          onClick={() => handleRemoveAssignment(assignment.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Remove
-                        </button>
-                      </td>
+                      <td className="px-4 py-2 text-gray-600">{assignment.class || 'null'}</td>
+                      <td className="px-4 py-2 text-gray-600">{assignment.section || 'null'}</td>
+                      <td className="px-4 py-2 text-gray-600">{assignment.name || 'null'}</td>
+                      <td className="px-4 py-2 text-gray-600">{assignment.subject || 'null'}</td>
                     </tr>
                   ))
                 )}

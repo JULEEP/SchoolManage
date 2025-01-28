@@ -13,12 +13,12 @@ const VehicleListPage = () => {
     const fetchVehicles = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-vehicles");
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-vehicle");
         if (!response.ok) {
           throw new Error("Failed to fetch vehicles");
         }
         const data = await response.json();
-        setVehicleList(data.vehicles);
+        setVehicleList(data.vehicles || []); // Ensure vehicles array exists
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {
@@ -30,7 +30,7 @@ const VehicleListPage = () => {
 
   // Filter vehicle list based on search term
   const filteredVehicles = vehicleList.filter((vehicle) =>
-    vehicle.vehicleNumber.toLowerCase().includes(search.toLowerCase())
+    vehicle.vehicleNumber?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -103,12 +103,12 @@ const VehicleListPage = () => {
                 </tr>
               ) : (
                 filteredVehicles.map((vehicle, index) => (
-                  <tr key={vehicle.id}>
+                  <tr key={vehicle._id}>
                     <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{vehicle.vehicleNumber}</td>
-                    <td className="px-4 py-2">{vehicle.vehicleModel}</td>
-                    <td className="px-4 py-2">{vehicle.yearMade}</td>
-                    <td className="px-4 py-2">{vehicle.driver}</td>
+                    <td className="px-4 py-2">{vehicle.vehicleNumber || "N/A"}</td>
+                    <td className="px-4 py-2">{vehicle.vehicleModel || "N/A"}</td>
+                    <td className="px-4 py-2">{vehicle.yearMade || "N/A"}</td>
+                    <td className="px-4 py-2">{vehicle.driver || "N/A"}</td>
                   </tr>
                 ))
               )}
