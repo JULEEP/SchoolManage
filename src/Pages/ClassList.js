@@ -65,7 +65,6 @@ const ClassListPage = () => {
             <thead>
               <tr className="bg-gray-100">
                 <th className="px-4 py-2 text-gray-600">Class</th>
-                <th className="px-4 py-2 text-gray-600">Sections</th>
                 <th className="px-4 py-2 text-gray-600">Action</th>
               </tr>
             </thead>
@@ -80,9 +79,6 @@ const ClassListPage = () => {
                 classes.map((classItem) => (
                   <tr key={classItem._id} className="border-t border-gray-300">
                     <td className="px-4 py-2 text-gray-600 text-center">{classItem.className}</td>
-                    <td className="px-4 py-2 text-gray-600 text-center">
-                      {classItem.sections.join(', ')}
-                    </td>
                     <td className="px-4 py-2 text-gray-600 text-center">
                       <button
                         onClick={() => handleRemoveClass(classItem._id)}

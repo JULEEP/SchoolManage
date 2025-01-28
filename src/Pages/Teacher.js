@@ -5,6 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 
 const Teacher = () => {
   const [teacherList, setTeacherList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,22 +16,27 @@ const Teacher = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get(
-        "https://school-backend-1-2xki.onrender.com/api/admin/get-teacher"
-      );
-      setTeacherList(response.data.data || []);
+      const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/teachers");
+      setTeacherList(response.data || []);
     } catch (error) {
       console.error("Error fetching teachers:", error);
       alert("Error fetching teachers. Please try again.");
     }
   };
 
-  const totalTeachers = teacherList.length;
+  // Filter teachers by name or email
+  const filteredTeachers = teacherList.filter(
+    (teacher) =>
+      teacher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalTeachers = filteredTeachers.length;
   const totalPages = Math.ceil(totalTeachers / itemsPerPage);
   
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentTeachers = teacherList.slice(startIndex, endIndex);
+  const currentTeachers = filteredTeachers.slice(startIndex, endIndex);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -68,6 +74,15 @@ const Teacher = () => {
         </div>
 
         {/* Title Section */}
+        <div className="flex justify-between items-center mt-8 px-4">
+          <input
+            type="text"
+            className="px-4 py-2 w-1/3 border border-gray-300 rounded-md"
+            placeholder="Search by name or email"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
         {/* Teacher List Table */}
         <div className="overflow-x-auto mt-8">

@@ -8,15 +8,17 @@ const TeacherList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Fetch teachers
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
         const response = await axios.get(
-          "https://school-backend-1-2xki.onrender.com/api/admin/get-teacher"
+          "https://school-backend-1-2xki.onrender.com/api/admin/teachers"
         );
-        setTeacherList(response.data.data || []);
+        setTeacherList(response.data || []);
       } catch (error) {
         console.error("Error fetching teachers:", error);
         alert("Error fetching teachers. Please try again.");
@@ -35,12 +37,27 @@ const TeacherList = () => {
     setSearchTerm(e.target.value);
   };
 
+  // Filter teachers based on name or email
   const filteredTeachers = teacherList.filter(
     (teacher) =>
       teacher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      teacher.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      teacher.phone?.toString().includes(searchTerm)
+      teacher.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTeachers.length / itemsPerPage);
+  const currentTeachers = filteredTeachers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
   const exportToCSV = () => {
     const headers = [
@@ -99,14 +116,14 @@ const TeacherList = () => {
           </button>
         </div>
 
-        {/* Search Bar */}
+        {/* Search and Export */}
         <div className="mb-6 flex justify-between items-center">
           <input
             type="text"
-            placeholder="Search by Name, Email, or Phone"
+            className="px-4 py-2 w-1/3 border border-gray-300 rounded-md"
+            placeholder="Search by name or email"
             value={searchTerm}
             onChange={handleSearch}
-            className="px-4 py-2 border border-gray-300 rounded-md w-1/3"
           />
           <button
             onClick={exportToCSV}
@@ -134,10 +151,10 @@ const TeacherList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredTeachers.length > 0 ? (
-                filteredTeachers.map((teacher, index) => (
+              {currentTeachers.length > 0 ? (
+                currentTeachers.map((teacher, index) => (
                   <tr key={teacher._id}>
-                    <td className="px-4 py-2 border-b">{index + 1}</td>
+                    <td className="px-4 py-2 border-b">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td className="px-4 py-2 border-b">{teacher.name}</td>
                     <td className="px-4 py-2 border-b">{teacher.email}</td>
                     <td className="px-4 py-2 border-b">{teacher.phone}</td>
@@ -147,9 +164,7 @@ const TeacherList = () => {
                     <td className="px-4 py-2 border-b">{teacher.gender || "N/A"}</td>
                     <td className="px-4 py-2 border-b">{teacher.education || "N/A"}</td>
                     <td className="px-4 py-2 border-b">
-                      {teacher.joiningDate
-                        ? new Date(teacher.joiningDate).toLocaleDateString()
-                        : "N/A"}
+                      {teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString() : "N/A"}
                     </td>
                   </tr>
                 ))
@@ -162,6 +177,27 @@ const TeacherList = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={handlePrevPage}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
