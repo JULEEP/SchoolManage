@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Subject = () => {
   const [subjectName, setSubjectName] = useState("");
@@ -24,6 +26,9 @@ const Subject = () => {
       setSubjectName("");
       setCategory("");
       setSubjectCode("");
+      toast.success("Subject added successfully!"); // Success toast
+    } else {
+      toast.error("Please fill in all fields!"); // Error toast
     }
   };
 
@@ -143,22 +148,15 @@ const Subject = () => {
                   <tr>
                     <th className="px-4 py-2 text-left text-gray-600">SL</th>
                     <th className="px-4 py-2 text-left text-gray-600">Subject</th>
-                    <th className="px-4 py-2 text-left text-gray-600">
-                      Category Name
-                    </th>
-                    <th className="px-4 py-2 text-left text-gray-600">
-                      Subject Code
-                    </th>
+                    <th className="px-4 py-2 text-left text-gray-600">Category Name</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Subject Code</th>
                     <th className="px-4 py-2 text-left text-gray-600">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredSubjects.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan="5"
-                        className="text-center py-4 text-gray-500"
-                      >
+                      <td colSpan="5" className="text-center py-4 text-gray-500">
                         No Data Available In Table
                       </td>
                     </tr>
@@ -188,6 +186,9 @@ const Subject = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

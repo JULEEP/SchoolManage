@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
 import Sidebar from "./Sidebar";
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const VehiclePage = () => {
   const [vehicleNumber, setVehicleNumber] = useState("");
@@ -41,6 +43,7 @@ const VehiclePage = () => {
 
         const data = await response.json();
         setSuccessMessage(data.message);
+        toast.success("Vehicle added successfully!"); // Success toast
         setVehicleNumber("");
         setVehicleModel("");
         setYearMade("");
@@ -48,11 +51,13 @@ const VehiclePage = () => {
         setNote("");
       } catch (err) {
         setError(err.message || "Something went wrong");
+        toast.error("Failed to add vehicle. Please try again."); // Error toast
       } finally {
         setLoading(false);
       }
     } else {
       setError("Please fill in all required fields.");
+      toast.warning("Please fill in all required fields."); // Warning toast
     }
   };
 
@@ -156,6 +161,9 @@ const VehiclePage = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for showing notifications */}
+      <ToastContainer />
     </div>
   );
 };

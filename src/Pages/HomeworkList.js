@@ -2,26 +2,31 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const HomeworkList = () => {
   const [homeworks, setHomeworks] = useState([]);
   const [search, setSearch] = useState(""); // Search query state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
-  // Fetch homeworks data from the API
   useEffect(() => {
     const fetchHomeworks = async () => {
       try {
+        // Dismiss any existing toast notifications before triggering a new one
+        toast.dismiss();
+  
         const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/homeworks");
         setHomeworks(response.data); // Set the fetched homeworks to state
+        toast.success('Homework data loaded successfully!'); // Success toast after data fetch
       } catch (error) {
         console.error("Error fetching homework data:", error);
       }
     };
-
+  
     fetchHomeworks();
   }, []);
-
+  
   const handleInputChange = (e) => {
     setSearch(e.target.value); // Update the search query
   };

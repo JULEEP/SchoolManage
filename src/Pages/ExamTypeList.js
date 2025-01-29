@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const ExamTypeList = () => {
   const [examTypes, setExamTypes] = useState([]);
@@ -15,7 +17,7 @@ const ExamTypeList = () => {
         const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/examtypes");
         setExamTypes(response.data.examTypes);
       } catch (error) {
-        alert("Failed to fetch exam types.");
+        toast.error("Failed to fetch exam types.");
       }
     };
 
@@ -101,6 +103,9 @@ const ExamTypeList = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const TransportRouteListPage = () => {
   const [routeList, setRouteList] = useState([]);
@@ -18,6 +20,7 @@ const TransportRouteListPage = () => {
         setRouteList(response.data.routes); // Assuming response data contains 'routes' array
       } catch (error) {
         console.error("Error fetching route list:", error);
+        toast.error("Error fetching route list. Please try again later."); // Toast notification on error
       }
     };
 
@@ -111,6 +114,9 @@ const TransportRouteListPage = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for showing notifications */}
+      <ToastContainer />
     </div>
   );
 };

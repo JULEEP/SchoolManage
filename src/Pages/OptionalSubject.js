@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // Importing sidebar icons
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const OptionalSubject = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +26,11 @@ const OptionalSubject = () => {
   };
 
   const handleSearchClick = () => {
-    console.log("Searching...");
+    if (!formData.class || !formData.section || !formData.subject) {
+      toast.error("Please select all criteria fields.");
+    } else {
+      toast.success("Searching for optional subject...");
+    }
   };
 
   const toggleSidebar = () => {
@@ -143,6 +149,9 @@ const OptionalSubject = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

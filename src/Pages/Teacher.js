@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Teacher = () => {
   const [teacherList, setTeacherList] = useState([]);
@@ -20,7 +22,7 @@ const Teacher = () => {
       setTeacherList(response.data || []);
     } catch (error) {
       console.error("Error fetching teachers:", error);
-      alert("Error fetching teachers. Please try again.");
+      toast.error("Error fetching teachers. Please try again."); // Toast error message
     }
   };
 
@@ -147,6 +149,9 @@ const Teacher = () => {
           </button>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

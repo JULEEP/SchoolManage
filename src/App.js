@@ -199,6 +199,9 @@ import VehicleListPage from './Pages/VehicleList';
 import ExamTypeList from './Pages/ExamTypeList';
 import ExamScheduleList from './Pages/ExamSheduleList';
 import Parents from './Pages/ParentList';
+import DriverForm from './Pages/AddDriver';
+import DriverListPage from './Pages/DriverList';
+import ExamTypeListPage from './Pages/ExamTypeTable';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -264,7 +267,7 @@ function App() {
             <Route path="/unassignedstudent" element={<UnassignedStudentList/>} />
             <Route path="/studentattendance" element={<StudentAttendance/>} />
             <Route path="/studentgrp" element={<StudentGroup/>} />
-            <Route path="/studentpromote" element={<StudentPromote/>} />
+            <Route path="/studentpromote" element={<StudentPromote/>} /> 
             <Route path="/disabledstudent" element={<DisabledStudents/>} />
             <Route path="/subjectwiseatten" element={<SubjectWiseAttendance/>} />
             <Route path="/studentexport" element={<StudentExport/>} />
@@ -288,7 +291,6 @@ function App() {
             <Route path="/vehiclelist" element={<VehicleListPage/>} />
             <Route path="/assignvehicle" element={<AddAssignVehicle/>} />
             <Route path="/addexam" element={<AddExamType/>} />
-            <Route path="/examtypelist" element={<ExamTypeList/>} />
             <Route path="/examsetup" element={<ExamSetup/>} />
             <Route path="/examshedule" element={<ExamSchedule/>} />
             <Route path="/examshedulelist" element={<ExamScheduleList/>} />
@@ -366,6 +368,12 @@ function App() {
             <Route path="/add-holiday" element={<HolidayForm/>} />
             <Route path="/holidays" element={<HolidayPage/>} />
             <Route path="/add-teacher" element={<AddTeacher/>} />
+            <Route path="/add-driver" element={<DriverForm/>} />
+            <Route path="/driverlist" element={<DriverListPage/>} />
+            <Route path="/examtypelist" element={<ExamTypeListPage/>} />
+
+
+
 
 
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const TeacherList = () => {
   const [teacherList, setTeacherList] = useState([]);
@@ -21,7 +23,7 @@ const TeacherList = () => {
         setTeacherList(response.data || []);
       } catch (error) {
         console.error("Error fetching teachers:", error);
-        alert("Error fetching teachers. Please try again.");
+        toast.error("Error fetching teachers. Please try again."); // Adding toast notification
       } finally {
         setLoading(false);
       }
@@ -89,6 +91,7 @@ const TeacherList = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast.success("CSV Exported Successfully!"); // Adding success toast notification
   };
 
   return (
@@ -200,6 +203,9 @@ const TeacherList = () => {
           </button>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

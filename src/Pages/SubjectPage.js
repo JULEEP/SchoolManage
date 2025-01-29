@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar'; // Import Sidebar
 import { FaBars, FaTimes } from 'react-icons/fa'; // Import icons for the sidebar toggle
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const SubjectPage = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +31,7 @@ const SubjectPage = () => {
 
   const handleSaveSubject = async () => {
     if (!formData.subjectName || !formData.subjectCode) {
-      alert('Please fill in all required fields.');
+      toast.error('Please fill in all required fields.'); // Toast error
       return;
     }
 
@@ -53,14 +55,14 @@ const SubjectPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Subject added successfully.');
+        toast.success('Subject added successfully.'); // Toast success
         setFormData({ subjectName: '', subjectType: 'Theory', subjectCode: '' }); // Reset form
       } else {
-        alert(data.message || 'Failed to add subject.');
+        toast.error(data.message || 'Failed to add subject.'); // Toast error
       }
     } catch (error) {
       console.error('Error adding subject:', error);
-      alert('An error occurred while adding the subject.');
+      toast.error('An error occurred while adding the subject.'); // Toast error
     } finally {
       setLoading(false);
     }
@@ -176,6 +178,9 @@ const SubjectPage = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

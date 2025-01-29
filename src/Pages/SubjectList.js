@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const SubjectListPage = () => {
   const [subjects, setSubjects] = useState([]);
@@ -19,10 +21,10 @@ const SubjectListPage = () => {
         if (response.ok) {
           setSubjects(data.subjects);
         } else {
-          console.error('Failed to fetch subjects:', data.message);
+          toast.error('Failed to fetch subjects: ' + data.message); // Toast error
         }
       } catch (error) {
-        console.error('Error fetching subjects:', error);
+        toast.error('Error fetching subjects: ' + error.message); // Toast error
       }
     };
 
@@ -120,6 +122,9 @@ const SubjectListPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

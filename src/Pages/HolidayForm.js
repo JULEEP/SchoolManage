@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar'; // Import Sidebar
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const HolidayForm = () => {
   const [fromDate, setFromDate] = useState('');
@@ -37,7 +39,7 @@ const HolidayForm = () => {
 
         // Check if the response is successful (status 200 or 201)
         if (response.status === 201) {
-          alert('Holiday added successfully!');
+          toast.success('Holiday added successfully!'); // Using toast instead of alert
           
           // Reset form fields
           setFromDate('');
@@ -45,14 +47,14 @@ const HolidayForm = () => {
           setHolidayName('');
           setHolidayMessage('');
         } else {
-          alert('Failed to add holiday. Please try again.');
+          toast.error('Failed to add holiday. Please try again.'); // Using toast for error message
         }
       } catch (error) {
         console.error('Error adding holiday:', error);
-        alert('An error occurred while adding the holiday.');
+        toast.error('An error occurred while adding the holiday.'); // Using toast for error message
       }
     } else {
-      alert('Please fill in all fields');
+      toast.warning('Please fill in all fields'); // Using toast for warning
     }
   };
 
@@ -139,6 +141,9 @@ const HolidayForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

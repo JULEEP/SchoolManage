@@ -1,9 +1,48 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
+import { ToastContainer, toast } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import styles
 
 const AddBook = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
+  const [formData, setFormData] = useState({
+    bookTitle: '',
+    category: '',
+    subject: '',
+    bookNo: '',
+    isbnNo: '',
+    publisherName: '',
+    authorName: '',
+    rackNumber: '',
+    quantity: '',
+    price: '',
+    description: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Form submission logic goes here
+
+    // Trigger success toast notification
+    toast.success("Book added successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -38,7 +77,7 @@ const AddBook = () => {
 
         {/* Form Container */}
         <div className="p-6 bg-gray-100 rounded shadow">
-          <form>
+          <form onSubmit={handleSubmit}>
             {/* Row 1 */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-4">
               {/* Book Title */}
@@ -48,6 +87,9 @@ const AddBook = () => {
                 </label>
                 <input
                   type="text"
+                  name="bookTitle"
+                  value={formData.bookTitle}
+                  onChange={handleChange}
                   placeholder="Enter Book Title"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -58,7 +100,12 @@ const AddBook = () => {
                 <label className="block text-sm text-gray-600 mb-1">
                   Book Categories *
                 </label>
-                <select className="w-full p-2 border border-gray-300 rounded">
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
                   <option>Select Category</option>
                   <option>Fiction</option>
                   <option>Non-Fiction</option>
@@ -69,7 +116,12 @@ const AddBook = () => {
               {/* Subject */}
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Subject *</label>
-                <select className="w-full p-2 border border-gray-300 rounded">
+                <select
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
                   <option>Select Subject</option>
                   <option>Math</option>
                   <option>Science</option>
@@ -85,6 +137,9 @@ const AddBook = () => {
                 <label className="block text-sm text-gray-600 mb-1">Book No</label>
                 <input
                   type="text"
+                  name="bookNo"
+                  value={formData.bookNo}
+                  onChange={handleChange}
                   placeholder="Enter Book No"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -95,6 +150,9 @@ const AddBook = () => {
                 <label className="block text-sm text-gray-600 mb-1">ISBN No</label>
                 <input
                   type="text"
+                  name="isbnNo"
+                  value={formData.isbnNo}
+                  onChange={handleChange}
                   placeholder="Enter ISBN No"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -107,6 +165,9 @@ const AddBook = () => {
                 </label>
                 <input
                   type="text"
+                  name="publisherName"
+                  value={formData.publisherName}
+                  onChange={handleChange}
                   placeholder="Enter Publisher Name"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -122,6 +183,9 @@ const AddBook = () => {
                 </label>
                 <input
                   type="text"
+                  name="authorName"
+                  value={formData.authorName}
+                  onChange={handleChange}
                   placeholder="Enter Author Name"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -134,6 +198,9 @@ const AddBook = () => {
                 </label>
                 <input
                   type="text"
+                  name="rackNumber"
+                  value={formData.rackNumber}
+                  onChange={handleChange}
                   placeholder="Enter Rack Number"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -144,6 +211,9 @@ const AddBook = () => {
                 <label className="block text-sm text-gray-600 mb-1">Quantity</label>
                 <input
                   type="number"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
                   placeholder="Enter Quantity"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -159,6 +229,9 @@ const AddBook = () => {
                 </label>
                 <input
                   type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
                   placeholder="Enter Book Price"
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -170,6 +243,9 @@ const AddBook = () => {
                   Description
                 </label>
                 <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
                   placeholder="Enter Description"
                   className="w-full p-2 border border-gray-300 rounded h-20"
                 />
@@ -188,6 +264,9 @@ const AddBook = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

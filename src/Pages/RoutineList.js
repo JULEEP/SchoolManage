@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const RoutineList = () => {
   const [routines, setRoutines] = useState([]);
@@ -13,8 +15,10 @@ const RoutineList = () => {
     try {
       const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-routine');
       setRoutines(response.data.routines || []);
+      toast.success("Routine data fetched successfully!"); // Success toast
     } catch (error) {
       setError('Error fetching routine data');
+      toast.error("Error fetching routine data!"); // Error toast
     }
   };
 
@@ -96,6 +100,9 @@ const RoutineList = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

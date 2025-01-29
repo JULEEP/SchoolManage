@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
 import Sidebar from './Sidebar'; // Importing Sidebar
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const ExamScheduleList = () => {
   const [scheduleData, setScheduleData] = useState([]);
@@ -17,6 +19,7 @@ const ExamScheduleList = () => {
         setScheduleData(response.data.examSchedules || []);
       } catch (error) {
         console.error('Error fetching schedule data:', error);
+        toast.error('Failed to fetch exam schedule data. Please try again.');
       }
     };
 
@@ -115,6 +118,9 @@ const ExamScheduleList = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

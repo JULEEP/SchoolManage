@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Parents = () => {
   const [parentList, setParentList] = useState([]);
@@ -17,9 +19,10 @@ const Parents = () => {
       try {
         const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/parents");
         setParentList(response.data.parents || []);
+        toast.success("Parents fetched successfully!");
       } catch (error) {
         console.error("Error fetching parents:", error);
-        alert("Error fetching parents. Please try again.");
+        toast.error("Error fetching parents. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -173,6 +176,9 @@ const Parents = () => {
           </button>
         </div>
       </div>
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

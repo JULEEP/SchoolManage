@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar"; // Import Sidebar
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const FeeManagement = () => {
   const [selectedClass, setSelectedClass] = useState("");
@@ -35,6 +37,7 @@ const FeeManagement = () => {
       }
     } catch (error) {
       console.error("Error fetching students:", error);
+      toast.error("Error fetching students"); // Show error toast
     }
   };
 
@@ -79,6 +82,7 @@ const FeeManagement = () => {
         if (data.message === "Fee added successfully") {
           console.log("Fee details added successfully:", data);
           setIsSuccessPopupOpen(true); // Open success popup
+          toast.success("Fee details added successfully!"); // Success toast
 
           // Reset form and close modal after success
           setFeeDetails({
@@ -99,14 +103,17 @@ const FeeManagement = () => {
         } else {
           // Handle unexpected success message or other cases
           console.error("Unexpected response:", data.message);
+          toast.error("Unexpected response: " + data.message); // Error toast
         }
       } else {
         // Handle response failure (e.g., 4xx or 5xx error)
         console.error("Error adding fee details:", data.message || "Unknown error");
+        toast.error("Error adding fee details: " + data.message || "Unknown error"); // Error toast
       }
     } catch (error) {
       // This will log network-related errors, like connection issues
       console.error("Error submitting fee details:", error);
+      toast.error("Error submitting fee details"); // Error toast
     }
   };
 
@@ -322,6 +329,9 @@ const FeeManagement = () => {
           </div>
         )}
       </div>
+
+      {/* ToastContainer for Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

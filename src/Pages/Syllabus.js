@@ -1,7 +1,10 @@
+// SyllabusList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const SyllabusList = () => {
   const [syllabusList, setSyllabusList] = useState([]);
@@ -14,9 +17,11 @@ const SyllabusList = () => {
         const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-syllabus');
         if (response.data) {
           setSyllabusList(response.data);
+          toast.success('Syllabus loaded successfully!'); // Toast success on successful data load
         }
       } catch (error) {
         console.error('Error fetching syllabus data:', error);
+        toast.error('Failed to load syllabus data.'); // Toast error on failure
       }
     };
 
@@ -123,6 +128,9 @@ const SyllabusList = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

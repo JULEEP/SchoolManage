@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
 import Sidebar from "./Sidebar";
-import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
-const VehicleListPage = () => {
-  const [vehicleList, setVehicleList] = useState([]);
+const ExamTypeListPage = () => {
+  const [examTypes, setExamTypes] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   useEffect(() => {
-    const fetchVehicles = async () => {
+    const fetchExamTypes = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-vehicle");
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-examtype");
         if (!response.ok) {
-          throw new Error("Failed to fetch vehicles");
+          throw new Error("Failed to fetch exam types");
         }
         const data = await response.json();
-        setVehicleList(data.vehicles || []); // Ensure vehicles array exists
-        toast.success("Vehicles loaded successfully!"); // Success toast
+        setExamTypes(data.examTypes || []); // Set exam types data
       } catch (err) {
         setError(err.message || "Something went wrong");
-        toast.error("Failed to load vehicles. Please try again."); // Error toast
+        toast.error(err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
     };
-    fetchVehicles();
+    fetchExamTypes();
   }, []);
 
-  // Filter vehicle list based on search term
-  const filteredVehicles = vehicleList.filter((vehicle) =>
-    vehicle.vehicleNumber?.toLowerCase().includes(search.toLowerCase())
+  // Filter exam types based on search term
+  const filteredExamTypes = examTypes.filter((exam) =>
+    exam.examName?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -56,11 +55,8 @@ const VehicleListPage = () => {
       <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Vehicle List</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-2xl focus:outline-none"
-          >
+          <h1 className="text-lg font-bold">Exam Types</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -68,7 +64,7 @@ const VehicleListPage = () => {
         <div className="flex justify-between items-center mb-4">
           <input
             type="text"
-            placeholder="Search by Vehicle No."
+            placeholder="Search Exam Type"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border border-gray-300 p-2 rounded w-full sm:w-1/3"
@@ -80,39 +76,35 @@ const VehicleListPage = () => {
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                <th className="px-4 py-2 text-left text-gray-600">Vehicle No</th>
-                <th className="px-4 py-2 text-left text-gray-600">Model No</th>
-                <th className="px-4 py-2 text-left text-gray-600">Year Made</th>
-                <th className="px-4 py-2 text-left text-gray-600">Driver Name</th>
+                <th className="px-4 py-2 text-left text-gray-600">Exam Name</th>
+                <th className="px-4 py-2 text-left text-gray-600">Created At</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-4 text-gray-500">
+                  <td colSpan="3" className="text-center py-4 text-gray-500">
                     Loading...
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-4 text-red-500">
+                  <td colSpan="3" className="text-center py-4 text-red-500">
                     {error}
                   </td>
                 </tr>
-              ) : filteredVehicles.length === 0 ? (
+              ) : filteredExamTypes.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-4 text-gray-500">
+                  <td colSpan="3" className="text-center py-4 text-gray-500">
                     No Data Available
                   </td>
                 </tr>
               ) : (
-                filteredVehicles.map((vehicle, index) => (
-                  <tr key={vehicle._id}>
+                filteredExamTypes.map((exam, index) => (
+                  <tr key={exam._id}>
                     <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{vehicle.vehicleNumber || "N/A"}</td>
-                    <td className="px-4 py-2">{vehicle.vehicleModel || "N/A"}</td>
-                    <td className="px-4 py-2">{vehicle.yearMade || "N/A"}</td>
-                    <td className="px-4 py-2">{vehicle.driver || "N/A"}</td>
+                    <td className="px-4 py-2">{exam.examName || "N/A"}</td>
+                    <td className="px-4 py-2">{new Date(exam.createdAt).toLocaleDateString() || "N/A"}</td>
                   </tr>
                 ))
               )}
@@ -121,10 +113,10 @@ const VehicleListPage = () => {
         </div>
       </div>
 
-      {/* ToastContainer for showing notifications */}
+      {/* Toast Container */}
       <ToastContainer />
     </div>
   );
 };
 
-export default VehicleListPage;
+export default ExamTypeListPage;

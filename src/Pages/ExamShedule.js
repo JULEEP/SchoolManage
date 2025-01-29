@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const ExamSchedule = () => {
   const [examTitle, setExamTitle] = useState('');
@@ -17,6 +19,7 @@ const ExamSchedule = () => {
   const [classes, setClasses] = useState([]);
   const [sections, setSections] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [examTypes, setExamTypes] = useState([]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
@@ -33,6 +36,9 @@ const ExamSchedule = () => {
         const subjectResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-subjects-names');
         const uniqueSubjects = [...new Set(subjectResponse.data.subjectNames.filter((name) => name))];
         setSubjects(uniqueSubjects || []);
+
+        const examTypeResponse = await axios.get('http://localhost:4000/api/admin/get-examtype');
+        setExamTypes(examTypeResponse.data.examTypes || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -61,7 +67,7 @@ const ExamSchedule = () => {
       const response = await axios.post('https://school-backend-1-2xki.onrender.com/api/admin/add-exam-schedule', newExam);
 
       if (response.status === 200) {
-        alert('Exam schedule added successfully!');
+        toast.success('Exam schedule added successfully!');
         setExamTitle('');
         setExamClass('');
         setExamSection('');
@@ -71,11 +77,11 @@ const ExamSchedule = () => {
         setEndTime('');
         setExamType('');
       } else {
-        alert(`Error: ${response.data.message}`);
+        toast.error(`Error: ${response.data.message}`);
       }
     } catch (error) {
       console.error('Error adding exam schedule:', error);
-      alert('An error occurred. Please try again.');
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -195,9 +201,11 @@ const ExamSchedule = () => {
                 required
               >
                 <option value="">Select Exam Type</option>
-                <option value="Mid-Term">Mid-Term</option>
-                <option value="Final">Final</option>
-                <option value="Semester">Semester</option>
+                {examTypes.map((type) => (
+                  <option key={type._id} value={type.examName}>
+                    {type.examName}
+                  </option>
+                ))}
               </select>
             </div>
             <button
@@ -209,6 +217,9 @@ const ExamSchedule = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

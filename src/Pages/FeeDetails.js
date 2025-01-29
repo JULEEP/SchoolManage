@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar'; // Import Sidebar component
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 function FeeDetails() {
   const [feeData, setFeeData] = useState([]);
@@ -25,10 +27,12 @@ function FeeDetails() {
         setFeeData(response.data.fees);
         setFilteredData(response.data.fees); // Initial data
         setLoading(false);
+        toast.success("Fee data loaded successfully!"); // Success Toast
       })
       .catch((err) => {
         setError("Failed to fetch data");
         setLoading(false);
+        toast.error("Error fetching fee data"); // Error Toast
       });
   }, []);
 
@@ -95,6 +99,8 @@ function FeeDetails() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    toast.success("CSV file generated successfully!"); // Success Toast for CSV generation
   };
 
   // Get current items to display based on pagination
@@ -143,7 +149,6 @@ function FeeDetails() {
 
         {/* Title and Filter Section */}
         <div className="p-6">
-
           {/* Filters for Class and Section */}
           <div className="mb-4 flex flex-col sm:flex-row sm:gap-6 sm:items-center">
             <select
@@ -250,6 +255,9 @@ function FeeDetails() {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 }

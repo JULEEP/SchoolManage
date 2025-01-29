@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const AddTopic = () => {
   const [selectedClass, setSelectedClass] = useState('');
@@ -53,6 +55,7 @@ const AddTopic = () => {
     // Validate fields
     if (!selectedClass || !selectedSection || !selectedSubject || !selectedLesson || !topicTitle) {
       setErrorMessage('All fields are required.');
+      toast.error('All fields are required.'); // Show error toast
       return;
     }
 
@@ -75,6 +78,7 @@ const AddTopic = () => {
 
       if (response.ok) {
         setSuccessMessage('Topic added successfully.');
+        toast.success('Topic added successfully.'); // Show success toast
         setTopics((prevTopics) => [
           ...prevTopics,
           {
@@ -92,9 +96,11 @@ const AddTopic = () => {
         setTopicTitle('');
       } else {
         setErrorMessage(data.message || 'Failed to add topic.');
+        toast.error(data.message || 'Failed to add topic.'); // Show error toast
       }
     } catch (error) {
       setErrorMessage('An error occurred while adding the topic.');
+      toast.error('An error occurred while adding the topic.'); // Show error toast
     }
   };
 
@@ -246,6 +252,9 @@ const AddTopic = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

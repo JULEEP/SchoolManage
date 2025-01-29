@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const StaffList = () => {
   const [staffList, setStaffList] = useState([]);
@@ -19,7 +21,7 @@ const StaffList = () => {
         setStaffList(response.data.staff || []);
       } catch (error) {
         console.error("Error fetching staff:", error);
-        alert("Error fetching staff. Please try again.");
+        toast.error("Error fetching staff. Please try again."); // Error toast
       } finally {
         setLoading(false);
       }
@@ -79,6 +81,8 @@ const StaffList = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    toast.success("CSV Exported Successfully!"); // Success toast
   };
 
   return (
@@ -109,10 +113,7 @@ const StaffList = () => {
         {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Staff List</h1>
-          <button
-            onClick={toggleSidebar}
-            className="text-2xl focus:outline-none"
-          >
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -197,6 +198,9 @@ const StaffList = () => {
           </table>
         </div>
       </div>
+
+      {/* ToastContainer to display toasts */}
+      <ToastContainer />
     </div>
   );
 };

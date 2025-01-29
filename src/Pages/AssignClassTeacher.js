@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import axios from 'axios';
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
 const AssignClassTeacherPage = () => {
   const [formData, setFormData] = useState({
@@ -92,13 +94,16 @@ const AssignClassTeacherPage = () => {
         const data = await response.json();
         setClassTeacherAssignments([...classTeacherAssignments, { ...data.assignment }]);
         setFormData({ className: '', sectionName: '', name: '', subject: '' });
+        toast.success('Class Teacher Assigned Successfully!'); // Success toast
       } catch (error) {
         setError(error.message || 'An unexpected error occurred.');
+        toast.error('Failed to assign class teacher.'); // Error toast
       } finally {
         setIsLoading(false);
       }
     } else {
       setError('Please fill in all fields.');
+      toast.warning('Please fill in all fields.'); // Warning toast
     }
   };
 
@@ -273,6 +278,14 @@ const AssignClassTeacherPage = () => {
                       <td className="px-4 py-2 text-gray-600">{assignment.section || 'null'}</td>
                       <td className="px-4 py-2 text-gray-600">{assignment.name || 'null'}</td>
                       <td className="px-4 py-2 text-gray-600">{assignment.subject || 'null'}</td>
+                      <td className="px-4 py-2">
+                        <button
+                          onClick={() => handleRemoveAssignment(assignment.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -282,25 +295,25 @@ const AssignClassTeacherPage = () => {
 
           {/* Pagination */}
           <div className="flex justify-center mt-4">
-            <nav className="inline-flex space-x-2">
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentPage === 1 && 'opacity-50 cursor-not-allowed'}`}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                className={`px-4 py-2 rounded-md bg-gray-200 text-gray-600 ${currentAssignments.length < assignmentsPerPage && 'opacity-50 cursor-not-allowed'}`}
-                disabled={currentAssignments.length < assignmentsPerPage}
-              >
-                Next
-              </button>
-            </nav>
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-md"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={indexOfLastAssignment >= classTeacherAssignments.length}
+              className="px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-md ml-4"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
+
+      <ToastContainer /> {/* Toast notifications container */}
     </div>
   );
 };

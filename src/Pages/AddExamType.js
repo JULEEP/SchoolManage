@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
 
 const AddExamType = () => {
   const [examName, setExamName] = useState("");
@@ -16,16 +18,16 @@ const AddExamType = () => {
         });
 
         if (response.status === 201) {
-          alert("Exam Type Added Successfully");
+          toast.success("Exam Type Added Successfully!"); // Success notification
           setExamName(""); // Clear the input field after saving
         } else {
-          alert("Failed to add exam type.");
+          toast.error("Failed to add exam type."); // Error notification
         }
       } catch (error) {
-        alert(`Error adding exam type: ${error.response?.data?.message || error.message}`);
+        toast.error(`Error adding exam type: ${error.response?.data?.message || error.message}`); // Error notification
       }
     } else {
-      alert("Please enter an exam name.");
+      toast.warning("Please enter an exam name."); // Warning notification
     }
   };
 
@@ -49,10 +51,7 @@ const AddExamType = () => {
         {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Add Exam Type</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-2xl focus:outline-none"
-          >
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -83,6 +82,9 @@ const AddExamType = () => {
           </div>
         </div>
       </div>
+
+      {/* Toastify Container */}
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
     </div>
   );
 };

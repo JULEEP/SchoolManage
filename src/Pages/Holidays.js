@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const HolidayPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,8 +19,10 @@ const HolidayPage = () => {
         }
         const data = await response.json();
         setHolidays(data.holidays);
+        toast.success('Holidays fetched successfully!'); // Success toast after fetching holidays
       } catch (err) {
         setError(err.message);
+        toast.error('Error fetching holidays'); // Error toast in case of failure
       } finally {
         setLoading(false);
       }
@@ -86,6 +90,9 @@ const HolidayPage = () => {
           )}
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

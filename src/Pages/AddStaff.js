@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar'; // Import Sidebar component
 import { FaBars, FaTimes } from 'react-icons/fa'; // Mobile sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the Toastify CSS
 
 const AddStaffForm = () => {
     const [staffData, setStaffData] = useState({
@@ -59,7 +61,7 @@ const AddStaffForm = () => {
         e.preventDefault();
         try {
             const response = await axios.post('https://school-backend-1-2xki.onrender.com/api/admin/add-staff', staffData);
-            alert('Staff added successfully!');
+            toast.success('Staff added successfully!'); // Success Toast
             console.log(response.data);
 
             // Reset the form fields after successful submission
@@ -90,7 +92,7 @@ const AddStaffForm = () => {
                 qualifications: [''],
             });
         } catch (error) {
-            alert('Error adding staff');
+            toast.error('Error adding staff'); // Error Toast
             console.error(error);
         }
     };
@@ -326,10 +328,10 @@ const AddStaffForm = () => {
                             </div>
                         </div>
 
-                        {/* Emergency Contact (4 fields per row) */}
+                        {/* Emergency Contact (3 fields) */}
                         <div className="mt-6">
                             <h3 className="text-lg font-semibold">Emergency Contact</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="form-group">
                                     <label className="block text-gray-700">Name</label>
                                     <input
@@ -360,33 +362,13 @@ const AddStaffForm = () => {
                                         className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label className="block text-gray-700">Qualification</label>
-                                    {staffData.qualifications.map((qualification, index) => (
-                                        <input
-                                            key={index}
-                                            type="text"
-                                            value={qualification}
-                                            onChange={(e) => handleQualificationChange(index, e.target.value)}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-purple-500 focus:outline-none mb-2"
-                                        />
-                                    ))}
-                                    <button
-                                        type="button"
-                                        onClick={addQualification}
-                                        className="mt-2 text-sm text-purple-600"
-                                    >
-                                        Add Qualification
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
-                        {/* Submit Button */}
-                        <div className="mt-6 text-center">
+                        <div className="flex justify-end mt-8">
                             <button
                                 type="submit"
-                                className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-md shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                                className="px-6 py-2 bg-purple-600 text-white rounded-md shadow-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
                             >
                                 Add Staff
                             </button>
@@ -394,6 +376,9 @@ const AddStaffForm = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Toastify Container */}
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         </div>
     );
 };

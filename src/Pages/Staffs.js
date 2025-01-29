@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Staffs = () => {
   const [staffList, setStaffList] = useState([]);
@@ -21,7 +23,7 @@ const Staffs = () => {
         setStaffList(response.data.staff || []);
       } catch (error) {
         console.error("Error fetching staff:", error);
-        alert("Error fetching staff. Please try again.");
+        toast.error("Error fetching staff. Please try again."); // Using toast for error
       } finally {
         setLoading(false);
       }
@@ -187,6 +189,9 @@ const Staffs = () => {
           </button>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

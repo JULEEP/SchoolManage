@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const MarksList = () => {
   const [marksList, setMarksList] = useState([]);
@@ -30,13 +32,15 @@ const MarksList = () => {
       );
       setMarksList(response.data.marks || []);
       setFilteredMarks(response.data.marks || []);
+      toast.success("Marks data fetched successfully!"); // Success toast
     } catch (error) {
       console.error("Error fetching marks:", error);
-      alert("Error fetching marks. Please try again.");
+      toast.error("Error fetching marks. Please try again."); // Error toast
     } finally {
       setLoading(false);
     }
   };
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -308,6 +312,7 @@ const MarksList = () => {
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

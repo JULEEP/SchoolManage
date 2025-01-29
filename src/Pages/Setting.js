@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios"; // For making API requests
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // For sidebar toggle icons
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Setting = () => {
   const [schoolName, setSchoolName] = useState("");
@@ -56,9 +58,7 @@ const Setting = () => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setSuccessMessage("School details updated successfully!");
-      setErrorMessage("");
-  
+      toast.success("School details updated successfully!"); // Success toast
       // Clear form fields after successful submission
       setSchoolName("");
       setAddress("");
@@ -67,11 +67,9 @@ const Setting = () => {
       setDescription("");
       setLogo(null);
       setSchoolImage(null);
-  
     } catch (error) {
       console.error("Error updating school details:", error);
-      setErrorMessage("Failed to update school details.");
-      setSuccessMessage("");
+      toast.error("Failed to update school details."); // Error toast
     } finally {
       setLoading(false);
     }
@@ -241,6 +239,7 @@ const Setting = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

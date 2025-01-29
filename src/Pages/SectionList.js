@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const SectionListPage = () => {
   const [sections, setSections] = useState([]);
@@ -17,6 +19,7 @@ const SectionListPage = () => {
         setSections(response.data.sections);
       } catch (error) {
         console.error("Error fetching sections:", error);
+        toast.error("Error fetching sections!"); // Error toast
       }
     };
 
@@ -29,8 +32,10 @@ const SectionListPage = () => {
         `https://school-backend-1-2xki.onrender.com/api/admin/delete-section/${id}`
       );
       setSections(sections.filter((section) => section._id !== id));
+      toast.success("Section removed successfully!"); // Success toast
     } catch (error) {
       console.error("Error removing section:", error);
+      toast.error("Error removing section!"); // Error toast
     }
   };
 
@@ -105,6 +110,9 @@ const SectionListPage = () => {
           </table>
         </div>
       </div>
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

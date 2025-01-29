@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddAssignVehicle = () => {
   const [vehicleNumber, setVehicleNumber] = useState("");
@@ -28,28 +30,13 @@ const AddAssignVehicle = () => {
   const handleSaveVehicle = async () => {
     if (vehicleNumber && vehicleModel && yearMade && driver) {
       setLoading(true);
-      setError("");
-      setSuccessMessage("");
-
       try {
         const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/add-vehicle", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            vehicleNumber,
-            vehicleModel,
-            yearMade,
-            driver,
-            note,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vehicleNumber, vehicleModel, yearMade, driver, note })
         });
-
-        if (!response.ok) {
-          throw new Error("Failed to add vehicle");
-        }
-
+        if (!response.ok) throw new Error("Failed to add vehicle");
         const data = await response.json();
         setVehicleList([...vehicleList, { ...data.vehicle, id: vehicleList.length + 1 }]);
         setVehicleNumber("");
@@ -57,14 +44,14 @@ const AddAssignVehicle = () => {
         setYearMade("");
         setDriver("");
         setNote("");
-        setSuccessMessage(data.message);
+        toast.success(data.message);
       } catch (err) {
-        setError(err.message || "Something went wrong");
+        toast.error(err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
     } else {
-      setError("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
     }
   };
 
@@ -132,6 +119,7 @@ const AddAssignVehicle = () => {
 
   return (
     <div className="flex min-h-screen">
+    <ToastContainer />
       {/* Sidebar Overlay for Mobile */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}

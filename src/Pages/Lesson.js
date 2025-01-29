@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";  // Importing Sidebar component
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Importing sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const AddLesson = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to control sidebar visibility
@@ -29,6 +31,7 @@ const AddLesson = () => {
         setSubjects(uniqueSubjects || []);
       } catch (error) {
         console.error("Error fetching data:", error);
+        toast.error("Error fetching data!"); // Error toast for fetching failure
       }
     };
     fetchData();
@@ -36,7 +39,7 @@ const AddLesson = () => {
 
   const handleSave = async () => {
     if (!selectedClass || !selectedSection || !selectedSubject || !lessonName || !title || !postedBy) {
-      alert("All fields are required");
+      toast.warn("All fields are required!"); // Warn toast if fields are empty
       return;
     }
 
@@ -52,7 +55,7 @@ const AddLesson = () => {
 
       const response = await axios.post("https://school-backend-1-2xki.onrender.com/api/admin/add-lesson", payload);
       if (response.status === 201) {
-        alert("Lesson added successfully");
+        toast.success("Lesson added successfully!"); // Success toast for lesson addition
 
         setSelectedClass("");
         setSelectedSection("");
@@ -63,7 +66,7 @@ const AddLesson = () => {
       }
     } catch (error) {
       console.error("Error adding lesson:", error);
-      alert("Failed to add lesson. Please try again.");
+      toast.error("Failed to add lesson. Please try again."); // Error toast in case of failure
     }
   };
 
@@ -188,6 +191,9 @@ const AddLesson = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

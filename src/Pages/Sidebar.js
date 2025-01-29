@@ -3,6 +3,8 @@ import { FaHome, FaUser, FaWallet, FaCog, FaSignOutAlt, FaList, FaDownload, FaFi
 import { NavLink } from "react-router-dom"; // Import NavLink from react-router-dom
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Sidebar = () => {
   const [isAddItemsOpen, setIsAddItemsOpen] = useState(false);
@@ -11,6 +13,11 @@ const Sidebar = () => {
   const [isExportDataOpen, setExportDataOpen] = useState(false);
   const [isAssigningSectionOpen, setIsAssigningSectionOpen] = useState(false);
   const [isParentSectionOpen, setIsParentSectionOpen] = useState(false);
+  const [isStudentAttendanceOpen, setIsStudentAttendanceOpen] = useState(false);
+  const [isStudentPromoteOpen, setIsStudentPromoteOpen] = useState(false);
+  const [isStudentHomeworkOpen, setIsStudentHomeworkOpen] = useState(false);
+  const [isAssignmentsOpen, setIsAssignmentsOpen] = useState(false); // New state for Assignments
+
 
 
 
@@ -41,28 +48,27 @@ const Sidebar = () => {
   const [isSubjectAssigningOpen, setIsSubjectAssigningOpen] = useState(false);
   const [isVehicleAssigningOpen, setIsVehicleAssigningOpen] = useState(false);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleAdminLogout = async () => {
-  try {
-    const response = await axios.post(
-      "https://school-backend-1-2xki.onrender.com/api/admin/admin-logout",
-      {},
-      { withCredentials: true }
-    );
+  const handleAdminLogout = async () => {
+    try {
+      const response = await axios.post(
+        "https://school-backend-1-2xki.onrender.com/api/admin/admin-logout",
+        {},
+        { withCredentials: true }
+      );
 
-    if (response.status === 200) {
-      alert(response.data.message); // Display success message from backend
-      navigate("/admin-login"); // Redirect to admin login page
-    } else {
-      alert("Logout failed. Please try again.");
+      if (response.status === 200) {
+        toast.success(response.data.message); // Success toast
+        navigate("/admin-login"); // Redirect to admin login page
+      } else {
+        toast.error("Logout failed. Please try again."); // Error toast
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("An error occurred while logging out."); // Error toast
     }
-  } catch (error) {
-    console.error("Logout error:", error);
-    alert("An error occurred while logging out.");
-  }
-};
-
+  };
 
 
 
@@ -140,11 +146,6 @@ const handleAdminLogout = async () => {
                 {isStudentSectionOpen && (
                   <ul className="pl-4 space-y-2">
                     <li>
-                      <NavLink to="/studentcat" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Student Category</span>
-                      </NavLink>
-                    </li>
-                    <li>
                       <NavLink to="/studentadmission" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>Student Admission</span>
                       </NavLink>
@@ -196,8 +197,8 @@ const handleAdminLogout = async () => {
                 {isClassSectionOpen && (
                   <ul className="pl-4 space-y-2">
                     <li>
-                      <NavLink to="/optional-subject" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Optional Subject</span>
+                      <NavLink to="/class" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Add Class</span>
                       </NavLink>
                     </li>
                     <li>
@@ -206,8 +207,8 @@ const handleAdminLogout = async () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink to="/class" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Class</span>
+                      <NavLink to="/classroom" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Add Classroom</span>
                       </NavLink>
                     </li>
                     <li>
@@ -216,13 +217,13 @@ const handleAdminLogout = async () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink to="/classroom" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Classroom</span>
+                      <NavLink to="/optional-subject" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Add Optional Subject</span>
                       </NavLink>
                     </li>
                     <li>
                       <NavLink to="/classroutine" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add ClassRoutine</span>
+                        <span>Add Routine</span>
                       </NavLink>
                     </li>
                   </ul>
@@ -232,16 +233,11 @@ const handleAdminLogout = async () => {
               {/* Content Section */}
               <li>
                 <div className="flex items-center cursor-pointer" onClick={() => setIsContentSectionOpen(!isContentSectionOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Content</span>
+                  <span className="text-sm font-semibold text-gray-300">Lession/Topic</span>
                   {isContentSectionOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
                 </div>
                 {isContentSectionOpen && (
                   <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/updatecontent" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Content</span>
-                      </NavLink>
-                    </li>
                     <li>
                       <NavLink to="/lesson" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>Add Lesson</span>
@@ -281,6 +277,11 @@ const handleAdminLogout = async () => {
                 </div>
                 {isTransportSectionOpen && (
                   <ul className="pl-4 space-y-2">
+                    <li>
+                      <NavLink to="/add-driver" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Add Driver</span>
+                      </NavLink>
+                    </li>
                     <li>
                       <NavLink to="/transport" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>Add Transport Route</span>
@@ -478,6 +479,74 @@ const handleAdminLogout = async () => {
                 )}
               </li>
 
+               {/* Assignments */}
+        <li>
+        <div className="flex items-center cursor-pointer" onClick={() => setIsAssignmentsOpen(!isAssignmentsOpen)}>
+          <span className="text-sm font-semibold text-gray-300">Assignments</span>
+          {isAssignmentsOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
+        </div>
+        {isAssignmentsOpen && (
+          <ul className="pl-4 space-y-2">
+            <li>
+              <NavLink to="/assignment" className="flex items-center text-sm text-white hover:text-gray-400">
+                <span>View Assignment List</span>
+              </NavLink>
+            </li>
+          </ul>
+        )}
+      </li>
+
+              {/* Student Attendance */}
+              <li>
+                <div className="flex items-center cursor-pointer" onClick={() => setIsStudentAttendanceOpen(!isStudentAttendanceOpen)}>
+                  <span className="text-sm font-semibold text-gray-300">Student Attendance</span>
+                  {isStudentAttendanceOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
+                </div>
+                {isStudentAttendanceOpen && (
+                  <ul className="pl-4 space-y-2">
+                    <li>
+                      <NavLink to="/studentattendance" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>View Student Attendance List</span>
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
+              </li>
+
+              {/* Student Promote */}
+              <li>
+                <div className="flex items-center cursor-pointer" onClick={() => setIsStudentPromoteOpen(!isStudentPromoteOpen)}>
+                  <span className="text-sm font-semibold text-gray-300">Student Promote</span>
+                  {isStudentPromoteOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
+                </div>
+                {isStudentPromoteOpen && (
+                  <ul className="pl-4 space-y-2">
+                    <li>
+                      <NavLink to="/studentpromote" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Promote Student</span>
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
+              </li>
+
+              {/* Student Homework */}
+              <li>
+                <div className="flex items-center cursor-pointer" onClick={() => setIsStudentHomeworkOpen(!isStudentHomeworkOpen)}>
+                  <span className="text-sm font-semibold text-gray-300">Student Homework</span>
+                  {isStudentHomeworkOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
+                </div>
+                {isStudentHomeworkOpen && (
+                  <ul className="pl-4 space-y-2">
+                    <li>
+                      <NavLink to="/homeworklist" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>Student Homework List</span>
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
+              </li>
+
               {/* Routine Section */}
               <li>
                 <div className="flex items-center cursor-pointer" onClick={() => setIsRoutineSectionOpen(!isRoutineSectionOpen)}>
@@ -555,6 +624,11 @@ const handleAdminLogout = async () => {
                 {isTransportSectionOpen && (
                   <ul className="pl-4 space-y-2">
                     <li>
+                      <NavLink to="/driverlist" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>View Drivers</span>
+                      </NavLink>
+                    </li>
+                    <li>
                       <NavLink to="/transportlist" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>View Transport Routes</span>
                       </NavLink>
@@ -600,51 +674,6 @@ const handleAdminLogout = async () => {
             </ul>
           )}
         </li>
-
-        {/* Modify Entries Section */}
-        <li className="flex flex-col items-start text-lg p-3 rounded-md hover:bg-gray-700">
-          <div className="flex items-center w-full cursor-pointer" onClick={toggleModifyEntries}>
-            <FaClipboardCheck className="mr-3 text-white" />
-            <span className="text-white">Modify Entries(Coming Soon)</span>
-            {isModifyEntriesOpen ? (
-              <FaChevronDown className="ml-2 text-white" />
-            ) : (
-              <FaChevronRight className="ml-2 text-white" />
-            )}
-          </div>
-          {isModifyEntriesOpen && (
-            <ul className="pl-8 space-y-4 mt-2">
-              <li>
-                <NavLink
-                  to="/admin-modify-teacher"
-                  className="flex items-center text-sm text-white hover:text-gray-400"
-                  activeClassName="bg-gray-700 rounded-full"
-                >
-                  <span>Modify Teacher</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/admin-modify-student"
-                  className="flex items-center text-sm text-white hover:text-gray-400"
-                  activeClassName="bg-gray-700 rounded-full"
-                >
-                  <span>Modify Student</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/admin-modify-staff"
-                  className="flex items-center text-sm text-white hover:text-gray-400"
-                  activeClassName="bg-gray-700 rounded-full"
-                >
-                  <span>Modify Staff</span>
-                </NavLink>
-              </li>
-            </ul>
-          )}
-        </li>
-
         {/* Export Data Section */}
         <li className="flex flex-col items-start text-lg p-3 rounded-md hover:bg-gray-700">
           <div className="flex items-center w-full cursor-pointer" onClick={toggleExportData}>
@@ -806,13 +835,14 @@ const handleAdminLogout = async () => {
         </li>
 
         <li
-  className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8 cursor-pointer"
-  onClick={handleAdminLogout}
->
-  <FaSignOutAlt className="mr-3 text-white" />
-  <span className="text-white hover:text-gray-400">Admin Logout</span>
-</li>
+          className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8 cursor-pointer"
+          onClick={handleAdminLogout}
+        >
+          <FaSignOutAlt className="mr-3 text-white" />
+          <span className="text-white hover:text-gray-400">Admin Logout</span>
+        </li>
       </ul>
+      <ToastContainer />
     </div>
   );
 };

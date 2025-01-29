@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const TopicList = () => {
   const [topics, setTopics] = useState([]);
@@ -15,6 +17,7 @@ const TopicList = () => {
         setTopics(response.data.data || []);
       } catch (error) {
         console.error('Error fetching topics:', error);
+        toast.error('Error fetching topics. Please try again later.'); // Toast for error
       }
     };
 
@@ -49,7 +52,7 @@ const TopicList = () => {
         {/* Page Content */}
         <div className="p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Existing Topics</h2>
-          
+
           <div className="mt-4">
             {topics.length === 0 ? (
               <div className="text-center text-gray-500 bg-gray-100 p-4 rounded-lg shadow-md">
@@ -68,6 +71,9 @@ const TopicList = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for showing notifications */}
+      <ToastContainer />
     </div>
   );
 };

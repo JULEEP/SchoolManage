@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const LessonList = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,8 +14,10 @@ const LessonList = () => {
       try {
         const lessonResponse = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/get-lesson");
         setLessons(lessonResponse.data.lessons || []);
+        toast.success('Lessons loaded successfully'); // Toast success notification
       } catch (error) {
         console.error("Error fetching lessons:", error);
+        toast.error('Failed to load lessons. Please try again.'); // Toast error notification
       }
     };
     fetchData();
@@ -77,6 +81,9 @@ const LessonList = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer to display the toast notifications */}
+      <ToastContainer />
     </div>
   );
 };

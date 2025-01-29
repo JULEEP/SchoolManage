@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const SectionPage = () => {
   const [formData, setFormData] = useState({
@@ -27,16 +29,19 @@ const SectionPage = () => {
             `https://school-backend-1-2xki.onrender.com/api/admin/update-section/${formData.id}`,
             { name: formData.name }
           );
+          toast.success("Section updated successfully!"); // Success toast
         } else {
           // Add new section
           await axios.post(
             "https://school-backend-1-2xki.onrender.com/api/admin/add-section",
             { name: formData.name }
           );
+          toast.success("Section added successfully!"); // Success toast
         }
         setFormData({ id: null, name: "" }); // Clear form
       } catch (error) {
         console.error("Error saving section:", error);
+        toast.error("Error saving section!"); // Error toast
       }
     }
   };
@@ -104,6 +109,9 @@ const SectionPage = () => {
           </form>
         </div>
       </div>
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

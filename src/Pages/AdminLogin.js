@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,11 +24,16 @@ const AdminLogin = () => {
         localStorage.setItem('refreshToken', refreshToken); // Store refresh token
         localStorage.setItem('adminId', _id); // Store adminId (from _id)
         localStorage.setItem('firstName', response.data.firstName); // Store admin's first name
-        navigate('/Admin-dashboard'); // Redirect to admin dashboard
+
+        toast.success('Login successful! Redirecting to dashboard...');
+        setTimeout(() => {
+          navigate('/Admin-dashboard'); // Redirect to admin dashboard
+        }, 2000); // Delay the redirect to show the toast
       }
     } catch (err) {
       // Handle error: Show error message if login fails
       setError('Invalid credentials or something went wrong.');
+      toast.error('Invalid credentials or something went wrong.');
       console.error('Login error:', err);
     }
   };
@@ -92,6 +99,9 @@ const AdminLogin = () => {
           />
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

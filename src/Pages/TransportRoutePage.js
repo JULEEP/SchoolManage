@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const TransportRoutePage = () => {
   const [routeTitle, setRouteTitle] = useState("");
@@ -23,12 +25,14 @@ const TransportRoutePage = () => {
         if (response.status === 201) {
           setRouteTitle("");
           setFare("");
+          toast.success("Route added successfully!"); // Success toast
         }
       } catch (error) {
         console.error("Error adding route:", error);
+        toast.error("Error adding route. Please try again."); // Error toast
       }
     } else {
-      alert("Please provide both route title and fare.");
+      toast.warning("Please provide both route title and fare."); // Warning toast
     }
   };
 
@@ -98,6 +102,9 @@ const TransportRoutePage = () => {
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for showing notifications */}
+      <ToastContainer />
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
+import { toast, ToastContainer } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const AddTeacher = () => {
   const [teacherDetails, setTeacherDetails] = useState({
@@ -46,10 +48,10 @@ const AddTeacher = () => {
           },
         }
       );
-      alert("Teacher added successfully!");
+      toast.success("Teacher added successfully!"); // Show success toast
     } catch (error) {
       console.error("Error adding teacher:", error);
-      alert("Failed to add teacher");
+      toast.error("Failed to add teacher"); // Show error toast
     }
   };
 
@@ -81,8 +83,6 @@ const AddTeacher = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        {/* Title Section */}
 
         {/* Add Teacher Form */}
         <div className="bg-white p-6 rounded-md shadow-md mb-8 w-full max-w-5xl mt-8">
@@ -131,6 +131,9 @@ const AddTeacher = () => {
           </form>
         </div>
       </div>
+
+      {/* Toastify Container */}
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 };
