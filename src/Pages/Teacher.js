@@ -79,7 +79,7 @@ const Teacher = () => {
         <div className="flex justify-between items-center mt-8 px-4">
           <input
             type="text"
-            className="px-4 py-2 w-1/3 border border-gray-300 rounded-md"
+            className="px-4 py-2 w-1/1 border border-gray-300 rounded-md"
             placeholder="Search by name or email"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

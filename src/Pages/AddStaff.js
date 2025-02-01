@@ -138,7 +138,7 @@ const AddStaffForm = () => {
 
                 {/* Main Form Area */}
                 <div className={`ml-0 md:ml-64 bg-white rounded-lg p-6 shadow-lg w-full`}>
-                    <h2 className="text-3xl font-bold text-center mb-8">Add Staff Member</h2>
+                    <h2 className="text-2xl text-blue-600 text-center mb-8">Add Staff Member</h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Basic Information (4 fields per row) */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -283,7 +283,7 @@ const AddStaffForm = () => {
 
                         {/* Address (4 fields per row) */}
                         <div className="mt-6">
-                            <h3 className="text-lg font-semibold">Address</h3>
+                            <h3 className="text-lg font-semibld">Address</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                                 <div className="form-group">
                                     <label className="block text-gray-700">Street</label>

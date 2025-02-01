@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaUserGraduate,
@@ -10,11 +10,40 @@ import {
   FaQuestionCircle,
   FaCalendarAlt
 } from "react-icons/fa";
+import {
+  Container,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import TeacherSidebar from "./TeacherSidebar";
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [transportData, setTransportData] = useState([]);
+    
+    useEffect(() => {
+      const fetchTransportData = async () => {
+        try {
+          const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
+          const data = await response.json();
+          // Filter the transport data based on current date
+          const currentDate = new Date().toISOString().split('T')[0];
+          const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
+          setTransportData(filteredRoutes);
+        } catch (error) {
+          console.error("Error fetching transport data:", error);
+        }
+      };
+      
+      fetchTransportData();
+    }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -66,7 +95,7 @@ const TeacherDashboard = () => {
               { title: "Total Attendance", value: "98%", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-attendance" },
               { title: "Total Leave", value: "12", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-leave" },
               { title: "Total Exams", value: "8", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-marks" },
-              { title: "Total Subjects", value: "6", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-coming-soon" },
+              { title: "Total Subjects", value: "6", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-subjects" },
               { title: "Total Projects", value: "5", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
               { title: "Total Meetings", value: "15", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-coming-soon" },
               { title: "Total Reports", value: "22", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
@@ -132,6 +161,37 @@ const TeacherDashboard = () => {
               </tbody>
             </table>
           </div>
+
+            {/* Transport Routes Table */}
+            <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
+              <h3 style={{ marginBottom: "10px",  fontWeight: "bold" }}>Transport Routes (Today)</h3>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Route</TableCell>
+                      <TableCell>Driver</TableCell>
+                      <TableCell>Driver's Number</TableCell>
+                      <TableCell>Stop Name</TableCell>
+                      <TableCell>Arrival Time</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {transportData.map((route, index) => (
+                      route.stops.map((stop, stopIndex) => (
+                        <TableRow key={`${index}-${stopIndex}`}>
+                          <TableCell>{route.routeTitle}</TableCell>
+                          <TableCell>{route.driver.name}</TableCell>
+                          <TableCell>{route.driver.mobileNumber}</TableCell>
+                          <TableCell>{stop.stopName}</TableCell>
+                          <TableCell>{stop.arrivalTime}</TableCell>
+                        </TableRow>
+                      ))
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
 
           {/* Another Table Section (e.g., Student Grades) */}
           <div className="bg-white shadow-md rounded-lg p-2">

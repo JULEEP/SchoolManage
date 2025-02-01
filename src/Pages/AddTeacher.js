@@ -111,15 +111,23 @@ const AddTeacher = () => {
               </div>
             ))}
             <div>
-              <label className="text-sm text-gray-600">Joining Date</label>
-              <input
-                type="date"
-                name="joiningDate"
-                value={teacherDetails.joiningDate}
-                onChange={handleChange}
-                className="border border-gray-300 rounded-md p-2 w-full"
-              />
-            </div>
+            <label className="text-sm text-gray-600">Joining Date</label>
+            <input
+              type="date"
+              name="joiningDate"
+              value={teacherDetails.joiningDate}
+              onChange={handleChange}
+              onFocus={(e) => (e.target.style.color = "black")}
+              onBlur={(e) => {
+                if (!e.target.value) {
+                  e.target.style.color = "gray";
+                }
+              }}
+              placeholder="Choose a date"
+              className="border border-gray-300 rounded-md p-2 w-full text-gray-400"
+            />
+          </div>
+          
             <div className="col-span-full">
               <button
                 type="submit"

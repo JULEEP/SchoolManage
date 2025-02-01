@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FiMenu } from "react-icons/fi"; // Mobile menu icon
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import StudentSidebar from "../Sidebar"; // Import the StudentSidebar component
 
 const StudentHomeworkList = () => {
-  const [homework, setHomework] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar toggle
+  const [homework, setHomework] = useState([]); // Homework state
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(""); // Error state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
 
-  const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId
+  const studentId = "676bb21bd06928a8432c676a"; // Static studentId (change if needed)
 
   // Fetch homework when component mounts
   useEffect(() => {
@@ -73,14 +72,11 @@ const StudentHomeworkList = () => {
         </div>
 
         {/* Heading */}
-
         <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">Nine (A)</h2>
+          <h2 className="text-xl font-semibold text-gray-800">10 (A)</h2>
           <div className="my-4 border-t border-gray-300"></div>
 
           {/* Week Section */}
-          <p className="text-lg font-semibold text-gray-600">Week 51 | 2024</p>
-          <div className="my-4 border-t border-gray-300"></div>
 
           {/* Homework Table */}
           <div className="overflow-x-auto">
@@ -92,7 +88,7 @@ const StudentHomeworkList = () => {
                   <th className="px-4 py-2 text-left text-gray-400">Homework Date</th>
                   <th className="px-4 py-2 text-left text-gray-400">Submission Date</th>
                   <th className="px-4 py-2 text-left text-gray-400">Evaluation Date</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Obtained Marks</th>
+                  <th className="px-4 py-2 text-left text-gray-400">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,17 +99,21 @@ const StudentHomeworkList = () => {
                       <td className="px-4 py-2 text-gray-600">{item.subject}</td>
                       <td className="px-4 py-2 text-gray-600">{item.marks}</td>
                       <td className="px-4 py-2 text-gray-600">
-                        {new Date(item.homeworkDate).toLocaleDateString()}
+                        {item.homeworkDate
+                          ? new Date(item.homeworkDate).toLocaleDateString()
+                          : "N/A"}
                       </td>
                       <td className="px-4 py-2 text-gray-600">
-                        {new Date(item.submissionDate).toLocaleDateString()}
+                        {item.submissionDate
+                          ? new Date(item.submissionDate).toLocaleDateString()
+                          : "N/A"}
                       </td>
                       <td className="px-4 py-2 text-gray-600">
                         {item.updatedAt
                           ? new Date(item.updatedAt).toLocaleDateString()
                           : "N/A"}
                       </td>
-                      <td className="px-4 py-2 text-gray-600">N/A</td>
+                      <td className="px-4 py-2 text-gray-600">{item.status}</td>
                     </tr>
                   ))
                 ) : (

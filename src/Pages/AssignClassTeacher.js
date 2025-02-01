@@ -30,27 +30,35 @@ const AssignClassTeacherPage = () => {
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const classResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
-        const classData = await classResponse.json();
-        setClasses(classData.classes || []);
-
+        const classResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-classes');
+        setClasses(classResponse.data.classes || []);
+  
         const sectionResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
         setSections(sectionResponse.data.sections || []);
-
-        const teacherResponse = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
-        const teacherData = await teacherResponse.json();
-        const teacherNames = teacherData.data.map((teacher) => teacher.name);
-        setTeachers(teacherNames || []);
-
+  
         const subjectResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-subjects-names');
         setSubjects(subjectResponse.data.subjectNames || []);
+  
+        const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/teachers');
+  
+        if (Array.isArray(teacherResponse.data)) {
+          const teacherData = teacherResponse.data
+            .map((teacher) => teacher.name?.trim()) // Ensure name is not empty or null
+            .filter((name) => name && name.length > 0); // Remove empty names
+  
+          setTeachers(teacherData);
+        } else {
+          setTeachers([]);
+        }
       } catch (error) {
-        setError(error.message);
+        console.error('Error fetching data:', error);
+        setError('Error fetching data');
       }
     };
+  
     fetchDropdownData();
   }, []);
-
+  
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
@@ -278,14 +286,6 @@ const AssignClassTeacherPage = () => {
                       <td className="px-4 py-2 text-gray-600">{assignment.section || 'null'}</td>
                       <td className="px-4 py-2 text-gray-600">{assignment.name || 'null'}</td>
                       <td className="px-4 py-2 text-gray-600">{assignment.subject || 'null'}</td>
-                      <td className="px-4 py-2">
-                        <button
-                          onClick={() => handleRemoveAssignment(assignment.id)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          Remove
-                        </button>
-                      </td>
                     </tr>
                   ))
                 )}

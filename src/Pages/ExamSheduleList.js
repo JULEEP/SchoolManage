@@ -10,21 +10,29 @@ const ExamScheduleList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
+  const [classFilter, setClassFilter] = useState(''); // Class filter state
+  const [sectionFilter, setSectionFilter] = useState(''); // Section filter state
 
-  // Fetch exam schedule data
+  // Fetch exam schedule data based on class and section
+  const fetchScheduleData = async () => {
+    try {
+      const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-exam-schedule', {
+        params: {
+          class: classFilter,
+          section: sectionFilter,
+        },
+      });
+      setScheduleData(response.data.examSchedules || []);
+    } catch (error) {
+      console.error('Error fetching schedule data:', error);
+      toast.error('Failed to fetch exam schedule data. Please try again.');
+    }
+  };
+
+  // Fetch data when class or section filter changes
   useEffect(() => {
-    const fetchScheduleData = async () => {
-      try {
-        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-exam-schedule');
-        setScheduleData(response.data.examSchedules || []);
-      } catch (error) {
-        console.error('Error fetching schedule data:', error);
-        toast.error('Failed to fetch exam schedule data. Please try again.');
-      }
-    };
-
     fetchScheduleData();
-  }, []);
+  }, [classFilter, sectionFilter]);
 
   // Get current items for the page
   const indexOfLastSchedule = currentPage * perPage;
@@ -62,40 +70,65 @@ const ExamScheduleList = () => {
           </button>
         </div>
 
+        {/* Filter Inputs */}
+        <div className="p-4">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <div className="flex flex-col sm:w-1/2 w-full">
+              <label className="text-gray-600">Class</label>
+              <input
+                type="text"
+                value={classFilter}
+                onChange={(e) => setClassFilter(e.target.value)}
+                className="border p-2 rounded-md w-full"
+                placeholder="Enter class (e.g., 10)"
+              />
+            </div>
+            <div className="flex flex-col sm:w-1/2 w-full">
+              <label className="text-gray-600">Section</label>
+              <input
+                type="text"
+                value={sectionFilter}
+                onChange={(e) => setSectionFilter(e.target.value)}
+                className="border p-2 rounded-md w-full"
+                placeholder="Enter section (e.g., A)"
+              />
+            </div>
+            <div className="sm:w-auto w-full">
+              <button
+                onClick={fetchScheduleData}
+                className="bg-purple-700 text-white p-2 rounded-md w-full sm:w-auto hover:bg-purple-800"
+              >
+                Filter
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Layout for Exam Schedules */}
         <div className="space-y-4 p-4 lg:p-6">
-          <div className="overflow-x-auto bg-white shadow-md rounded-md p-4">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Exam Title</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Class</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Section</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Subject</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Exam Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentSchedules.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="text-center py-4 text-gray-500">
-                      No Data Available
-                    </td>
-                  </tr>
-                ) : (
-                  currentSchedules.map((schedule, index) => (
-                    <tr key={schedule._id}>
-                      <td className="px-4 py-2">{index + 1}</td>
-                      <td className="px-4 py-2">{schedule.examTitle}</td>
-                      <td className="px-4 py-2">{schedule.class}</td>
-                      <td className="px-4 py-2">{schedule.section}</td>
-                      <td className="px-4 py-2">{schedule.subject}</td>
-                      <td className="px-4 py-2">{schedule.examDate}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentSchedules.length === 0 ? (
+              <div className="col-span-3 text-center text-gray-500">
+                No Data Available
+              </div>
+            ) : (
+              currentSchedules.map((schedule, scheduleIndex) => (
+                schedule.exams.map((exam, examIndex) => (
+                  <div
+                    key={`${schedule._id.class}-${schedule._id.section}-${exam.subject}-${examIndex}`}
+                    className="bg-white shadow-md rounded-md p-4"
+                  >
+                    <div className="text-lg font-semibold mb-2">{schedule.examTitle}</div>
+                    <div className="text-gray-600">Class: {schedule._id.class}</div>
+                    <div className="text-gray-600">Section: {schedule._id.section}</div>
+                    <div className="text-gray-600">Subject: {exam.subject}</div>
+                    <div className="text-gray-600">Exam Date: {new Date(exam.examDate).toLocaleDateString()}</div>
+                    <div className="text-gray-600">Start Time: {exam.startTime}</div>
+                    <div className="text-gray-600">End Time: {exam.endTime}</div>
+                  </div>
+                ))
+              ))
+            )}
           </div>
 
           {/* Pagination */}

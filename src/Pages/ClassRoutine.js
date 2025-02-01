@@ -37,8 +37,8 @@ const ClassRoutineCreate = () => {
         setSubjects(subjectResponse.data.subjectNames || []);
 
         // Fetching teacher data
-        const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
-        const teacherData = teacherResponse.data.data.map((teacher) => teacher.name);
+        const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/teachers');
+        const teacherData = teacherResponse.data.map((teacher) => teacher.name);
         setTeachers(teacherData || []);
 
 

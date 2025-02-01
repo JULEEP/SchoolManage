@@ -41,11 +41,30 @@ const ParentDashboard = () => {
   const [error, setError] = useState(null);
   const [comparisonText, setComparisonText] = useState("");  // State for comparison text
   const [suggestionText, setSuggestionText] = useState("");  // State for suggestion text
+  const [transportData, setTransportData] = useState([]);
+  
 
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+      const fetchTransportData = async () => {
+        try {
+          const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
+          const data = await response.json();
+          // Filter the transport data based on current date
+          const currentDate = new Date().toISOString().split('T')[0];
+          const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
+          setTransportData(filteredRoutes);
+        } catch (error) {
+          console.error("Error fetching transport data:", error);
+        }
+      };
+      
+      fetchTransportData();
+    }, []);
 
   useEffect(() => {
     // Fetch comparison data
@@ -55,24 +74,24 @@ const ParentDashboard = () => {
           "https://school-backend-1-2xki.onrender.com/api/parent/my-child-marks/676cf56dfd1eb1caa8426205"
         );
         const data = await response.json();
-  
+
         if (data.message === "Subject-wise comparison with topper retrieved successfully") {
           const comparisonResult = data.comparisonResult;
-  
+
           // Prepare data for the chart
           const chartComparisonData = comparisonResult.subjectWiseComparison.map((subjectData) => ({
             subject: subjectData.subject,
             childMarks: subjectData.studentMarks,
             topperMarks: subjectData.topperMarks,
           }));
-  
+
           // Add overall percentage comparison
           chartComparisonData.unshift({
             subject: "Overall Percentage",
             childMarks: parseFloat(comparisonResult.studentPercentage),
             topperMarks: parseFloat(comparisonResult.topperPercentage),
           });
-  
+
           setComparisonData(chartComparisonData); // Set the chart data
           setComparisonText(comparisonResult.overallComparison); // Set overall comparison text
           setSuggestionText(comparisonResult.suggestion); // Set suggestion text
@@ -86,13 +105,13 @@ const ParentDashboard = () => {
         setLoading(false);
       }
     };
-  
+
     fetchComparisonData();
   }, []);
-  
+
 
   const chartData = comparisonData
-  ? {
+    ? {
       labels: comparisonData.map((item) => item.subject),
       datasets: [
         {
@@ -111,7 +130,7 @@ const ParentDashboard = () => {
         },
       ],
     }
-  : null;
+    : null;
 
   // Sample data for tables
   const subjectsData = [
@@ -222,58 +241,58 @@ const ParentDashboard = () => {
           </Box>
 
           <Box mt={5} style={{ backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}>
-          <h3 className="text-xl font-bold mb-4">Comparison with Topper</h3>
-          {loading && <p>Loading chart data...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-        
-          {chartData && (
-            <>
-              <Bar
-                data={chartData}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    legend: {
-                      position: "top",
-                    },
-                    title: {
-                      display: true,
-                      text: "Percentage Comparison",
-                    },
-                  },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
+            <h3 className="text-xl font-bold mb-4">Comparison with Topper</h3>
+            {loading && <p>Loading chart data...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+
+            {chartData && (
+              <>
+                <Bar
+                  data={chartData}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: "top",
+                      },
                       title: {
                         display: true,
-                        text: "Percentage",
+                        text: "Percentage Comparison",
                       },
                     },
-                  },
-                }}
-              />
-        
-              {/* Display percentage above bars */}
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-                {comparisonData.map((item, index) => (
-                  <div key={index} style={{ textAlign: "center", margin: "0 10px" }}>
-                    <strong>{item.subject}</strong>
-                    <div>
-                      <span>{item.childMarks}%</span> vs. <span>{item.topperMarks}%</span>
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        title: {
+                          display: true,
+                          text: "Percentage",
+                        },
+                      },
+                    },
+                  }}
+                />
+
+                {/* Display percentage above bars */}
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+                  {comparisonData.map((item, index) => (
+                    <div key={index} style={{ textAlign: "center", margin: "0 10px" }}>
+                      <strong>{item.subject}</strong>
+                      <div>
+                        <span>{item.childMarks}%</span> vs. <span>{item.topperMarks}%</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-        
-              {/* Display comparison and suggestion below the graph */}
-              <div style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
-                <p>{comparisonText}</p>
-                <p>{suggestionText}</p>
-              </div>
-            </>
-          )}
-        </Box>
-        
+                  ))}
+                </div>
+
+                {/* Display comparison and suggestion below the graph */}
+                <div style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
+                  <p>{comparisonText}</p>
+                  <p>{suggestionText}</p>
+                </div>
+              </>
+            )}
+          </Box>
+
           {/* Tables for Parent Dashboard */}
           <Box mt={5}>
             {/* Subjects Table */}
@@ -345,6 +364,37 @@ const ParentDashboard = () => {
                         <TableCell>{row.teacher}</TableCell>
                         <TableCell>{row.students}</TableCell>
                       </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
+            {/* Transport Routes Table */}
+            <Box style={{ backgroundColor: "#fef3c7", padding: "20px", borderRadius: "10px" }}>
+              <h3 style={{ marginBottom: "10px",  fontWeight: "bold" }}>Transport Routes (Today)</h3>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Route</TableCell>
+                      <TableCell>Driver</TableCell>
+                      <TableCell>Driver's Number</TableCell>
+                      <TableCell>Stop Name</TableCell>
+                      <TableCell>Arrival Time</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {transportData.map((route, index) => (
+                      route.stops.map((stop, stopIndex) => (
+                        <TableRow key={`${index}-${stopIndex}`}>
+                          <TableCell>{route.routeTitle}</TableCell>
+                          <TableCell>{route.driver.name}</TableCell>
+                          <TableCell>{route.driver.mobileNumber}</TableCell>
+                          <TableCell>{stop.stopName}</TableCell>
+                          <TableCell>{stop.arrivalTime}</TableCell>
+                        </TableRow>
+                      ))
                     ))}
                   </TableBody>
                 </Table>

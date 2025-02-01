@@ -1,10 +1,40 @@
 import React, { useState } from "react";
-import { FiMenu } from "react-icons/fi"; // Import menu icon for mobile
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import StudentSidebar from "../Sidebar"; // Import the Sidebar component
 
 const StudentBookListPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
+
+  // Dummy book data
+  const books = [
+    {
+      title: "JavaScript: The Good Parts",
+      bookNo: "B001",
+      isbnNo: "978-0596517748",
+      category: "Programming",
+      subject: "JavaScript",
+      publisherName: "O'Reilly Media",
+      authorName: "Douglas Crockford",
+    },
+    {
+      title: "Eloquent JavaScript",
+      bookNo: "B002",
+      isbnNo: "978-1593279509",
+      category: "Programming",
+      subject: "JavaScript",
+      publisherName: "No Starch Press",
+      authorName: "Marijn Haverbeke",
+    },
+    {
+      title: "Clean Code",
+      bookNo: "B003",
+      isbnNo: "978-0132350884",
+      category: "Software Engineering",
+      subject: "Coding Practices",
+      publisherName: "Prentice Hall",
+      authorName: "Robert C. Martin",
+    },
+  ];
 
   // Toggle Sidebar for Mobile View
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -35,10 +65,10 @@ const StudentBookListPage = () => {
         </div>
 
         {/* Title */}
+        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">All Books</h2>
 
+        {/* Book List Table */}
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-medium text-gray-700 mb-4">All Books</h2>
-
           {/* Book List Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto">
@@ -54,18 +84,31 @@ const StudentBookListPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* Empty data message */}
-                <tr>
-                  <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-600">
-                    No Data Available In Table
-                  </td>
-                </tr>
+                {books.length > 0 ? (
+                  books.map((book, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.title}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.bookNo}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.isbnNo}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.category}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.subject}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.publisherName}</td>
+                      <td className="px-4 py-2 text-sm text-gray-700">{book.authorName}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-600">
+                      No Data Available In Table
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
 
             {/* Pagination */}
             <div className="mt-4 text-sm text-gray-600 text-center">
-              Showing 0 to 0 of 0 entries
+              Showing {books.length} entries
             </div>
           </div>
         </div>

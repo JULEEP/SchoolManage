@@ -17,6 +17,10 @@ const TeacherAttendance = () => {
   });
   const [subjects] = useState(["Math", "Science", "English"]); // Example subjects
 
+  // Filter states
+  const [classFilter, setClassFilter] = useState("");
+  const [sectionFilter, setSectionFilter] = useState("");
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
@@ -100,10 +104,30 @@ const TeacherAttendance = () => {
     }
   };
 
+  // Handle filter change for class
+const handleClassFilterChange = (e) => {
+  setClassFilter(e.target.value);
+};
+
+// Handle filter change for section
+const handleSectionFilterChange = (e) => {
+  setSectionFilter(e.target.value);
+};
+
+// Filter students based on class and section
+const filteredStudents = students.filter((student) => {
+  // Ensure class comparison is correct (both should be strings or both should be numbers)
+  const classMatches = classFilter ? student.class === parseInt(classFilter) : true;  // Convert classFilter to number for accurate comparison
+  
+  const sectionMatches = sectionFilter ? student.section === sectionFilter : true;
+
+  return classMatches && sectionMatches;
+});
+
   // Calculate pagination
-  const totalPages = Math.ceil(students.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
   const startIdx = (currentPage - 1) * rowsPerPage;
-  const currentStudents = students.slice(startIdx, startIdx + rowsPerPage);
+  const currentStudents = filteredStudents.slice(startIdx, startIdx + rowsPerPage);
 
   return (
     <div className="flex min-h-screen">
@@ -141,6 +165,49 @@ const TeacherAttendance = () => {
 
             {loading && <p>Loading students...</p>}
             {error && <p className="text-red-500">{error}</p>}
+
+            {/* Filters */}
+            <div className="flex gap-4 mb-4">
+              <div className="flex flex-col">
+                <label className="font-medium">Class:</label>
+                <select
+                  value={classFilter}
+                  onChange={handleClassFilterChange}
+                  className="p-2 border rounded-lg"
+                >
+                  <option value="">All</option>
+                  {/* Add the available classes here */}
+                  <option value="Class 1">1</option>
+                  <option value="Class 2">2</option>
+                  <option value="Class 3">3</option>
+                  <option value="Class 4">4</option>
+                  <option value="Class 5">5</option>
+                  <option value="Class 6">6</option>
+                  <option value="Class 7">7</option>
+                  <option value="Class 8">8</option>
+                  <option value="Class 9">9</option>
+                  <option value="Class 10">10</option>
+
+                  {/* Add more as needed */}
+                </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="font-medium">Section:</label>
+                <select
+                  value={sectionFilter}
+                  onChange={handleSectionFilterChange}
+                  className="p-2 border rounded-lg"
+                >
+                  <option value="">All</option>
+                  {/* Add the available sections here */}
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                  {/* Add more as needed */}
+                </select>
+              </div>
+            </div>
 
             {/* Students Table */}
             {!loading && !error && (
@@ -227,8 +294,8 @@ const TeacherAttendance = () => {
                       }
                       className="p-2 border rounded-lg w-full"
                     >
-                      {subjects.map((subject) => (
-                        <option key={subject} value={subject}>
+                      {subjects.map((subject, index) => (
+                        <option key={index} value={subject}>
                           {subject}
                         </option>
                       ))}
@@ -245,18 +312,19 @@ const TeacherAttendance = () => {
                     >
                       <option value="Present">Present</option>
                       <option value="Absent">Absent</option>
+                      <option value="Late">Late</option>
                     </select>
                   </div>
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-between">
                     <button
                       onClick={closePopup}
-                      className="bg-gray-300 px-4 py-2 rounded-md"
+                      className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={submitAttendance}
-                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                      className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-blue-600"
                     >
                       Submit
                     </button>

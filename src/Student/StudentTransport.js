@@ -1,60 +1,84 @@
 import React, { useEffect, useState } from "react";
-import { FiMenu } from "react-icons/fi"; // Import menu icon for mobile
-import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import StudentSidebar from "../Sidebar"; // Import the Sidebar component
+import axios from "axios";
+import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
+import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const TransportPage = () => {
-  const [student, setStudent] = useState(null); // State to store student data
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(""); // Error state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
-  const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId (could be dynamic based on context)
+  const [routeList, setRouteList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
+  const [dateFilter, setDateFilter] = useState(""); // New state for date filter
+  const [startDate, setStartDate] = useState(""); // Start date for custom filter
+  const [endDate, setEndDate] = useState(""); // End date for custom filter
+  const [filteredRoutes, setFilteredRoutes] = useState([]);
 
-  // Fetch student transport details from API
   useEffect(() => {
-    const fetchStudentTransport = async () => {
-      setLoading(true);
-      setError(""); // Reset error
+    // Fetch route list data
+    const fetchRoutes = async () => {
       try {
-        const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/students/get-transport/${studentId}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setStudent(data.student); // Set student data with transport details
-        } else {
-          setError(data.message || "Error fetching student transport details");
-        }
-      } catch (err) {
-        setError("An error occurred while fetching student transport details");
-      } finally {
-        setLoading(false);
+        const response = await axios.get(
+          "https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route"
+        );
+        setRouteList(response.data.routes); // Update with the new data structure
+      } catch (error) {
+        console.error("Error fetching route list:", error);
+        toast.error("Error fetching route list. Please try again later."); // Toast notification on error
       }
     };
 
-    fetchStudentTransport(); // Call the function to fetch student transport data
-  }, [studentId]);
+    fetchRoutes();
+  }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const filterByDate = (routes) => {
+    const today = new Date().setHours(0, 0, 0, 0); // Midnight today
+    const yesterday = new Date(today - 24 * 60 * 60 * 1000); // Midnight yesterday
+  
+    return routes.filter(route => {
+      const routeDate = new Date(route.date).setHours(0, 0, 0, 0); // Normalize to midnight
+  
+      switch (dateFilter) {
+        case "today":
+          return routeDate === today;
+        case "yesterday":
+          return routeDate === yesterday;
+        case "custom":
+          // Ensure that the start and end date comparisons are set to include the entire range of the day
+          const start = new Date(startDate).setHours(0, 0, 0, 0); // Start of the selected start date
+          const end = new Date(endDate).setHours(23, 59, 59, 999); // End of the selected end date
+  
+          // Check if the route's date is within the start and end range
+          return routeDate >= start && routeDate <= end;
+        default:
+          return true; // If no filter is applied, show all
+      }
+    });
+  };
+  
+  // Filter routes based on search term
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  useEffect(() => {
+    // Apply search and date filter to routes
+    const filteredBySearch = routeList.filter(route =>
+      route.routeTitle ? route.routeTitle.toLowerCase().includes(search.toLowerCase()) : true
+    );
 
-  if (!student) {
-    return <div>No student data available.</div>;
-  }
+    // Apply date filter
+    const finalFilteredRoutes = filterByDate(filteredBySearch);
+    setFilteredRoutes(finalFilteredRoutes);
 
-  // Toggle Sidebar for Mobile View
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  }, [routeList, search, dateFilter, startDate, endDate]);
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar Overlay */}
+    <div className="flex min-h-screen">
+      {/* Sidebar Overlay for Mobile */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-        onClick={toggleSidebar}
+        onClick={() => setIsSidebarOpen(false)}
       ></div>
 
       {/* Sidebar */}
@@ -65,113 +89,134 @@ const TransportPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Transport</h1>
-          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+          <h1 className="text-lg font-bold">Transport Route List</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Title */}
+        {/* Title and Filter */}
+        <div className="flex flex-wrap gap-8 px-6 mt-4">
+          <div className="w-full">
+            <h2 className="text-lg text-gray-600 mb-4">Routes List</h2>
 
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
-          {/* ID Card */}
-          <div className="bg-white shadow-xl rounded-3xl p-6 w-full lg:w-64 mt-8">
-            <div className="border-2 border-gray-300 rounded-3xl p-6">
-              {/* Profile Photo */}
-              <div className="flex justify-center mb-4">
-                <img
-                  src="https://cdn.pixabay.com/photo/2023/06/01/14/11/ai-generated-8033671_960_720.png" // Replace with your logo
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full border-2 border-gray-300"
-                />
-              </div>
+            {/* Search Bar */}
+            <input
+              type="text"
+              placeholder="Search"
+              value={search}
+              onChange={handleSearch}
+              className="border border-gray-300 p-2 rounded w-full sm:w-1/3 mb-4"
+            />
 
-              {/* Student ID Card Details */}
-              <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">ID Card</h3>
-              <div className="space-y-2">
-                {/* Flex container to align key-value pairs */}
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Student Name:</span>
-                  <span>{student.name}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Class:</span>
-                  <span>{student.class}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Section:</span>
-                  <span>{student.section}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span className="font-medium">Gender:</span>
-                  <span>{student.gender}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Transport Details */}
-          <div className="flex-1 bg-white shadow-md rounded-lg p-6 ml-2">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Transport Details</h3>
-
-            {/* Route and Vehicle Table */}
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto">
-                <thead>
-                  <tr className="border-b">
-                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Route</th>
-                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Vehicle</th>
-                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Pickup Time</th>
-                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Drop Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Display transport details */}
-                  {student.transport ? (
-                    <tr>
-                      <td className="px-4 py-2 text-sm text-gray-600">{student.transport.route}</td>
-                      <td className="px-4 py-2 text-sm text-gray-600">{student.transport.vehicle}</td>
-                      <td className="px-4 py-2 text-sm text-gray-600">{student.transport.pickupTime}</td>
-                      <td className="px-4 py-2 text-sm text-gray-600">{student.transport.dropTime}</td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="px-4 py-2 text-center text-sm text-gray-600">
-                        No Transport Assigned
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-
-              {/* Pagination */}
-              <div className="mt-4 text-sm text-gray-600 text-center">
-                Showing 1 to 1 of 1 entry
-              </div>
+            {/* Date Filter */}
+            <div className="mb-4">
+              <label className="mr-2 text-sm text-gray-600">Filter by Date:</label>
+              <select
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="border border-gray-300 p-2 rounded"
+              >
+                <option value="">All Dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="custom">Custom</option>
+              </select>
             </div>
 
-            {/* Driver Details */}
-            {student.transport && (
-              <div className="mt-6">
-                <h4 className="text-lg font-semibold text-gray-700">Driver Details</h4>
-                <div className="space-y-2 mt-2">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span className="font-medium">Driver Name:</span>
-                    <span>{student.transport.driver.name}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span className="font-medium">Driver Contact:</span>
-                    <span>{student.transport.driver.contact}</span>
-                  </div>
+            {/* Custom Date Range */}
+            {dateFilter === "custom" && (
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <label className="block text-sm text-gray-600">Start Date:</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border border-gray-300 p-2 rounded w-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-600">End Date:</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border border-gray-300 p-2 rounded w-full"
+                  />
                 </div>
               </div>
             )}
+
+            <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
+              <table className="min-w-full table-auto border border-gray-200">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-gray-600">SL</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Route Title</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Driver</th>
+                    <th className="px-4 py-2 text-left text-gray-600">Driver Mobile</th>
+                    <th className="px-6 py-2 text-left text-gray-600">Stops & Arrival Time</th> {/* Merged column */}
+                    <th className="px-4 py-2 text-left text-gray-600">Date</th>
+                    <th className="px-6 py-2 text-left text-gray-600">Created At</th> {/* Increased width */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRoutes.length === 0 ? (
+                    <tr>
+                      <td colSpan="9" className="text-center py-4 text-gray-500">
+                        No Data Available In Table
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredRoutes.map((route, index) => (
+                      <tr key={route._id} className="border-t">
+                        <td className="px-4 py-2 text-sm sm:text-base">{index + 1}</td>
+                        <td className="px-4 py-2 text-sm sm:text-base">{route.routeTitle || "N/A"}</td>
+                        <td className="px-4 py-2 text-sm sm:text-base">{route.driver?.name || "N/A"}</td>
+                        <td className="px-4 py-2 text-sm sm:text-base">{route.driver?.mobileNumber || "N/A"}</td>
+                        <td className="px-6 py-2 text-sm sm:text-base">
+                          {route.stops && route.stops.length > 0 ? (
+                            route.stops.map((stop, stopIndex) => (
+                              <div
+                                key={stop._id}
+                                className="inline-block mr-2 mb-1 sm:mb-0 text-ellipsis overflow-hidden whitespace-nowrap"
+                              >
+                                {stop.stopName} {stop.arrivalTime && `- ${stop.arrivalTime}`}
+                                {stopIndex < route.stops.length - 1 && ", "}
+                              </div>
+                            ))
+                          ) : (
+                            "No Stops Available"
+                          )}
+                        </td>
+                        <td className="px-4 py-2 text-sm sm:text-base">{new Date(route.date).toLocaleDateString() || "N/A"}</td>
+                        <td className="px-6 py-2 text-sm sm:text-base">
+                          {route.createdAt ? new Date(route.createdAt).toLocaleString() : "N/A"}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-4 text-gray-500 text-sm px-6">
+              Showing {filteredRoutes.length} entries
+            </div>
           </div>
         </div>
       </div>
+
+      {/* ToastContainer for showing notifications */}
+      <ToastContainer />
     </div>
   );
 };

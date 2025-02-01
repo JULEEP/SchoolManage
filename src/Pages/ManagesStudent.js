@@ -12,7 +12,7 @@ const ManageStudent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -54,13 +54,16 @@ const ManageStudent = () => {
       (student) =>
         (searchByName === "" ||
           student.firstName.toLowerCase().includes(searchByName.toLowerCase())) &&
-        (searchByRoll === "" || student.admissionNumber.includes(searchByRoll))
+        (searchByRoll === "" || student.admissionNumber.includes(searchByRoll)) &&
+        (academicYear === "" || student.academicYear === academicYear) &&
+        (classValue === "" || student.class === classValue) &&
+        (section === "" || student.section === section)
     )
     .slice(indexOfFirstStudent, indexOfLastStudent);
 
   // Pagination controls
   const totalPages = Math.ceil(students.length / itemsPerPage);
-  
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -73,30 +76,29 @@ const ManageStudent = () => {
 
   return (
     <div className="min-h-screen flex bg-gray-100">
-    {/* Sidebar Overlay */}
-    <div
-      className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-      onClick={toggleSidebar}
-    ></div>
-  
-    {/* Sidebar */}
-    <div
-      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-      style={{ height: "100vh", top: "0", left: "0" }} // Ensuring sidebar takes full height of the screen
-    >
-      <Sidebar />
-    </div>
-  
-    {/* Main Content */}
-    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-      {/* Mobile View: Header and Sidebar Toggle Icon */}
-      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-        <h1 className="text-lg font-bold">Manage Student</h1>
-        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={toggleSidebar}
+      ></div>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        style={{ height: "100vh", top: "0", left: "0" }} // Ensuring sidebar takes full height of the screen
+      >
+        <Sidebar />
       </div>
-  
+
+      {/* Main Content */}
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile View: Header and Sidebar Toggle Icon */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Manage Student</h1>
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
         <div className="p-4 sm:p-6">
           {/* Filters */}

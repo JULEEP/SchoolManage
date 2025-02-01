@@ -121,13 +121,14 @@ const TeacherList = () => {
 
         {/* Search and Export */}
         <div className="mb-6 flex justify-between items-center">
-          <input
-            type="text"
-            className="px-4 py-2 w-1/3 border border-gray-300 rounded-md"
-            placeholder="Search by name or email"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+        <input
+        type="text"
+        className="px-4 py-2 w-1/3 border border-gray-300 rounded-md text-xs h-8 mr-4"
+        placeholder="Search by name or email"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+      
           <button
             onClick={exportToCSV}
             className="ml-4 px-4 py-2 bg-purple-600 text-white mt-4 rounded-md hover:bg-purple-700"

@@ -32,8 +32,8 @@ const AssignSubjectPage = () => {
         const sectionResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-section');
         setSections(sectionResponse.data.sections || []);
 
-        const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-teacher');
-        const teacherData = teacherResponse.data.data.map((teacher) => teacher.name);
+        const teacherResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/teachers');
+        const teacherData = teacherResponse.data.map((teacher) => teacher.name);
         setTeachers(teacherData || []);
 
         const subjectResponse = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-subjects-names');

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -30,8 +30,6 @@ const attendance = 'https://cdn.dribbble.com/users/1244169/screenshots/4494753/a
 const fee = 'https://cdn-icons-gif.flaticon.com/9908/9908553.gif';
 const holidays = 'https://media.tenor.com/KnM_tzEvCrQAAAAC/holiday-season.gif';
 
-
-
 const bestCategories = [
   { img: subject, name: "Subjects", link: "/student-subject-details" },
   { img: homework, name: "Homeworks", link: "/student-homework" },
@@ -45,14 +43,28 @@ const bestCategories = [
   { img: result, name: "Results", link: "/student-result" },
   { img: fee, name: "My Fees", link: "/student-fees" },
   { img: holidays, name: "Holidays", link: "/student-holidays" },
-
-
-
-
 ];
 
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [transportData, setTransportData] = useState([]);
+  
+  useEffect(() => {
+    const fetchTransportData = async () => {
+      try {
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
+        const data = await response.json();
+        // Filter the transport data based on current date
+        const currentDate = new Date().toISOString().split('T')[0];
+        const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
+        setTransportData(filteredRoutes);
+      } catch (error) {
+        console.error("Error fetching transport data:", error);
+      }
+    };
+    
+    fetchTransportData();
+  }, []);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -223,7 +235,7 @@ const StudentDashboard = () => {
               </TableContainer>
             </Box>
 
-            <Box style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
+            <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
               <h3 style={{ fontWeight: "bold" }}>Classes</h3>
               <TableContainer component={Paper}>
                 <Table>
@@ -241,6 +253,37 @@ const StudentDashboard = () => {
                         <TableCell>{row.teacher}</TableCell>
                         <TableCell>{row.students}</TableCell>
                       </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
+            {/* Transport Routes Table */}
+            <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
+              <h3 style={{ marginBottom: "10px",  fontWeight: "bold" }}>Transport Routes (Today)</h3>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Route</TableCell>
+                      <TableCell>Driver</TableCell>
+                      <TableCell>Driver's Number</TableCell>
+                      <TableCell>Stop Name</TableCell>
+                      <TableCell>Arrival Time</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {transportData.map((route, index) => (
+                      route.stops.map((stop, stopIndex) => (
+                        <TableRow key={`${index}-${stopIndex}`}>
+                          <TableCell>{route.routeTitle}</TableCell>
+                          <TableCell>{route.driver.name}</TableCell>
+                          <TableCell>{route.driver.mobileNumber}</TableCell>
+                          <TableCell>{stop.stopName}</TableCell>
+                          <TableCell>{stop.arrivalTime}</TableCell>
+                        </TableRow>
+                      ))
                     ))}
                   </TableBody>
                 </Table>

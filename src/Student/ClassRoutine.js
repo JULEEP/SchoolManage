@@ -8,7 +8,7 @@ const DailyRoutinePage = () => {
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar toggle
 
-  const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId (could be dynamic based on context)
+  const studentId = "677904859d0da6e3bee4ba2e"; // Static studentId (could be dynamic based on context)
 
   // Fetch daily routine when component mounts
   useEffect(() => {
@@ -43,8 +43,6 @@ const DailyRoutinePage = () => {
   return (
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar and Menu Icon */}
-
-      {/* Sidebar Overlay */}
       <div
         className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
         onClick={toggleSidebar}
@@ -61,7 +59,7 @@ const DailyRoutinePage = () => {
       <div className="flex-grow overflow-y-auto lg:ml-64">
         {/* Header for Mobile */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Daily Routine</h1>
+          <h1 className="text-lg font-bold">Class Routine</h1>
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
@@ -73,7 +71,7 @@ const DailyRoutinePage = () => {
         {/* Routine Table */}
         {routine.length > 0 ? (
           <div className="bg-white shadow-md rounded-xl p-6">
-            <h2 className="text-xl font-medium text-gray-700 mb-4">Daily Routine</h2>
+            <h2 className="text-xl font-medium text-gray-700 mb-4">Your Class Routine</h2>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse bg-gray-50 rounded-lg">
                 <thead>
@@ -81,6 +79,8 @@ const DailyRoutinePage = () => {
                     <th className="py-3 px-4">Day</th>
                     <th className="py-3 px-4">Time</th>
                     <th className="py-3 px-4">Subject</th>
+                    <th className="py-3 px-4">Teacher</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -89,6 +89,8 @@ const DailyRoutinePage = () => {
                       <td className="py-3 px-4 text-gray-700">{entry.day}</td>
                       <td className="py-3 px-4 text-gray-700">{entry.time}</td>
                       <td className="py-3 px-4 text-gray-700">{entry.subject}</td>
+                      <td className="py-3 px-4 text-gray-700">{entry.teacher || null}</td>
+
                     </tr>
                   ))}
                 </tbody>

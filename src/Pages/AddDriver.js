@@ -93,7 +93,7 @@ const DriverForm = () => {
             <form onSubmit={handleAddDriver}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Name</label>
+                  <label className="block text-sm font-medium mb-2">Name</label>
                   <input
                     type="text"
                     value={name}
@@ -103,7 +103,7 @@ const DriverForm = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Email</label>
+                  <label className="block text-sm font-medium mb-2">Email</label>
                   <input
                     type="email"
                     value={email}
@@ -113,7 +113,7 @@ const DriverForm = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Age</label>
+                  <label className="block text-sm font-medium mb-2">Age</label>
                   <input
                     type="number"
                     value={age}
@@ -123,7 +123,7 @@ const DriverForm = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Gender</label>
+                  <label className="block text-sm font-medium mb-2">Gender</label>
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
@@ -136,7 +136,7 @@ const DriverForm = () => {
                   </select>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Mobile Number</label>
+                  <label className="block text-sm font-medium mb-2">Mobile Number</label>
                   <input
                     type="text"
                     value={mobileNumber}
@@ -146,7 +146,7 @@ const DriverForm = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-lg font-medium mb-2">Joining Date</label>
+                  <label className="block text-sm font-medium mb-2">Joining Date</label>
                   <input
                     type="date"
                     value={joiningDate}

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FiMenu } from "react-icons/fi"; // Import menu icon for mobile
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import StudentSidebar from "../Sidebar"; // Import the Sidebar component
 
 const TeachersList = () => {
-  const [teachers, setTeachers] = useState([]); // State to store teacher names
+  const [teachers, setTeachers] = useState([]); // State to store teacher details
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
-  const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId (could be dynamic based on context)
+  const studentId = "677904859d0da6e3bee4ba2e"; // Static studentId (could be dynamic based on context)
+
+  // Default email in case the teacher does not have one
+  const defaultEmail = "noemail@school.com";
 
   // Fetch teachers from API
   useEffect(() => {
@@ -21,9 +23,15 @@ const TeachersList = () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Extract teacher names from the response and set them in the state
-          const teacherNames = data.student.subjects.map((subject) => subject.teacher);
-          setTeachers(teacherNames);
+          // Extract teacher details from the response and set them in the state
+          const teacherDetails = data.student.teachers.map((teacher) => ({
+            name: teacher.name,
+            subject: teacher.subject.join(", "), // Join multiple subjects with a comma
+            email: teacher.email || defaultEmail, // Use default email if not available
+            phone: teacher.phone || "Not available", // Provide default phone if not available
+          }));
+
+          setTeachers(teacherDetails);
         } else {
           setError(data.message || "Error fetching teachers");
         }
@@ -66,13 +74,11 @@ const TeachersList = () => {
         </div>
 
         {/* Title */}
+        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">Class: 10 (A)</h2>
 
-        {/* Class and Section */}
-        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">Class: 5 (A)</h2>
-
-        {/* Teacher Names List */}
+        {/* Teacher Names Table */}
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Teacher Names</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Teacher List</h3>
 
           {/* Display error if there is any */}
           {error && <p className="text-red-500">{error}</p>}
@@ -80,18 +86,40 @@ const TeachersList = () => {
           {/* Display loading state */}
           {loading && <p className="text-gray-500">Loading teachers...</p>}
 
-          {/* List of Teacher Names */}
-          <ul className="space-y-4">
-            {teachers.length > 0 ? (
-              teachers.map((teacher, index) => (
-                <li key={index} className="border-b border-gray-300 pb-4">
-                  <span className="text-gray-700 text-lg">{teacher}</span>
-                </li>
-              ))
-            ) : (
-              <p className="text-gray-600 text-center mt-4">No teachers available</p>
-            )}
-          </ul>
+          {/* Table of Teacher Data */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto text-left">
+              <thead className="bg-purple-700 text-white">
+                <tr>
+                  <th className="px-6 py-3 border-b">Teacher Name</th>
+                  <th className="px-6 py-3 border-b">Subject</th>
+                  <th className="px-6 py-3 border-b">Email</th>
+                  <th className="px-6 py-3 border-b">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teachers.length > 0 ? (
+                  teachers.map((teacher, index) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-gray-100 border-b"
+                    >
+                      <td className="px-6 py-4">{teacher.name}</td>
+                      <td className="px-6 py-4">{teacher.subject}</td>
+                      <td className="px-6 py-4">{teacher.email}</td>
+                      <td className="px-6 py-4">{teacher.phone}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-gray-600 text-center py-4">
+                      No teachers available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

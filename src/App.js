@@ -202,6 +202,8 @@ import Parents from './Pages/ParentList';
 import DriverForm from './Pages/AddDriver';
 import DriverListPage from './Pages/DriverList';
 import ExamTypeListPage from './Pages/ExamTypeTable';
+import Leaves from './Pages/LeaveList';
+import TeacherSubjects from './Teacher/TeacherSubjects';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -340,7 +342,7 @@ function App() {
             <Route path="/student-assignment" element={<StudentAssignmentList/>} />
             <Route path="/student-syllabus" element={<StudentSyllabusList/>} />
             <Route path="/student-attendance" element={<StudentAttendanceList/>} />
-            <Route path="/apply-leave" element={<ApplyLeave/>} />
+            <Route path="/leaves" element={<Leaves/>} />
             <Route path="/pending-leave" element={<PendingLeaveRequest/>} />
             <Route path="/student-result" element={<ResultPage/>} />
             <Route path="/student-exam-routine" element={<ExamRoutinePage/>} />
@@ -414,7 +416,7 @@ function App() {
 
 
 
-          {/* Parents Sections */} 
+          {/* Parents Sections */}   
           <Route path="/teacher-sidebar" element={<TeacherSidebar/>} />
           <Route path="/teacher-dashboard" element={<TeacherDashboard/>} />
           <Route path="/teacher-attendance" element={<TeacherAttendance/>} />
@@ -430,6 +432,8 @@ function App() {
           <Route path="/teacher-coming-soon" element={<TeacherComingSoon/>} />
           <Route path="/teacher-queries" element={<TeacherCommunication/>} />
           <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
+          <Route path="/teacher-subjects" element={<TeacherSubjects/>} />
+
 
 
 
