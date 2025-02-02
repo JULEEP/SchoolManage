@@ -204,6 +204,7 @@ import DriverListPage from './Pages/DriverList';
 import ExamTypeListPage from './Pages/ExamTypeTable';
 import Leaves from './Pages/LeaveList';
 import TeacherSubjects from './Teacher/TeacherSubjects';
+import UserGuide from './Student/UserGuide';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -358,6 +359,7 @@ function App() {
             <Route path="/student-holidays" element={<StudentHolidayPage/>} />
             <Route path="/teacher" element={<Teacher/>} />
             <Route path="/sidebar" element={<Sidebar/>} />
+            <Route path='/user-guide' element={<UserGuide/>}/>
             <Route path="/student-login" element={<StudentLogin/>} />
             <Route path="/marks" element={<MarksList/>} />
             <Route path="/staff" element={<AddStaffForm/>} />

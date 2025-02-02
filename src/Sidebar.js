@@ -294,6 +294,23 @@ const StudentSidebar = () => {
             <span className="ml-3 text-black">Transport</span>
           </NavLink>
         </li>
+
+        {/* User Guide */}
+        <li>
+          <NavLink
+            to="/user-guide"
+            className={({ isActive }) =>
+              `flex items-center p-3 rounded-md ${
+                isActive ? "bg-gray-100" : "hover:bg-gray-100"
+              }`
+            }
+          >
+            <div className="bg-blue-500 text-white p-2 rounded-full">
+              <FaBook/>
+            </div>
+            <span className="ml-3 text-black">User Guide</span>
+          </NavLink>
+        </li>
       </ul>
     </div>
   );
