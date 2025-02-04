@@ -20,7 +20,7 @@ const AddMeeting = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost:4000/api/admin/create-meeting', {
+      const response = await axios.post('https://school-backend-1-2xki.onrender.com/api/admin/create-meeting', {
         date,
         time,
         agenda,

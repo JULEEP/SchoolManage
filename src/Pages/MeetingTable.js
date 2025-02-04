@@ -14,7 +14,7 @@ const MeetingPage = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/admin/meetings');
+        const response = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/meetings');
         if (!response.ok) {
           throw new Error('Failed to fetch meetings');
         }

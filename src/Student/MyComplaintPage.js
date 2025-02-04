@@ -14,7 +14,7 @@ const ComplaintPage = () => {
     const fetchComplaints = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/students/my-complaint/6799137209c338219c673fe3"
+          "https://school-backend-1-2xki.onrender.com/api/students/my-complaint/6799137209c338219c673fe3"
         );
         setComplaints(response.data.complaints); // Update state with the complaints data
       } catch (error) {

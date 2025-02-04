@@ -103,7 +103,7 @@ const StudentsMarksPage = () => {
   const submitMarks = async () => {
     try {
       await axios.post(
-        `http://localhost:4000/api/teacher/add-marks/${selectedStudent.id}`,
+        `https://school-backend-1-2xki.onrender.com/api/teacher/add-marks/${selectedStudent.id}`,
         {
           subject: marksSubject,
           marksObtained: marksObtained,

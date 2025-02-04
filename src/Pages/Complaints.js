@@ -19,7 +19,7 @@ const Complaints = () => {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/admin/complaint");
+        const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/complaint");
         setComplaintList(response.data.complaints || []);
       } catch (error) {
         console.error("Error fetching complaints:", error);
