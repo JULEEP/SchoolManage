@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaUser, FaWallet, FaList, FaChalkboardTeacher, FaBook, FaClipboardCheck, FaChevronDown, FaChevronRight, FaVideo } from "react-icons/fa"; // Added icons
+import { FaHome, FaUser, FaWallet, FaList, FaChalkboardTeacher, FaExclamationCircle, FaBook, FaClipboardCheck, FaChevronDown, FaChevronRight, FaVideo } from "react-icons/fa"; // Added icons
 import { NavLink } from "react-router-dom"; // Import NavLink from react-router-dom
 
 const ParentSidebar = () => {
@@ -122,6 +122,18 @@ const ParentSidebar = () => {
           >
             <FaChalkboardTeacher className="mr-3 text-purple-600" />
             <span>Class Routine</span>
+          </NavLink>
+        </li>
+
+          {/* My Child Complaints */}
+          <li className="flex items-center text-lg p-3 rounded-md hover:bg-gray-100">
+          <NavLink 
+            to="/mychild-complaint" 
+            className="flex items-center text-sky-500 hover:text-sky-400"
+            activeClassName="bg-light-gray rounded-full"
+          >
+            <FaExclamationCircle className="mr-3 text-purple-600" />
+            <span>Complaints</span>
           </NavLink>
         </li>
 

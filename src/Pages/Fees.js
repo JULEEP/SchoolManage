@@ -240,8 +240,11 @@ const FeeManagement = () => {
                     className="w-full p-2 border rounded-md focus:border-purple-500"
                   >
                     <option value="">Select Fee Type</option>
-                    <option value="Tuition">Tuition</option>
-                    <option value="Exam">Exam</option>
+                    <option value="Tuition">Tuition Fee</option>
+                    <option value="Admission">Admission Fee</option>
+                    <option value="Monthly">Monthly Fee</option>
+                    <option value="Transport">Transport Fee</option>
+                    <option value="Exam">Exam Fee</option>
                     <option value="Other">Other</option>
                   </select>
 
@@ -331,8 +334,8 @@ const FeeManagement = () => {
       </div>
 
       {/* ToastContainer for Toast Notifications */}
-      <ToastContainer />
-    </div>
+      <ToastContainer autoClose={2000} hideProgressBar={false} newestOnTop={true} closeOnClick pauseOnHover={false} draggable />
+      </div>
   );
 };
 

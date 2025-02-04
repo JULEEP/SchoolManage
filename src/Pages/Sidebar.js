@@ -135,6 +135,11 @@ const Sidebar = () => {
                         <span>Add Teacher</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/add-meeting" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Arrenge Meeting</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>
@@ -317,6 +322,11 @@ const Sidebar = () => {
                         <span>Add Exam Schedule</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/add-marks" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Add Marks</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>
@@ -347,6 +357,11 @@ const Sidebar = () => {
                         <span>View Teachers</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/meetings" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>View Meetings</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>
@@ -362,6 +377,11 @@ const Sidebar = () => {
                     <li>
                       <NavLink to="/managestudent" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>View Students</span>
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/complaintlist" className="flex items-center text-sm text-white hover:text-gray-400">
+                        <span>View Complaints</span>
                       </NavLink>
                     </li>
                   </ul>

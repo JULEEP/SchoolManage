@@ -204,6 +204,13 @@ import DriverListPage from './Pages/DriverList';
 import ExamTypeListPage from './Pages/ExamTypeTable';
 import Leaves from './Pages/LeaveList';
 import TeacherSubjects from './Teacher/TeacherSubjects';
+import StudentsMarksPage from './Pages/AddMarks';
+import Complaints from './Pages/Complaints';
+import ComplaintPage from './Student/MyComplaintPage';
+import MyChildComplaintPage from './Parents/MyChildrenComplaint';
+import AddMeeting from './Pages/AddMeeting';
+import MeetingPage from './Pages/MeetingTable';
+import TeacherMeetingPage from './Teacher/Meetings';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -318,6 +325,7 @@ function App() {
             <Route path="/approval" element={<ApproveDepositTable/>} />
             <Route path="/reject" element={<RejectDepositTable/>} />
             <Route path="/refund" element={<RefundRequestTable/>} />
+            <Route path="/add-marks" element={<StudentsMarksPage/>} />
             <Route path="/profitloss" element={<ProfitLossPage/>} />
             <Route path="/addincome" element={<AddIncomePage/>} />
             <Route path="/addexpenses" element={<AddExpensePage/>} />
@@ -373,6 +381,12 @@ function App() {
             <Route path="/add-driver" element={<DriverForm/>} />
             <Route path="/driverlist" element={<DriverListPage/>} />
             <Route path="/examtypelist" element={<ExamTypeListPage/>} />
+            <Route path="/complaintlist" element={<Complaints/>} />
+            <Route path="/add-meeting" element={<AddMeeting/>} />
+            <Route path="/meetings" element={<MeetingPage/>} />
+            <Route path="/student-complaint" element={<ComplaintPage/>} />
+
+
 
 
 
@@ -411,6 +425,8 @@ function App() {
            <Route path="/parent-login" element={<ParentLogin/>} />
            <Route path="/ask-queries" element={<CommunicationForm/>} />
            <Route path="/children-holidays" element={<ParentHolidayPage/>} />
+           <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
+
 
 
 
@@ -433,6 +449,8 @@ function App() {
           <Route path="/teacher-queries" element={<TeacherCommunication/>} />
           <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
           <Route path="/teacher-subjects" element={<TeacherSubjects/>} />
+          <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
+
 
 
 

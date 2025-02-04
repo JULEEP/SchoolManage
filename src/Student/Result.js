@@ -9,6 +9,7 @@ const ResultPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [examType, setExamType] = useState(""); // New state for exam type
   const marksheetRef = useRef();
 
   const studentId = "676cf56dfd1eb1caa8426205";
@@ -16,9 +17,11 @@ const ResultPage = () => {
   useEffect(() => {
     const fetchMarks = async () => {
       try {
-        const response = await fetch(
-          `https://school-backend-1-2xki.onrender.com/api/students/marks/${studentId}`
-        );
+        const url = examType
+          ? `http://localhost:4000/api/students/marks/${studentId}?examType=${examType}`
+          : `http://localhost:4000/api/students/marks/${studentId}`;
+        
+        const response = await fetch(url);
         const data = await response.json();
 
         if (response.ok) {
@@ -34,44 +37,44 @@ const ResultPage = () => {
     };
 
     fetchMarks();
-  }, [studentId]);
+  }, [studentId, examType]); // Re-run when examType changes
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   const downloadPDF = async () => {
     const element = marksheetRef.current;
-  
+
     // Save original styles
     const originalOverflow = element.style.overflow;
     const originalWidth = element.style.width;
     const originalHeight = element.style.height;
-  
+
     // Temporarily adjust styles for rendering
     element.style.overflow = "visible";
     element.style.width = "1000px"; // A4 size width
     element.style.height = "auto";
-  
+
     try {
       // Capture the content using html2canvas
       const canvas = await html2canvas(element, { scale: 2 });
-  
+
       // Restore original styles
       element.style.overflow = originalOverflow;
       element.style.width = originalWidth;
       element.style.height = originalHeight;
-  
+
       // Convert content to image
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
+
       // Add content image to the PDF
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-  
+
       // Add the logo in the top-right corner
       const logoUrl = "https://res.cloudinary.com/dokfnv3vy/image/upload/v1736084543/custom/yhbii0wbedftmpvlpnon.jpg";
-  
+
       try {
         const response = await fetch(logoUrl, { mode: "cors" }); // Ensure CORS is enabled
         if (!response.ok) {
@@ -84,11 +87,11 @@ const ResultPage = () => {
           reader.onerror = reject;
           reader.readAsDataURL(blob);
         });
-  
+
         // Logo dimensions
         const logoWidth = 20; // mm
         const logoHeight = 20; // mm
-  
+
         // Add the logo to the PDF
         pdf.addImage(
           logoBase64,
@@ -101,15 +104,14 @@ const ResultPage = () => {
       } catch (logoError) {
         console.error("Error adding the logo to the PDF:", logoError);
       }
-  
+
       // Save the PDF
       pdf.save("Marksheet.pdf");
     } catch (error) {
       console.error("Error generating the PDF:", error);
     }
   };
-  
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -144,6 +146,20 @@ const ResultPage = () => {
           >
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
+        </div>
+
+        <div className="p-4">
+          {/* Exam Type Filter */}
+          <select
+            value={examType}
+            onChange={(e) => setExamType(e.target.value)}
+            className="p-2 rounded border"
+          >
+            <option value="">All Exams</option>
+            <option value="midTerm">MidTerm</option>
+            <option value="Final">Final</option>
+            {/* Add other exam types here */}
+          </select>
         </div>
 
         {marks && (

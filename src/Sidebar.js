@@ -11,6 +11,7 @@ import {
   FaBus,
   FaChevronDown,
   FaChevronRight,
+  FaExclamationCircle
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
@@ -21,6 +22,8 @@ const StudentSidebar = () => {
   const [isExaminationsOpen, setExaminationsOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [isLeavesOpen, setIsLeavesOpen] = useState(false); // New state for Leaves
+  const [isComplaintOpen, setIsComplaintOpen] = useState(false); // New state for Leaves
+
 
 
   useEffect(() => {
@@ -36,6 +39,9 @@ const StudentSidebar = () => {
   const toggleExaminations = () => setExaminationsOpen((prev) => !prev);
   const toggleLeaves = () => {
     setIsLeavesOpen(!isLeavesOpen);
+  };
+  const toggleComplaints = () => {
+    setIsComplaintOpen(!isComplaintOpen);
   };
 
 
@@ -167,6 +173,36 @@ const StudentSidebar = () => {
               className="block text-black text-sm py-1 hover:text-blue-500"
             >
               Apply Leave
+            </NavLink>
+          </li>
+        </ul>
+      )}
+    </li>
+    {/* complaints Section */}
+    <li>
+      <div
+        className="flex items-center p-3 rounded-md cursor-pointer hover:bg-gray-100"
+        onClick={toggleComplaints}
+      >
+        <div className="bg-red-500 text-white p-2 rounded-full">
+          {/* Adding the complaint icon */}
+          <FaExclamationCircle />
+        </div>
+        <span className="ml-3 text-black">My Complaints</span>
+        {isComplaintOpen ? (
+          <FaChevronDown className="ml-auto text-black" />
+        ) : (
+          <FaChevronRight className="ml-auto text-black" />
+        )}
+      </div>
+      {isComplaintOpen && (
+        <ul className="pl-12 mt-2">
+          <li>
+            <NavLink
+              to="/student-complaint"
+              className="block text-black text-sm py-1 hover:text-blue-500"
+            >
+              My Complaints
             </NavLink>
           </li>
         </ul>

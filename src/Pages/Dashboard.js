@@ -4,7 +4,9 @@ import Sidebar from './Sidebar';
 import axios from 'axios'; // We'll use axios to make API calls
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom'; // For navigation links
-import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide } from 'react-icons/fa'; // For icons
+import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaMoneyBillAlt, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide } from 'react-icons/fa'; // For icons
+import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+
 
 
 import {
@@ -43,6 +45,32 @@ const Dashboard = () => {
   });
   const lineChartRef = useRef(null); // Ref for line chart
   const lineChartInstanceRef = useRef(null); // Store line chart instance
+
+  const [feeDetails, setFeeDetails] = useState({
+    totalPaid: 0,
+    totalPending: 0
+  });
+
+  useEffect(() => {
+    // Fetching data from the API
+    const fetchFeeDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/admin/totalamount');
+        const data = await response.json();
+        if (data.message === 'Fee details fetched successfully') {
+          setFeeDetails({
+            totalPaid: data.totalPaid,
+            totalPending: data.totalPending
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching fee details:', error);
+      }
+    };
+
+    fetchFeeDetails();
+  }, []);
+
 
   useEffect(() => {
     const lineCtx = lineChartRef.current.getContext('2d');
@@ -174,38 +202,38 @@ const Dashboard = () => {
 
   return (
     <div className="flex min-h-screen">
-    {/* Sidebar - Always visible on large screens */}
-    <div
-      className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg w-64 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform lg:transform-none lg:block`}
-    >
-      <Sidebar />
-    </div>
-  
-    {/* Overlay for small screens */}
-    {isSidebarOpen && (
+      {/* Sidebar - Always visible on large screens */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
-        onClick={() => setIsSidebarOpen(false)}
-      ></div>
-    )}
-  
-    {/* Main Content */}
-    <div className={`flex-1 flex flex-col ${isSidebarOpen ? "pl-64" : ""} lg:pl-64`}>
-      {/* Header (only visible on small screens) */}
-      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-        <h1 className="text-lg font-bold">Admin Dashboard</h1>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-2xl focus:outline-none"
-        >
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg w-64 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform lg:transform-none lg:block`}
+      >
+        <Sidebar />
       </div>
-  
-      {/* Content */}
-      <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
-        <div className="font-sans">
+
+      {/* Overlay for small screens */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* Main Content */}
+      <div className={`flex-1 flex flex-col ${isSidebarOpen ? "pl-64" : ""} lg:pl-64`}>
+        {/* Header (only visible on small screens) */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Admin Dashboard</h1>
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
+          <div className="font-sans">
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -307,7 +335,6 @@ const Dashboard = () => {
                   <p className="text-2xl font-bold text-white">0</p>
                 </NavLink>
               </div>
-
               {/* Routine Section (Unique Gradient with Modern Touch) */}
               <div className="bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
                 <NavLink to="/classroutinelist" className="flex flex-col items-center">
@@ -484,6 +511,37 @@ const Dashboard = () => {
               </tbody>
             </table>
           </div>
+                    {/* Fee Summary Section */}
+<Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+<h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+<TableContainer component={Paper}>
+  <Table>
+    <TableHead>
+      <TableRow>
+        <TableCell>Amount Type</TableCell>
+        <TableCell>Description</TableCell>
+        <TableCell>Amount</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {/* Total Paid Amount Row */}
+      <TableRow>
+        <TableCell>Paid Amount</TableCell>
+        <TableCell>Total Amount Paid</TableCell>
+        <TableCell>{feeDetails.totalPaid.toLocaleString()}</TableCell>
+      </TableRow>
+      
+      {/* Total Pending Amount Row */}
+      <TableRow>
+        <TableCell>Pending Amount</TableCell>
+        <TableCell>Amount Still Pending</TableCell>
+        <TableCell>{feeDetails.totalPending.toLocaleString()}</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</TableContainer>
+</Box>
+
         </div>
       </div>
     </div>
