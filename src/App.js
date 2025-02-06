@@ -207,6 +207,9 @@ import TeacherLeavePage from './Teacher/TeacherLeave';
 import TeacherLogin from './Teacher/TeacherLogin';
 import TeacherSidebar from './Teacher/TeacherSidebar';
 import TeacherSubjects from './Teacher/TeacherSubjects';
+import UserGuide from './Student/UserGuide';
+import GenerateId from './Teacher/GenerateId';
+import RoomsVc from './Teacher/RoomsVc';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -363,6 +366,7 @@ function App() {
             <Route path="/student-holidays" element={<StudentHolidayPage/>} />
             <Route path="/teacher" element={<Teacher/>} />
             <Route path="/sidebar" element={<Sidebar/>} />
+            <Route path='/user-guide' element={<UserGuide/>}/>
             <Route path="/student-login" element={<StudentLogin/>} />
             <Route path="/marks" element={<MarksList/>} />
             <Route path="/staff" element={<AddStaffForm/>} />
@@ -382,6 +386,7 @@ function App() {
             <Route path="/add-meeting" element={<AddMeeting/>} />
             <Route path="/meetings" element={<MeetingPage/>} />
             <Route path="/student-complaint" element={<ComplaintPage/>} />
+
 
 
 
@@ -446,8 +451,9 @@ function App() {
           <Route path="/teacher-queries" element={<TeacherCommunication/>} />
           <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
           <Route path="/teacher-subjects" element={<TeacherSubjects/>} />
+          <Route path="/generateid" element={<GenerateId/>} />
+          <Route path="/generateid/room/:roomId" element={<RoomsVc/>} />
           <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
-
 
 
 
