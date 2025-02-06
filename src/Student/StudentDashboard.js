@@ -48,23 +48,61 @@ const bestCategories = [
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [transportData, setTransportData] = useState([]);
+  const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
+
   
   useEffect(() => {
     const fetchTransportData = async () => {
       try {
         const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
         const data = await response.json();
-        // Filter the transport data based on current date
-        const currentDate = new Date().toISOString().split('T')[0];
-        const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
-        setTransportData(filteredRoutes);
+        
+        // Log the full data to check its structure
+        console.log(data);
+
+        // Ensure 'data.routes' exists and is an array
+        if (data.routes && Array.isArray(data.routes)) {
+          // Get today's date in 'YYYY-MM-DD' format
+          const currentDate = new Date().toISOString().split('T')[0];
+          console.log("Current Date:", currentDate);
+        
+          // Filter the transport data based on current date
+          const filteredRoutes = data.routes.filter(route => {
+            // Extract the date part from the route's date field
+            const routeDate = route.date.split('T')[0];
+            return routeDate === currentDate;
+          });
+
+          // Log the filtered routes to check if filtering is working
+          console.log("Filtered Routes:", filteredRoutes);
+
+          // Set the transport data state with filtered routes
+          setTransportData(filteredRoutes);
+        } else {
+          console.error("No routes data found or data is not in the expected format.");
+        }
       } catch (error) {
         console.error("Error fetching transport data:", error);
       }
     };
-    
+        
+    const fetchFeeSummary = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/students/fees-summary/676909bcd20deeaaeca9bc31");
+        const data = await response.json();
+        setFeeSummary({
+          totalPaid: data.totalPaid,
+          totalPending: data.totalPending,
+        });
+      } catch (error) {
+        console.error("Error fetching fee summary:", error);
+      }
+    };
+
     fetchTransportData();
+    fetchFeeSummary();
   }, []);
+
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -87,33 +125,29 @@ const StudentDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-pink-100 flex">
-      {/* Sidebar */}
-      <div
-        className={`fixed md:static inset-y-0 left-0 bg-white shadow-lg transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 w-64 z-50 md:translate-x-0`}
-      >
-        <StudentSidebar />
+    <div className="min-h-screen flex bg-gray-100">
+    {/* Sidebar Overlay */}
+    <div
+      className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+      onClick={toggleSidebar}
+    ></div>
+
+    {/* Sidebar */}
+    <div
+      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+    >
+      <StudentSidebar />
+    </div>
+
+    {/* Main Content */}
+    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+        <h1 className="text-lg font-bold">Student DashBoard</h1>
+        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
-
-      {/* Overlay for Sidebar on Small Screens */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Mobile Header */}
-        <div className="p-4 bg-purple-700 text-white shadow-md flex items-center justify-between md:hidden">
-          <h1 className="text-lg font-bold">Student Dashboard</h1>
-          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
 
         {/* Content Area */}
         <Container
@@ -259,24 +293,24 @@ const StudentDashboard = () => {
               </TableContainer>
             </Box>
 
-            {/* Transport Routes Table */}
             <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ marginBottom: "10px",  fontWeight: "bold" }}>Transport Routes (Today)</h3>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Route</TableCell>
-                      <TableCell>Driver</TableCell>
-                      <TableCell>Driver's Number</TableCell>
-                      <TableCell>Stop Name</TableCell>
-                      <TableCell>Arrival Time</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {transportData.map((route, index) => (
+            <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Transport Routes (Today)</h3>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Route</TableCell>
+                    <TableCell>Driver</TableCell>
+                    <TableCell>Driver's Number</TableCell>
+                    <TableCell>Stop Name</TableCell>
+                    <TableCell>Arrival Time</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {transportData.length > 0 ? (
+                    transportData.map((route, index) => 
                       route.stops.map((stop, stopIndex) => (
-                        <TableRow key={`${index}-${stopIndex}`}>
+                        <TableRow key={`${route._id}-${stopIndex}`}>
                           <TableCell>{route.routeTitle}</TableCell>
                           <TableCell>{route.driver.name}</TableCell>
                           <TableCell>{route.driver.mobileNumber}</TableCell>
@@ -284,11 +318,39 @@ const StudentDashboard = () => {
                           <TableCell>{stop.arrivalTime}</TableCell>
                         </TableRow>
                       ))
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+                    )
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} style={{ textAlign: "center" }}>
+                        No transport routes available for today.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+
+                      {/* Fee Summary Section */}
+          <Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+          <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Total Paid</TableCell>
+                  <TableCell>Total Pending</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>{feeSummary.totalPaid}</TableCell>
+                  <TableCell>{feeSummary.totalPending}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
           </Box>
         </Container>
       </div>

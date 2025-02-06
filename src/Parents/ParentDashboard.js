@@ -42,6 +42,8 @@ const ParentDashboard = () => {
   const [comparisonText, setComparisonText] = useState("");  // State for comparison text
   const [suggestionText, setSuggestionText] = useState("");  // State for suggestion text
   const [transportData, setTransportData] = useState([]);
+    const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
+  
   
 
 
@@ -105,8 +107,21 @@ const ParentDashboard = () => {
         setLoading(false);
       }
     };
+    const fetchFeeSummary = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/api/students/fees-summary/676909bcd20deeaaeca9bc31");
+        const data = await response.json();
+        setFeeSummary({
+          totalPaid: data.totalPaid,
+          totalPending: data.totalPending,
+        });
+      } catch (error) {
+        console.error("Error fetching fee summary:", error);
+      }
+    };
 
     fetchComparisonData();
+    fetchFeeSummary()
   }, []);
 
 
@@ -400,7 +415,27 @@ const ParentDashboard = () => {
                 </Table>
               </TableContainer>
             </Box>
-          </Box>
+                         {/* Fee Summary Section */}
+                      <Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+                      <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Total Paid</TableCell>
+                              <TableCell>Total Pending</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>{feeSummary.totalPaid}</TableCell>
+                              <TableCell>{feeSummary.totalPending}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                      </Box>
         </Container>
       </div>
     </div>

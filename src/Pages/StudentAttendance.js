@@ -11,6 +11,8 @@ const StudentAttendance = () => {
   const [isImportFormVisible, setIsImportFormVisible] = useState(false); // State to toggle the import form visibility
   const [searchTerm, setSearchTerm] = useState(""); // State for search functionality
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar toggle state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const studentsPerPage = 5; // Set number of students per page
 
   // Fetch student data from the API
   useEffect(() => {
@@ -37,6 +39,14 @@ const StudentAttendance = () => {
         student.admissionNumber?.toString().includes(searchTerm))
     );
   });
+
+  // Pagination logic
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar visibility
@@ -157,36 +167,69 @@ const StudentAttendance = () => {
                 <tr className="bg-gray-100">
                   <th className="px-4 py-2 text-left border-b">Admission No</th>
                   <th className="px-4 py-2 text-left border-b">Name</th>
+                  <th className="px-4 py-2 text-left border-b">Class</th>
+                  <th className="px-4 py-2 text-left border-b">Roll</th>
                   <th className="px-4 py-2 text-left border-b">Date of Birth</th>
                   <th className="px-4 py-2 text-left border-b">Gender</th>
                   <th className="px-4 py-2 text-left border-b">Attendance Status</th>
+                  <th className="px-4 py-2 text-left border-b">Attendance Date</th>
+                  <th className="px-4 py-2 text-left border-b">Attendance Subject</th>
+
                 </tr>
               </thead>
               <tbody>
-                {filteredStudents.length > 0 ? (
-                  filteredStudents.map((student) => (
+              {currentStudents.length > 0 ? (
+                currentStudents.map((student) => {
+                  // Check if the student has attendance records
+                  const latestAttendance = student.attendance?.length > 0 
+                    ? student.attendance[student.attendance.length - 1] // Get the latest attendance record
+                    : null;
+            
+                  return (
                     <tr key={student._id}>
                       <td className="px-4 py-2 border-b">{student.admissionNumber || "N/A"}</td>
                       <td className="px-4 py-2 border-b">{`${student.firstName} ${student.lastName}`}</td>
+                      <td className="px-4 py-2 border-b">{student.class}</td>
+                      <td className="px-4 py-2 border-b">{student.roll}</td>
                       <td className="px-4 py-2 border-b">{student.dateOfBirth ? new Date(student.dateOfBirth).toLocaleDateString() : "N/A"}</td>
                       <td className="px-4 py-2 border-b">{student.gender}</td>
-                      <td className="px-4 py-2 border-b">{student.attendanceStatus}</td>
+                      {/* Show latest attendance details if available */}
+                      <td className="px-4 py-2 border-b">{latestAttendance ? latestAttendance.attendanceStatus : "No Record"}</td>
+                      <td className="px-4 py-2 border-b">{latestAttendance ? new Date(latestAttendance.date).toLocaleDateString() : "No Record"}</td>
+                      <td className="px-4 py-2 border-b">{latestAttendance ? latestAttendance.subject : "No Record"}</td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="px-4 py-2 text-center text-gray-500 border-b">
-                      No Data Available
-                    </td>
-                  </tr>
-                )}
-              </tbody>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="9" className="px-4 py-2 text-center text-gray-500 border-b">
+                    No Data Available
+                  </td>
+                </tr>
+              )}
+            </tbody>            
             </table>
           </div>
 
           {/* Pagination Info */}
-          <div className="text-sm text-gray-500 mt-4">
-            Showing {filteredStudents.length} entries
+          <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-gray-500">
+              Page {currentPage} of {Math.ceil(filteredStudents.length / studentsPerPage)}
+            </span>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === Math.ceil(filteredStudents.length / studentsPerPage)}
+              className="px-4 py-2 bg-purple-500 text-white rounded disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

@@ -16,9 +16,9 @@ const Navbar = () => {
     <Sidebar /> {/* Sidebar added here */}
 
     {/* Main Content */}
-    <div className="flex-1 p-6 ml-64"> {/* Add ml-64 to shift the content right */}      {/* Title */}      <div className="flex justify-between items-center">
+    <div className="flex-1 p-6 ml-64"> {/* Add ml-64 to shift the content right */}      {/* Title */}      <div className="flex items-center justify-between">
         {/* Logo */}
-        <div className="text-white text-2xl font-semibold">
+        <div className="text-2xl font-semibold text-white">
           InfixEdu
         </div>
 
@@ -27,13 +27,13 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="w-full py-2 pl-10 pr-4 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <FaSearch className="absolute left-3 top-3 text-gray-500" />
+          <FaSearch className="absolute text-gray-500 left-3 top-3" />
         </div>
 
         {/* Navbar Links (visible on desktop) */}
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden space-x-6 md:flex">
           <a href="#" className="text-white hover:text-blue-200">Home</a>
           <a href="#" className="text-white hover:text-blue-200">Dashboard</a>
           <a href="#" className="text-white hover:text-blue-200">Students</a>
@@ -49,14 +49,14 @@ const Navbar = () => {
             className="flex items-center text-white"
           >
             {/* Profile initials only (no email) */}
-            <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white">
+            <div className="flex items-center justify-center w-8 h-8 text-white bg-gray-400 rounded-full">
               <span>AD</span> {/* Placeholder for profile initials */}
             </div>
           </button>
 
           {/* Profile Dropdown */}
           {isProfileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2">
+            <div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-lg">
               <p className="px-4 py-2 text-gray-700">Super Admin</p>
               <hr />
               <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">View Profile</a>

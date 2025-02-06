@@ -18,6 +18,7 @@ const StudentPromote = () => {
   });
   const [filterClass, setFilterClass] = useState("");
   const [filterSection, setFilterSection] = useState("");
+  const [percentageThreshold, setPercentageThreshold] = useState(0); // For bulk promotion
 
   // Fetch marks
   useEffect(() => {
@@ -78,7 +79,37 @@ const StudentPromote = () => {
       alert("Failed to promote student. Please try again.");
     }
   };
-  
+
+  // Bulk Promote Based on Percentage
+  const handleBulkPromote = async () => {
+    const studentsToPromote = marksList.filter(
+      (student) => student.overallPercentage >= percentageThreshold
+    );
+
+    if (studentsToPromote.length > 0) {
+      try {
+        for (let student of studentsToPromote) {
+          await axios.put(
+            `https://school-backend-1-2xki.onrender.com/api/admin/promote/${student.student._id}`,
+            {
+              newClass: "Next Class", // Update with the actual promotion logic
+              section: student.student.section,
+              roll: student.student.roll,
+              message: "Congratulations on your promotion!", // You can customize this
+            }
+          );
+        }
+
+        alert(`${studentsToPromote.length} students promoted successfully!`);
+        fetchMarks(); // Refresh marks list after bulk promotion
+      } catch (error) {
+        console.error("Error in bulk promoting students:", error);
+        alert("Failed to bulk promote students. Please try again.");
+      }
+    } else {
+      alert("No students meet the promotion criteria.");
+    }
+  };
 
   // Pagination calculations
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -102,34 +133,21 @@ const StudentPromote = () => {
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${
-          isSidebarOpen ? "block" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
         onClick={toggleSidebar}
       ></div>
 
       {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+      <div className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div
-        className={`flex-grow overflow-y-auto transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile View: Header and Sidebar Toggle Icon */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Promote</h1>
-          <button
-            onClick={toggleSidebar}
-            className="text-2xl focus:outline-none"
-          >
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -147,7 +165,6 @@ const StudentPromote = () => {
                 <option value="">All Classes</option>
                 <option value="Class 1">Class 1</option>
                 <option value="Class 2">Class 2</option>
-                {/* Add other class options as needed */}
               </select>
             </div>
             <div className="flex-1">
@@ -160,9 +177,26 @@ const StudentPromote = () => {
                 <option value="">All Sections</option>
                 <option value="A">A</option>
                 <option value="B">B</option>
-                {/* Add other section options as needed */}
               </select>
             </div>
+          </div>
+
+          {/* Percentage Threshold for Bulk Promotion */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-1">Promotion Threshold (%)</label>
+            <input
+              type="number"
+              value={percentageThreshold}
+              onChange={(e) => setPercentageThreshold(e.target.value)}
+              className="w-full border px-3 py-2 rounded"
+              placeholder="Enter percentage"
+            />
+            <button
+              onClick={handleBulkPromote}
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            >
+              Bulk Promote Students
+            </button>
           </div>
         </div>
 
@@ -189,27 +223,13 @@ const StudentPromote = () => {
                 {currentMarks.map((student, index) => (
                   <tr key={student.student?._id}>
                     <td className="px-4 py-2 border-b text-center">{index + 1}</td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.student?.firstName || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.student?.lastName || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.student?.class || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.student?.roll || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.student?.section || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.overallPercentage || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {student.overallStatus || "N/A"}
-                    </td>
+                    <td className="px-4 py-2 border-b text-center">{student.student?.firstName || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.student?.lastName || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.student?.class || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.student?.roll || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.student?.section || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.overallPercentage || "N/A"}</td>
+                    <td className="px-4 py-2 border-b text-center">{student.overallStatus || "N/A"}</td>
                     <td className="px-4 py-2 border-b ml-2">
                       <button
                         onClick={() => handlePromoteClick(student)}
@@ -231,11 +251,7 @@ const StudentPromote = () => {
             <button
               key={i}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded-md ${
-                currentPage === i + 1
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
+              className={`px-3 py-1 rounded-md ${currentPage === i + 1 ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800"}`}
             >
               {i + 1}
             </button>

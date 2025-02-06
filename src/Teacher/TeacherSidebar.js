@@ -169,6 +169,19 @@ const TeacherSidebar = () => {
           </NavLink>
         </li>
 
+          {/* My Meetings */}
+          <li>
+          <NavLink
+            to="/teacher-meetings"
+            className="flex items-center text-lg text-gray-400 p-3 rounded-md hover:bg-gray-800"
+            activeClassName="bg-gray-700"
+          >
+            <FaRegCalendarCheck className="mr-3" />
+            My Meeting
+          </NavLink>
+        </li>
+
+
         {/* All Students */}
         <li>
           <NavLink
