@@ -205,6 +205,8 @@ import ExamTypeListPage from './Pages/ExamTypeTable';
 import Leaves from './Pages/LeaveList';
 import TeacherSubjects from './Teacher/TeacherSubjects';
 import UserGuide from './Student/UserGuide';
+import GenerateId from './Teacher/GenerateId';
+import RoomsVc from './Teacher/RoomsVc';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -375,6 +377,9 @@ function App() {
             <Route path="/add-driver" element={<DriverForm/>} />
             <Route path="/driverlist" element={<DriverListPage/>} />
             <Route path="/examtypelist" element={<ExamTypeListPage/>} />
+            
+
+
 
 
 
@@ -435,6 +440,8 @@ function App() {
           <Route path="/teacher-queries" element={<TeacherCommunication/>} />
           <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
           <Route path="/teacher-subjects" element={<TeacherSubjects/>} />
+          <Route path="/generateid" element={<GenerateId/>} />
+          <Route path="/generateid/room/:roomId" element={<RoomsVc/>} />
 
 
 
