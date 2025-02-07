@@ -14,14 +14,7 @@ const LiveMeeting = () => {
       setLoading(true);
       setError("");
       try {
-        // const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/parent-meetings");
-        // const data = await response.json();
-
-        // if (response.ok) {
-        //   setMeetings(data.meetings || []);
-        // } else {
-        //   setError("Failed to load meetings.");
-        // }
+        //call api here
       } catch (err) {
         setError("An error occurred while fetching meetings.");
       } finally {

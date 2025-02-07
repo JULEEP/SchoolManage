@@ -13,14 +13,7 @@ const LiveClass = () => {
       setLoading(true);
       setError("");
       try {
-        // const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/live-classes");
-        // const data = await response.json();
-
-        // if (response.ok) {
-        //   setLiveClasses(data.liveClasses || []);
-        // } else {
-        //   setError("Failed to load live classes.");
-        // }
+        // call api here
       } catch (err) {
         setError("An error occurred while fetching live classes.");
       } finally {
