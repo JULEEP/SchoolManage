@@ -13,7 +13,8 @@ import {
   FaChevronRight,
   FaSignOutAlt,
   FaUsers, // For Students icon
-  FaRegCalendarCheck, // For Leaves icon
+  FaRegCalendarCheck,
+  FaLaptopCode, // For Leaves icon
 } from "react-icons/fa"; // Icons from react-icons
 import { NavLink } from "react-router-dom";
 
@@ -191,6 +192,17 @@ const TeacherSidebar = () => {
           >
             <FaUsers className="mr-3" />
             All Students
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink
+            to="/liveclassform"
+            className="flex items-center text-lg text-gray-400 p-3 rounded-md hover:bg-gray-800"
+            activeClassName="bg-gray-700"
+          >
+            <FaLaptopCode className="mr-3" />
+            Live Class Form
           </NavLink>
         </li>
 
