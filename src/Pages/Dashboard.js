@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import axios from 'axios'; // We'll use axios to make API calls
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom'; // For navigation links
-import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaMoneyBillAlt, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide } from 'react-icons/fa'; // For icons
+import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaMoneyBillAlt, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide,FaLaptopCode } from 'react-icons/fa'; // For icons
 import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 
@@ -129,14 +129,14 @@ const Dashboard = () => {
     chartInstanceRef.current = new Chart(ctx, {
       type: 'bar', // Bar chart type
       data: {
-        labels: ['Students', 'Teachers', 'Parents', 'Staffs', 'Subjects', 'Classes', 'Sections', 'Vehicles'],
+        labels: ['Students', 'Teachers', 'Parents', 'Staffs', 'Subjects', 'Classes', 'Sections', 'Vehicles','Meetings'],
         datasets: [
           {
             label: 'Count',
-            data: [0, 50, 0, 0, 10, 5, 8, 4], // Example data
+            data: [0, 50, 0, 0, 10, 5, 8, 4,""], // Example data
             backgroundColor: [
               '#ADD8E6', '#000000', '#FFB6C1', '#90EE90',
-              '#FFFFE0', '#D8BFD8', '#FFA500', '#40E0D0'
+              '#FFFFE0', '#D8BFD8', '#FFA500', '#40E0D0','#ADD8E6'
             ],
           }
         ]
@@ -354,6 +354,13 @@ const Dashboard = () => {
                   <h2 className="font-semibold text-xl text-white">Vehicles</h2>
                   <p className="text-gray-200">Total Vehicles</p>
                   <p className="text-2xl font-bold text-white">4</p>
+                </NavLink>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
+                <NavLink to="/generateid" className="flex flex-col items-center">
+                  <FaLaptopCode className="text-4xl text-white mb-3" /> 
+                  <h2 className="font-semibold text-xl text-white">Meet</h2>
                 </NavLink>
               </div>
             </div>

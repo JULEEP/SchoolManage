@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaUser, FaWallet, FaCog, FaSignOutAlt, FaList, FaDownload, FaFileAlt, FaPlusCircle, FaChalkboardTeacher, FaBook, FaClipboardCheck, FaChevronDown, FaChevronRight, FaPlus } from "react-icons/fa"; // Added icons
+import { FaHome, FaUser, FaWallet, FaCog, FaSignOutAlt, FaList, FaDownload, FaFileAlt, FaPlusCircle, FaChalkboardTeacher, FaBook, FaClipboardCheck, FaChevronDown, FaChevronRight, FaPlus, FaLaptopCode } from "react-icons/fa"; // Added icons
 import { NavLink } from "react-router-dom"; // Import NavLink from react-router-dom
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
@@ -861,6 +861,17 @@ const Sidebar = () => {
             </ul>
           )}
         </li>
+
+         <li className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8">
+                  <NavLink
+                    to="/meetform"
+                    className="flex items-center text-white hover:text-gray-400"
+                    activeClassName="bg-gray-700 rounded-full"
+                  >
+                    <FaLaptopCode className="mr-3 text-white" />
+                    Live Meet Form
+                  </NavLink>
+                </li>
 
         {/* Admin Setting */}
         <li className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8">
