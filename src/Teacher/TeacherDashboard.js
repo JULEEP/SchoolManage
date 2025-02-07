@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { GoDotFill } from "react-icons/go";
 import {
   FaUserGraduate,
   FaTasks,
@@ -104,6 +105,7 @@ const TeacherDashboard = () => {
               { title: "Total Queries", value: "50", icon: <FaQuestionCircle className="text-3xl" />, link: "/teacher-queries" },
               { title: "Total Holidays", value: "5", icon: <FaCalendarAlt className="text-3xl" />, link: "/teacher-holidays" },
               { title: "Live Classes", value: "", icon: <FaLaptopCode className="text-3xl" />, link: "/generateid" },
+              { title: "Live Meeting", value: "", icon: <GoDotFill className="text-3xl text-red-600" />, link: "/teacher-live-meeting" },
 
 
             ].map((item, index) => (

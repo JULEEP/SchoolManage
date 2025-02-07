@@ -17,6 +17,7 @@ const fees = 'https://th.bing.com/th/id/R.9e223a9b2c0ef9a333764f8c4a87dbd2?rik=f
 const pendingHomework = 'https://th.bing.com/th/id/R.c1a735d2fa8cba39f15d088f3ea069f0?rik=fa6UqGzr2a49ww&riu=http%3a%2f%2fwikiclipart.com%2fwp-content%2fuploads%2f2017%2f09%2fStudent-thinking-students-images-clip-art-clipart-collection.jpg&ehk=bL3ekc6319OyCeNLIQldxn6RYl7IQRc6q2a73cPEnhg%3d&risl=&pid=ImgRaw&r=0';
 const queries = 'https://cdn-icons-png.flaticon.com/512/5013/5013104.png';
 const holidays = 'https://th.bing.com/th/id/R.afb1e164709a7fa37526f8c4720ec764?rik=RvY3GKnJUEQkWA&riu=http%3a%2f%2fclipartbarn.com%2fwp-content%2fuploads%2f2016%2f10%2fHappy-holidays-holiday-animated-clipart-kid.jpg&ehk=JmTBybzuHIjgczoFTumv%2bSCP5o3VCJJYB98KmZx37QY%3d&risl=&pid=ImgRaw&r=0';
+const liveMeeting='https://media.tenor.com/33gJyOCSrIYAAAAj/live.gif'
 
 const bestCategories = [
   { img: subject, name: "Subjects", link: "/parent-subjects" },
@@ -31,6 +32,7 @@ const bestCategories = [
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
   { img: holidays, name: "Holidays", link: "/children-holidays" },
+  { img: liveMeeting, name: "Live Meetings", link: "/parent-live-meeting" },
 
 ];
 
