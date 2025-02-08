@@ -13,7 +13,17 @@ const LiveClass = () => {
       setLoading(true);
       setError("");
       try {
-        // call api here
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/students/my-meetings/67a48cb67d7494c75f3c59ec");
+        const data = await response.json();
+        setLiveClasses(
+          data.meetings.map(meeting => ({
+            _id: meeting._id,
+            classSection: `${meeting.class} ${meeting.section}`,
+            time: meeting.meetingTime,
+            link: `${meeting.meetingLink}`,
+            createdBy: "Admin" // Placeholder, modify if needed
+          }))
+        );
       } catch (err) {
         setError("An error occurred while fetching live classes.");
       } finally {
