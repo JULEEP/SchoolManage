@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Navbar from './Navbar'; // Import Navbar component
 import Sidebar from './Sidebar';
 import axios from 'axios'; // We'll use axios to make API calls
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom'; // For navigation links
 import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaMoneyBillAlt, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide,FaLaptopCode } from 'react-icons/fa'; // For icons
 import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-
-
-
 import {
   Chart,
   BarController,
@@ -17,6 +13,8 @@ import {
   LinearScale,
   LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend,
 } from 'chart.js';
+import { driver as Driver } from 'driver.js';
+import "driver.js/dist/driver.css";
 
 // Registering necessary components for Bar chart
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend);
@@ -160,6 +158,21 @@ const Dashboard = () => {
       }
     };
   }, []); // Empty dependency array ensures this effect runs only once
+  const driver = new Driver({
+    animate: true,
+    showProgress: true,
+    allowClose: true,
+    doneBtnText: "Finish",
+  });
+
+  const steps = [
+    { element: "#sidebar", popover: { title: "Navigation", description: "Use this to navigate between sections." } },
+    { element: "#students", popover: { title: "Students", description: "View and manage students here." } },
+    { element: "#teachers", popover: { title: "Teachers", description: "Manage teacher records from this section." } },
+    { element: "#analytics", popover: { title: "Analytics", description: "View statistics and reports here." } },
+    { element: "#revenue", popover: { title: "Revenue", description: "Track financial growth." } },
+  ];
+
 
 
   // Function to handle form input changes
