@@ -1,3 +1,6 @@
+
+import { driver } from "driver.js";
+
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -10,12 +13,12 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { Button } from "@mui/material"; // ✅ Add this line
 import { FaBars, FaTimes } from "react-icons/fa"; // Icons for sidebar toggle
 import { Link } from "react-router-dom"; // For navigation
 import StudentSidebar from "../Sidebar";
 
 // Importing images
-import student from "../Images/student.jpeg";
 
 const book = "https://media1.tenor.com/images/107e39e6cccecb07771733a383291bd9/tenor.gif?itemid=12632259";
 const transport = "https://i.gifer.com/Wdf9.gif";
@@ -47,10 +50,110 @@ const bestCategories = [
   { img: liveClass, name: "Live Class", link: "/live-class" },
 ];
 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [transportData, setTransportData] = useState([]);
   const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
+
+
+  const startTour = () => {
+    const tour = driver({
+      animate: true,
+      opacity: 0.75,
+      doneBtnText: "Finish",
+      nextBtnText: "Next",
+      prevBtnText: "Previous",
+      allowClose: true,
+    });
+  
+    tour.setSteps([  // ✅ defineSteps ❌ wrong, use setSteps ✅ correct
+      {
+        element: "#sidebar",
+        popover: {
+          title: "Navigation Menu",
+          description: "This is the sidebar where you can access different sections.",
+        },
+      },
+      {
+        element: "#categories-section",
+        popover: {
+          title: "Dashboard Categories",
+          description: "Click on any category to explore more.",
+        },
+      },
+      {
+        element: "#subjects-section",
+        popover: {
+          title: "Subjects",
+          description: "View your subjects, teachers, and class timings here.",
+        },
+      },
+      {
+        element: "#teachers-section",
+        popover: {
+          title: "Teachers",
+          description: "List of teachers along with their subjects and contact info.",
+        },
+      },
+      {
+        element: "#classes-section",
+        popover: {
+          title: "Classes",
+          description: "Check details about different classes and student counts.",
+        },
+      },
+      {
+        element: "#transport-section",
+        popover: {
+          title: "Transport Routes",
+          description: "View daily transport routes, drivers, and arrival times.",
+        },
+      },
+      {
+        element: "#fee-summary",
+        popover: {
+          title: "Fee Summary",
+          description: "Check your paid and pending fees here.",
+        },
+      },
+      {
+        element: "#library-section",
+        popover: {
+          title: "Library",
+          description: "Manage your issued books and library records.",
+        },
+      },
+      {
+        element: "#attendance-section",
+        popover: {
+          title: "Attendance",
+          description: "Track your attendance records and check-in history.",
+        },
+      },
+    ]);
+  
+    tour.drive(); // ✅ Correct function to start the tour
+  };
+  
+
+
+
+
 
   
   useEffect(() => {
@@ -134,22 +237,36 @@ const StudentDashboard = () => {
       onClick={toggleSidebar}
     ></div>
 
-    {/* Sidebar */}
-    <div
-      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-    >
-      <StudentSidebar />
-    </div>
+   {/* Sidebar */}
+<div
+  id="sidebar"
+  className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+>
+  <StudentSidebar />
+</div>
 
-    {/* Main Content */}
-    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-        <h1 className="text-lg font-bold">Student DashBoard</h1>
-        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+
+      {/* Main Content */}
+      <div
+        className={`flex-grow overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Student Dashboard</h1>
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+
+        {/* Start Tour Button */}
+        <button
+          onClick={startTour}
+          className="bg-blue-500 text-white p-2 rounded-md mt-4 ml-4"
+        >
+          Start Tour
         </button>
-      </div>
 
         {/* Content Area */}
         <Container
@@ -157,11 +274,12 @@ const StudentDashboard = () => {
           style={{
             padding: "20px",
             textAlign: "center",
-            backgroundColor: "#add8e6", // Light blue color
+            backgroundColor: "#add8e6",
             marginTop: "12px",
           }}
         >
           <Box
+            id="categories-section"
             display="grid"
             gridTemplateColumns="repeat(7, 1fr)"
             gap="5px"
@@ -221,143 +339,220 @@ const StudentDashboard = () => {
             ))}
           </Box>
 
-          {/* Tables Section */}
-          <Box mt={5}>
-            <Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ fontWeight: "bold" }}>Subjects</h3>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Subject</TableCell>
-                      <TableCell>Teacher</TableCell>
-                      <TableCell>Time</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {subjectsData.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.teacher}</TableCell>
-                        <TableCell>{row.time}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+          <Box mt={5} id="subjects-section">
+      <Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+        <h3 style={{ fontWeight: "bold" }}>Subjects</h3>
 
-            <Box mb={4} style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Subject</TableCell>
-                      <TableCell>Contact</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {teachersData.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>{row.subject}</TableCell>
-                        <TableCell>{row.contact}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+        {/* Start Tour Button */}
+        <Button onClick={startTour} variant="contained" color="primary" style={{ marginBottom: "10px" }}>
+          Start Tour
+        </Button>
 
-            <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ fontWeight: "bold" }}>Classes</h3>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Class Name</TableCell>
-                      <TableCell>Teacher</TableCell>
-                      <TableCell>Number of Students</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {classesData.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.className}</TableCell>
-                        <TableCell>{row.teacher}</TableCell>
-                        <TableCell>{row.students}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
-
-            <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
-            <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Transport Routes (Today)</h3>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Route</TableCell>
-                    <TableCell>Driver</TableCell>
-                    <TableCell>Driver's Number</TableCell>
-                    <TableCell>Stop Name</TableCell>
-                    <TableCell>Arrival Time</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {transportData.length > 0 ? (
-                    transportData.map((route, index) => 
-                      route.stops.map((stop, stopIndex) => (
-                        <TableRow key={`${route._id}-${stopIndex}`}>
-                          <TableCell>{route.routeTitle}</TableCell>
-                          <TableCell>{route.driver.name}</TableCell>
-                          <TableCell>{route.driver.mobileNumber}</TableCell>
-                          <TableCell>{stop.stopName}</TableCell>
-                          <TableCell>{stop.arrivalTime}</TableCell>
-                        </TableRow>
-                      ))
-                    )
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} style={{ textAlign: "center" }}>
-                        No transport routes available for today.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-
-                      {/* Fee Summary Section */}
-          <Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
-          <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Total Paid</TableCell>
-                  <TableCell>Total Pending</TableCell>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Subject</TableCell>
+                <TableCell>Teacher</TableCell>
+                <TableCell>Time</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {subjectsData.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.teacher}</TableCell>
+                  <TableCell>{row.time}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>{feeSummary.totalPaid}</TableCell>
-                  <TableCell>{feeSummary.totalPending}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-          </Box>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+
+      <Box
+  id="teachers-section"
+  mb={4}
+  style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }}
+>
+  {/* Section Heading */}
+  <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
+
+  {/* Teachers Table */}
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Name</TableCell>
+          <TableCell>Subject</TableCell>
+          <TableCell>Contact</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {teachersData.map((row, index) => (
+          <TableRow key={index}>
+            <TableCell>{row.name}</TableCell>
+            <TableCell>{row.subject}</TableCell>
+            <TableCell>{row.contact}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>
+
+
+<Box
+  id="classes-section"
+  mb={4}
+  style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}
+>
+  {/* Section Heading */}
+  <h3 style={{ fontWeight: "bold" }}>Classes</h3>
+
+  {/* Start Tour Button */}
+  <Button
+    onClick={startTour}
+    variant="contained"
+    color="primary"
+    style={{ marginBottom: "10px" }}
+  >
+    Start Tour
+  </Button>
+
+  {/* Classes Table */}
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Class Name</TableCell>
+          <TableCell>Teacher</TableCell>
+          <TableCell>Number of Students</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {classesData.map((row, index) => (
+          <TableRow key={index}>
+            <TableCell>{row.className}</TableCell>
+            <TableCell>{row.teacher}</TableCell>
+            <TableCell>{row.students}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>
+
+
+<Box
+  id="transport-section"
+  mb={4}
+  style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}
+>
+  {/* Section Heading */}
+  <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>
+    Transport Routes (Today)
+  </h3>
+
+  {/* Start Tour Button */}
+  <Button
+    onClick={startTour}
+    variant="contained"
+    color="primary"
+    style={{ marginBottom: "10px" }}
+  >
+    Start Tour
+  </Button>
+
+  {/* Transport Routes Table */}
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Route</TableCell>
+          <TableCell>Driver</TableCell>
+          <TableCell>Driver's Number</TableCell>
+          <TableCell>Stop Name</TableCell>
+          <TableCell>Arrival Time</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {transportData.length > 0 ? (
+          transportData.map((route, index) =>
+            route.stops.map((stop, stopIndex) => (
+              <TableRow key={`${route._id}-${stopIndex}`}>
+                <TableCell>{route.routeTitle}</TableCell>
+                <TableCell>{route.driver.name}</TableCell>
+                <TableCell>{route.driver.mobileNumber}</TableCell>
+                <TableCell>{stop.stopName}</TableCell>
+                <TableCell>{stop.arrivalTime}</TableCell>
+              </TableRow>
+            ))
+          )
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} style={{ textAlign: "center" }}>
+              No transport routes available for today.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>
+
+       {/* Content Area */}
+       <Container
+        maxWidth="xl"
+        style={{
+          padding: "20px",
+          textAlign: "center",
+          backgroundColor: "#add8e6", // Light blue background
+          marginTop: "12px",
+        }}
+      >
+        {/* Start Tour Button */}
+        <Button
+          onClick={startTour}
+          variant="contained"
+          color="primary"
+          style={{ marginBottom: "10px" }}
+        >
+          Start Tour
+        </Button>
+
+        {/* Fee Summary Table */}
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Total Paid</TableCell>
+                <TableCell>Total Pending</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>{feeSummary.totalPaid}</TableCell>
+                <TableCell>{feeSummary.totalPending}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
         </Container>
+        </Box>
+        </Container>
+
       </div>
     </div>
   );
 };
 
 export default StudentDashboard;
+
+
+
+   
+
+
+ 
+     
