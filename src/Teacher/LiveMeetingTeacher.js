@@ -13,7 +13,13 @@ const LiveMeetingTeacher = () => {
       setLoading(true);
       setError("");
       try {
-        // call api here
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/teacher/admin-meetings/67769d22e51f185d83bc2d99");
+        const data = await response.json();
+        if (response.ok) {
+          setMeetings(data.meetings);
+        } else {
+          setError(data.message || "Failed to fetch meetings");
+        }
       } catch (err) {
         setError("An error occurred while fetching teacher meetings.");
       } finally {
@@ -39,39 +45,35 @@ const LiveMeetingTeacher = () => {
         <div className="p-6">
           {error && <p className="text-red-500 mt-4">{error}</p>}
           <div className="mt-8">
-            <h2 className="text-xl font-bold text-center text-blue-600 mb-4">Teacher Meeting List</h2>
+            <h2 className="text-xl font-bold text-center text-blue-600 mb-4">Meeting with Admin</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white shadow-md rounded-lg">
                 <thead>
                   <tr className="bg-purple-600 text-white">
                     <th className="px-6 py-3 text-left">Index</th>
-                    <th className="px-6 py-3 text-left">Teacher Name</th>
-                    <th className="px-6 py-3 text-left">Subject</th>
+                    <th className="px-6 py-3 text-left">Date</th>
                     <th className="px-6 py-3 text-left">Time</th>
                     <th className="px-6 py-3 text-left">Meeting Link</th>
-                    <th className="px-6 py-3 text-left">Created By</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="6" className="text-center p-4">Loading meetings...</td>
+                      <td colSpan="4" className="text-center p-4">Loading meetings...</td>
                     </tr>
                   ) : meetings.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="text-center p-4">No teacher meetings available</td>
+                      <td colSpan="4" className="text-center p-4">No teacher meetings available</td>
                     </tr>
                   ) : (
                     meetings.map((meeting, index) => (
                       <tr key={meeting._id} className="border-t">
                         <td className="px-6 py-4">{index + 1}</td>
-                        <td className="px-6 py-4">{meeting.teacherName}</td>
-                        <td className="px-6 py-4">{meeting.subject}</td>
+                        <td className="px-6 py-4">{meeting.date}</td>
                         <td className="px-6 py-4">{meeting.time}</td>
                         <td className="px-6 py-4">
-                          <a href={meeting.meetingLink} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Join</a>
+                          <a href={meeting.link} className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">Join</a>
                         </td>
-                        <td className="px-6 py-4">{meeting.createdBy}</td>
                       </tr>
                     ))
                   )}
