@@ -473,22 +473,6 @@ className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg
 
 
 
-              {/* Vehicles Section (Light Teal) */}
-              <div className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/vehiclelist" className="flex flex-col items-center">
-                  <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
-                  <h2 className="font-semibold text-xl text-white">Vehicles</h2>
-                  <p className="text-gray-200">Total Vehicles</p>
-                  <p className="text-2xl font-bold text-white">4</p>
-                </NavLink>
-              </div>
-
-              <div className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/generateid" className="flex flex-col items-center">
-                  <FaLaptopCode className="text-4xl text-white mb-3" /> 
-                  <h2 className="font-semibold text-xl text-white">Meet</h2>
-                </NavLink>
-              </div>
             {/* Vehicles Section (Light Teal) */}
 <div
 className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-vehicles" // Add this class for highlighting
@@ -496,6 +480,15 @@ className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg h
 <NavLink to="/bus-tracking" className="flex flex-col items-center">
   <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
   <h2 className="font-semibold text-xl text-white">Vehicles</h2>
+</NavLink>
+</div>
+
+<div
+className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-meeting with teachers" 
+>
+<NavLink to="/generateid" className="flex flex-col items-center">
+  <FaLaptopCode className="text-4xl text-white mb-3" /> 
+  <h2 className="font-semibold text-xl text-white">Meet</h2>
 </NavLink>
 </div>
             </div>

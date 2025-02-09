@@ -219,6 +219,9 @@ import LiveClass from './Student/LiveClass';
 // import AddMeeting from './Pages/AddMeeting';
 // import MeetingPage from './Pages/MeetingTable';
 // import TeacherMeetingPage from './Teacher/Meetings';
+import MeetForm from './Pages/MeetForm';
+import LiveForm from './Teacher/LiveForm';
+
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -440,6 +443,7 @@ function App() {
            <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
            <Route path='/parent-live-meeting' element={<LiveMeeting/>} />
 
+           <Route path="/meetform" element={<MeetForm/>} />
 
 
 
@@ -465,7 +469,7 @@ function App() {
           <Route path="/generateid" element={<GenerateId/>} />
           <Route path="/generateid/room/:roomId" element={<RoomsVc/>} />
           <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
-
+          <Route path="/liveclassform" element={<LiveForm/>} />
 
 
 
