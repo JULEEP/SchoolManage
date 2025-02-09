@@ -73,11 +73,11 @@ const ExamTypeListPage = () => {
 
         <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
           <table className="min-w-full table-auto border border-gray-200">
-            <thead className="bg-gray-200">
+            <thead className="bg-purple-600">
               <tr>
-                <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                <th className="px-4 py-2 text-left text-gray-600">Exam Name</th>
-                <th className="px-4 py-2 text-left text-gray-600">Created At</th>
+                <th className="px-4 py-2 text-left text-white">SL</th>
+                <th className="px-4 py-2 text-left text-white">Exam Name</th>
+                <th className="px-4 py-2 text-left text-white">Created At</th>
               </tr>
             </thead>
             <tbody>

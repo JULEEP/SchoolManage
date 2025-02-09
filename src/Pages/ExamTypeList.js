@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const ExamTypeList = () => {
@@ -17,7 +16,6 @@ const ExamTypeList = () => {
         const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/examtypes");
         setExamTypes(response.data.examTypes);
       } catch (error) {
-        toast.error("Failed to fetch exam types.");
       }
     };
 
@@ -71,11 +69,11 @@ const ExamTypeList = () => {
 
           <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
             <table className="min-w-full table-auto border border-gray-200">
-              <thead className="bg-gray-200">
+              <thead className="bg-purple-600">
                 <tr>
-                  <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Exam Name</th>
-                  <th className="px-4 py-2 text-left text-gray-600">Action</th>
+                  <th className="px-4 py-2 text-left text-white">SL</th>
+                  <th className="px-4 py-2 text-left text-white">Exam Name</th>
+                  <th className="px-4 py-2 text-left text-white">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,7 +103,6 @@ const ExamTypeList = () => {
       </div>
 
       {/* Toast Container */}
-      <ToastContainer />
     </div>
   );
 };

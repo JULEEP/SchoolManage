@@ -784,23 +784,6 @@ const Sidebar = () => {
                   </ul>
                 )}
               </li>
-
-              {/* Vehicle Assignment Section */}
-              <li>
-                <div className="flex items-center cursor-pointer" onClick={() => setIsVehicleAssigningOpen(!isVehicleAssigningOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Vehicles</span>
-                  {isVehicleAssigningOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
-                </div>
-                {isVehicleAssigningOpen && (
-                  <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/assignvehicle" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Assign Vehicle To Driver</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
             </ul>
           )}
         </li>

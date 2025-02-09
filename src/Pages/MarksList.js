@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const MarksList = () => {
@@ -16,7 +15,7 @@ const MarksList = () => {
     section: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -32,15 +31,12 @@ const MarksList = () => {
       );
       setMarksList(response.data.marks || []);
       setFilteredMarks(response.data.marks || []);
-      toast.success("Marks data fetched successfully!"); // Success toast
     } catch (error) {
       console.error("Error fetching marks:", error);
-      toast.error("Error fetching marks. Please try again."); // Error toast
     } finally {
       setLoading(false);
     }
   };
-
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -216,7 +212,7 @@ const MarksList = () => {
           ) : (
             <table className="w-full border-collapse border border-gray-300">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-purple-600 text-white">
                   <th className="px-4 py-2 border-b">SL</th>
                   <th className="px-4 py-2 border-b">First Name</th>
                   <th className="px-4 py-2 border-b">Last Name</th>
@@ -239,7 +235,7 @@ const MarksList = () => {
                 {currentMarks.map((student, index) =>
                   student.subjects.map((subject, subIndex) => (
                     <tr key={`${student._id}-${subIndex}`}>
-                      <td className="px-4 py-2 border-b">{index + 1}</td>
+                      <td className="px-4 py-2 border-b">{startIndex + subIndex + 1}</td>
                       <td className="px-4 py-2 border-b">
                         {student.student?.firstName || "N/A"}
                       </td>
@@ -261,24 +257,16 @@ const MarksList = () => {
                       <td className="px-4 py-2 border-b">
                         {student.student?.motherName || "N/A"}
                       </td>
-                      <td className="px-4 py-2 border-b">
-                        {subject.subject || "N/A"}
-                      </td>
+                      <td className="px-4 py-2 border-b">{subject.subject || "N/A"}</td>
                       <td className="px-4 py-2 border-b">
                         {subject.marksObtained || "N/A"}
                       </td>
-                      <td className="px-4 py-2 border-b">
-                        {subject.totalMarks || "N/A"}
-                      </td>
+                      <td className="px-4 py-2 border-b">{subject.totalMarks || "N/A"}</td>
                       <td className="px-4 py-2 border-b">
                         {subject.percentage || "N/A"}
                       </td>
-                      <td className="px-4 py-2 border-b">
-                        {subject.grade || "N/A"}
-                      </td>
-                      <td className="px-4 py-2 border-b">
-                        {subject.status || "N/A"}
-                      </td>
+                      <td className="px-4 py-2 border-b">{subject.grade || "N/A"}</td>
+                      <td className="px-4 py-2 border-b">{subject.status || "N/A"}</td>
                       <td className="px-4 py-2 border-b">
                         {student.overallPercentage || "N/A"}
                       </td>
@@ -293,26 +281,27 @@ const MarksList = () => {
           )}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination Controls */}
         <div className="flex justify-between items-center">
           <button
-            className="bg-purple-600 text-white py-2 px-4 rounded-md"
-            onClick={() => setCurrentPage(currentPage - 1)}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
+            onClick={() => setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))}
             disabled={currentPage === 1}
           >
             Previous
           </button>
-          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
           <button
-            className="bg-purple-600 text-white py-2 px-4 rounded-md"
-            onClick={() => setCurrentPage(currentPage + 1)}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md disabled:opacity-50"
+            onClick={() => setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
             Next
           </button>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };
