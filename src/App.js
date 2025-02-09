@@ -221,6 +221,19 @@ import LiveClass from './Student/LiveClass';
 // import TeacherMeetingPage from './Teacher/Meetings';
 import MeetForm from './Pages/MeetForm';
 import LiveForm from './Teacher/LiveForm';
+import BusForm from './Pages/BusForm';
+
+
+import ClassRoutinePage from './Student/ClassRoutine';
+import ApplyLeave from './Student/ApplyLeave';
+import ExamTypeList from './Pages/ExamTypeList';
+import TeacherLeaves from './Pages/TeacherLeaves';
+import BusTracker from './Pages/BusTracker';
+import BusTracking from './Pages/BusTracker';
+import StudentBusTracking from './Student/StudentBusTracking';
+import FingerprintAttendance from './Pages/FingerPrintAttendance';
+import ParentBusTracking from './Parents/ParentBusTracking';
+import TeacherBusTracking from './Teacher/TeacherBusTracking';
 
 function App() {
   return (
@@ -399,6 +412,15 @@ function App() {
             <Route path="/meetings" element={<MeetingPage/>} />
             <Route path="/student-complaint" element={<ComplaintPage/>} />
             <Route path="/live-class" element={<LiveClass/>} />
+            <Route path="/student-complaint" element={<ComplaintPage/>} />
+            <Route path="/teacher-leaves" element={<TeacherLeaves/>} />
+            <Route path="/apply-leave" element={<ApplyLeave/>} />
+            <Route path="/location" element={<BusTracker/>} />
+            <Route path="/bus-tracking" element={<BusTracking />} />
+            <Route path="/studentbus-tracking" element={<StudentBusTracking />} />
+            <Route path="/fingerprint" element={<FingerprintAttendance />} />
+            <Route path="/bus-form" element={<BusForm />} />
+
             
 
 
@@ -442,6 +464,8 @@ function App() {
            <Route path="/children-holidays" element={<ParentHolidayPage/>} />
            <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
            <Route path='/parent-live-meeting' element={<LiveMeeting/>} />
+           <Route path="/mychild-transport" element={<ParentBusTracking/>} />
+
 
            <Route path="/meetform" element={<MeetForm/>} />
 
@@ -470,6 +494,8 @@ function App() {
           <Route path="/generateid/room/:roomId" element={<RoomsVc/>} />
           <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
           <Route path="/liveclassform" element={<LiveForm/>} />
+          <Route path="/teacher-transport" element={<TeacherBusTracking/>} />
+
 
 
 

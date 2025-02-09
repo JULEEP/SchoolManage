@@ -53,103 +53,11 @@ const bestCategories = [
 
 
 
-
-
-
-
- 
-
-
-
-
-
-
-
-
 const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [transportData, setTransportData] = useState([]);
   const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
 
-
-  const startTour = () => {
-    const tour = driver({
-      animate: true,
-      opacity: 0.75,
-      doneBtnText: "Finish",
-      nextBtnText: "Next",
-      prevBtnText: "Previous",
-      allowClose: true,
-    });
-  
-    tour.setSteps([  // ✅ defineSteps ❌ wrong, use setSteps ✅ correct
-      {
-        element: "#sidebar",
-        popover: {
-          title: "Navigation Menu",
-          description: "This is the sidebar where you can access different sections.",
-        },
-      },
-      {
-        element: "#categories-section",
-        popover: {
-          title: "Dashboard Categories",
-          description: "Click on any category to explore more.",
-        },
-      },
-      {
-        element: "#subjects-section",
-        popover: {
-          title: "Subjects",
-          description: "View your subjects, teachers, and class timings here.",
-        },
-      },
-      {
-        element: "#teachers-section",
-        popover: {
-          title: "Teachers",
-          description: "List of teachers along with their subjects and contact info.",
-        },
-      },
-      {
-        element: "#classes-section",
-        popover: {
-          title: "Classes",
-          description: "Check details about different classes and student counts.",
-        },
-      },
-      {
-        element: "#transport-section",
-        popover: {
-          title: "Transport Routes",
-          description: "View daily transport routes, drivers, and arrival times.",
-        },
-      },
-      {
-        element: "#fee-summary",
-        popover: {
-          title: "Fee Summary",
-          description: "Check your paid and pending fees here.",
-        },
-      },
-      {
-        element: "#library-section",
-        popover: {
-          title: "Library",
-          description: "Manage your issued books and library records.",
-        },
-      },
-      {
-        element: "#attendance-section",
-        popover: {
-          title: "Attendance",
-          description: "Track your attendance records and check-in history.",
-        },
-      },
-    ]);
-  
-    tour.drive(); // ✅ Correct function to start the tour
-  };
   
 
 
@@ -313,14 +221,6 @@ const StudentDashboard = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        {/* Start Tour Button */}
-        <button
-          onClick={startTour}
-          className="bg-blue-500 text-white p-2 rounded-md mt-4 ml-4"
-        >
-          Start Tour
-        </button>
 
      {/* Content Area */}
 <Container

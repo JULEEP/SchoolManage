@@ -119,6 +119,11 @@ const Dashboard = () => {
           position: "top"
         },
         {
+          element: ".intro-step-meeting",  // Vehicles Section highlight
+          intro: "This section allows you to track the school vehicles.",
+          position: "top"
+        },
+        {
           element: ".intro-step-dashboard-analytics",  // Dashboard Analytics Section highlight
           intro: "This section displays the analytics data in a visual format.",
           position: "top"
@@ -484,7 +489,7 @@ className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg h
 </div>
 
 <div
-className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-meeting with teachers" 
+className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-meeting" 
 >
 <NavLink to="/generateid" className="flex flex-col items-center">
   <FaLaptopCode className="text-4xl text-white mb-3" /> 

@@ -290,10 +290,10 @@ const Sidebar = () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink to="/transport" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Transport Route</span>
-                      </NavLink>
-                    </li>
+                    <NavLink to="/bus-form" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Add Bus Route</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>

@@ -10,7 +10,8 @@ import {
   FaTimes,
   FaQuestionCircle,
   FaCalendarAlt,
-  FaLaptopCode
+  FaLaptopCode,
+  FaBusAlt
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import TeacherSidebar from "./TeacherSidebar";
@@ -77,8 +78,6 @@ const TeacherDashboard = () => {
       nextLabel: "Next",
       prevLabel: "Previous",
       overlayOpacity: 0.8,
-      showStepNumbers: true,
-      disableInteraction: true,
     });
 
     intro.onbeforechange(() => {
@@ -149,7 +148,9 @@ const TeacherDashboard = () => {
               { title: "Total Feedback", value: "30", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-coming-soon" },
               { title: "Total Queries", value: "50", icon: <FaQuestionCircle className="text-3xl" />, link: "/teacher-queries" },
               { title: "Total Holidays", value: "5", icon: <FaCalendarAlt className="text-3xl" />, link: "/teacher-holidays" },
-              { title: "Live Classes", value: "", icon: <FaLaptopCode className="text-3xl" />, link: "/generateid" }
+              { title: "Live Classes", value: "", icon: <FaLaptopCode className="text-3xl" />, link: "/generateid" },
+              { title: "Transport", value: "5", icon: <FaBusAlt className="text-3xl" />, link: "/teacher-transport" },
+
 
 
             ].map((item, index) => (
