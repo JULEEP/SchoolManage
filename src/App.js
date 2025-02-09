@@ -211,6 +211,13 @@ import MyChildComplaintPage from './Parents/MyChildrenComplaint';
 import AddMeeting from './Pages/AddMeeting';
 import MeetingPage from './Pages/MeetingTable';
 import TeacherMeetingPage from './Teacher/Meetings';
+import TeacherLeaves from './Pages/TeacherLeaves';
+import BusTracker from './Pages/BusTracker';
+import BusTracking from './Pages/BusTracker';
+import StudentBusTracking from './Student/StudentBusTracking';
+import FingerprintAttendance from './Pages/FingerPrintAttendance';
+import ParentBusTracking from './Parents/ParentBusTracking';
+import TeacherBusTracking from './Teacher/TeacherBusTracking';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -385,6 +392,19 @@ function App() {
             <Route path="/add-meeting" element={<AddMeeting/>} />
             <Route path="/meetings" element={<MeetingPage/>} />
             <Route path="/student-complaint" element={<ComplaintPage/>} />
+            <Route path="/teacher-leaves" element={<TeacherLeaves/>} />
+            <Route path="/apply-leave" element={<ApplyLeave/>} />
+            <Route path="/location" element={<BusTracker/>} />
+            <Route path="/bus-tracking" element={<BusTracking />} />
+            <Route path="/studentbus-tracking" element={<StudentBusTracking />} />
+            <Route path="/fingerprint" element={<FingerprintAttendance />} />
+
+
+
+
+
+
+
 
 
 
@@ -426,6 +446,8 @@ function App() {
            <Route path="/ask-queries" element={<CommunicationForm/>} />
            <Route path="/children-holidays" element={<ParentHolidayPage/>} />
            <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
+           <Route path="/mychild-transport" element={<ParentBusTracking/>} />
+
 
 
 
@@ -450,6 +472,8 @@ function App() {
           <Route path="/teacher-holidays" element={<TeacherHolidayPage/>} />
           <Route path="/teacher-subjects" element={<TeacherSubjects/>} />
           <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
+          <Route path="/teacher-transport" element={<TeacherBusTracking/>} />
+
 
 
 

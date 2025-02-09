@@ -10,6 +10,8 @@ import notice from "../Images/notice.jpeg";
 import exam from "../Images/exam.jpeg";
 import attendance from "../Images/attendance.jpeg";
 import student from "../Images/student.jpeg";
+import IntroJs from "intro.js";
+import "intro.js/introjs.css"; // Intro.js CSS import
 
 const book = 'https://static.vecteezy.com/system/resources/previews/003/812/674/large_2x/pink-book-closed-free-vector.jpg';
 const transport = 'https://static.vecteezy.com/system/resources/previews/002/373/903/large_2x/cartoon-school-bus-with-children-free-vector.jpg';
@@ -26,25 +28,78 @@ const bestCategories = [
   { img: attendance, name: "Attendance", link: "/mychild-attendance" },
   { img: notice, name: "Notice", link: "/parent-noticeboard" },
   { img: book, name: "Books", link: "/parent-booklist" },
-  { img: transport, name: "Transport", link: "/parent-transport" },
+  { img: transport, name: "Transport", link: "/mychild-transport" },
   { img: fees, name: "Fees", link: "/mychild-fees" },
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
   { img: holidays, name: "Holidays", link: "/children-holidays" },
-
 ];
-
 const ParentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [comparisonData, setComparisonData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [comparisonText, setComparisonText] = useState("");  // State for comparison text
-  const [suggestionText, setSuggestionText] = useState("");  // State for suggestion text
+  const [comparisonText, setComparisonText] = useState("");
+  const [suggestionText, setSuggestionText] = useState("");
   const [transportData, setTransportData] = useState([]);
-    const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
-  
-  
+  const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
+
+
+  useEffect(() => {
+    const intro = IntroJs();
+
+    intro.setOptions({
+      steps: [
+        ...bestCategories.map((category, index) => ({
+          element: `.category-box-${index}`,
+          intro: `This is the ${category.name} section.`,
+          position: "right"
+        })),
+        {
+          element: ".intro-step-comparison",  // Comparison box highlight
+          intro: "Here you can compare your child's performance with the topper.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-subjects",  // Subjects table highlight
+          intro: "This table displays your child's subjects, their teachers, and the class timing.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-teachers",  // Teachers table highlight
+          intro: "Here you can see the list of teachers along with their subjects and contact details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-classes",  // Classes table highlight
+          intro: "This table shows the classes, teachers, and the number of students in each class.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-transport",  // Transport Routes table highlight
+          intro: "This table shows the transport routes, drivers, stops, and arrival times for today.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-fee-summary",  // Fee Summary section highlight
+          intro: "This section displays the total paid and pending fee amounts.",
+          position: "top"
+        },
+      ],
+      highlightClass: "rounded",
+      nextLabel: "Next",
+      prevLabel: "Previous",
+      overlayOpacity: 0.8,
+      showStepNumbers: true,
+      disableInteraction: true,
+    });
+
+    intro.onbeforechange((targetElement) => {
+      targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    intro.start();
+  }, []);
 
 
   const toggleSidebar = () => {
@@ -52,21 +107,21 @@ const ParentDashboard = () => {
   };
 
   useEffect(() => {
-      const fetchTransportData = async () => {
-        try {
-          const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
-          const data = await response.json();
-          // Filter the transport data based on current date
-          const currentDate = new Date().toISOString().split('T')[0];
-          const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
-          setTransportData(filteredRoutes);
-        } catch (error) {
-          console.error("Error fetching transport data:", error);
-        }
-      };
-      
-      fetchTransportData();
-    }, []);
+    const fetchTransportData = async () => {
+      try {
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route");
+        const data = await response.json();
+        // Filter the transport data based on current date
+        const currentDate = new Date().toISOString().split('T')[0];
+        const filteredRoutes = data.routes.filter(route => route.date.split('T')[0] === currentDate);
+        setTransportData(filteredRoutes);
+      } catch (error) {
+        console.error("Error fetching transport data:", error);
+      }
+    };
+
+    fetchTransportData();
+  }, []);
 
   useEffect(() => {
     // Fetch comparison data
@@ -109,7 +164,7 @@ const ParentDashboard = () => {
     };
     const fetchFeeSummary = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/students/fees-summary/676909bcd20deeaaeca9bc31");
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/students/fees-summary/676909bcd20deeaaeca9bc31");
         const data = await response.json();
         setFeeSummary({
           totalPaid: data.totalPaid,
@@ -167,37 +222,34 @@ const ParentDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen flex bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={toggleSidebar}
+      ></div>
+
       {/* Sidebar */}
       <div
-        className={`fixed md:static inset-y-0 left-0 bg-white shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 w-64 z-50 md:translate-x-0`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <ParentSidebar />
       </div>
 
-      {/* Overlay for Sidebar on Small Screens */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
-
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Mobile Header */}
-        <div className="p-4 bg-purple-700 text-white shadow-md flex items-center justify-between md:hidden">
-          <h1 className="text-lg font-bold">Parent Dashboard</h1>
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Parent DashBoard</h1>
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
+
         {/* Content Area */}
         <Container maxWidth="xl" style={{ padding: "20px", marginTop: "12px" }}>
-          <h1 className="text-center text-2xl font-bold mb-6">Parent Dashboard</h1>
 
-          {/* Categories Grid */}
           <Box
             display="grid"
             gridTemplateColumns="repeat(7, 1fr)"
@@ -211,9 +263,10 @@ const ParentDashboard = () => {
               boxSizing: "border-box",
             }}
           >
-            {bestCategories.map((category) => (
+            {bestCategories.map((category, index) => (
               <NavLink to={category.link} key={category.name} style={{ textDecoration: "none", padding: "5px" }}>
                 <Box
+                  className={`category-box-${index}`} // IntroJs ke liye class add ki
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -255,8 +308,11 @@ const ParentDashboard = () => {
             ))}
           </Box>
 
-          <Box mt={5} style={{ backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}>
-            <h3 className="text-xl font-bold mb-4">Comparison with Topper</h3>
+          <Box
+            mt={5}
+            className="intro-step-comparison"  // Added class for IntroJs
+            style={{ backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}
+          >            <h3 className="text-xl font-bold mb-4">Comparison with Topper</h3>
             {loading && <p>Loading chart data...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
@@ -311,7 +367,12 @@ const ParentDashboard = () => {
           {/* Tables for Parent Dashboard */}
           <Box mt={5}>
             {/* Subjects Table */}
-            <Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+            {/* Subjects Table */}
+            <Box
+              mb={4}
+              className="intro-step-subjects"  // Added class for IntroJs
+              style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}
+            >
               <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Subjects</h3>
               <TableContainer component={Paper}>
                 <Table>
@@ -336,7 +397,11 @@ const ParentDashboard = () => {
             </Box>
 
             {/* Teachers Table */}
-            <Box mb={4} style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }}>
+            <Box
+              mb={4}
+              className="intro-step-teachers"  // Added class for IntroJs
+              style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }}
+            >
               <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Teachers</h3>
               <TableContainer component={Paper}>
                 <Table>
@@ -360,8 +425,8 @@ const ParentDashboard = () => {
               </TableContainer>
             </Box>
 
-            {/* Classes Table */}
-            <Box style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
+
+            <Box className="intro-step-classes" style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}>
               <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Classes</h3>
               <TableContainer component={Paper}>
                 <Table>
@@ -385,9 +450,10 @@ const ParentDashboard = () => {
               </TableContainer>
             </Box>
 
+
             {/* Transport Routes Table */}
-            <Box style={{ backgroundColor: "#fef3c7", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ marginBottom: "10px",  fontWeight: "bold" }}>Transport Routes (Today)</h3>
+            <Box className="intro-step-transport" style={{ backgroundColor: "#fef3c7", padding: "20px", borderRadius: "10px" }}>
+              <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Transport Routes (Today)</h3>
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead>
@@ -415,27 +481,29 @@ const ParentDashboard = () => {
                 </Table>
               </TableContainer>
             </Box>
-                         {/* Fee Summary Section */}
-                      <Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
-                      <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Total Paid</TableCell>
-                              <TableCell>Total Pending</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>{feeSummary.totalPaid}</TableCell>
-                              <TableCell>{feeSummary.totalPending}</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                      </Box>
+
+            {/* Fee Summary Section */}
+            <Box className="intro-step-fee-summary" mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+              <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Total Paid</TableCell>
+                      <TableCell>Total Pending</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>{feeSummary.totalPaid}</TableCell>
+                      <TableCell>{feeSummary.totalPending}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
+          </Box>
         </Container>
       </div>
     </div>

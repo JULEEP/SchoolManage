@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
 const Parents = () => {
   const [parentList, setParentList] = useState([]);
@@ -19,10 +17,8 @@ const Parents = () => {
       try {
         const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/parents");
         setParentList(response.data.parents || []);
-        toast.success("Parents fetched successfully!");
       } catch (error) {
         console.error("Error fetching parents:", error);
-        toast.error("Error fetching parents. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -108,10 +104,10 @@ const Parents = () => {
         </div>
 
         {/* Parents Table */}
-        <div className="overflow-x-auto mb-8">
+        <div className="overflow-x-auto shadow-md rounded-lg">
           <table className="w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-purple-600 text-white">
                 <th className="px-4 py-2 border-b">SL</th>
                 <th className="px-4 py-2 border-b">Name</th>
                 <th className="px-4 py-2 border-b">Email</th>
@@ -148,7 +144,7 @@ const Parents = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -177,8 +173,6 @@ const Parents = () => {
         </div>
       </div>
 
-      {/* ToastContainer */}
-      <ToastContainer />
     </div>
   );
 };

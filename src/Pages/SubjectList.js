@@ -72,15 +72,14 @@ const SubjectListPage = () => {
         </div>
 
         {/* Subject List */}
-        <div className="bg-white p-6 rounded-md shadow-lg mx-4 lg:mx-0 mt-4">
-          <h2 className="text-lg text-gray-700 mb-4">Subject List</h2>
-          <table className="min-w-full table-auto">
+        <div className="overflow-x-auto shadow-md rounded-lg">
+          <table className="min-w-full table-auto mt-8 text-white">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2 text-gray-600">SL</th>
-                <th className="px-4 py-2 text-gray-600">Subject</th>
-                <th className="px-4 py-2 text-gray-600">Subject Type</th>
-                <th className="px-4 py-2 text-gray-600">Subject Code</th>
+              <tr className="bg-purple-600 text-white">
+                <th className="px-4 py-2 text-white">SL</th>
+                <th className="px-4 py-2 text-white">Subject</th>
+                <th className="px-4 py-2 text-white">Subject Type</th>
+                <th className="px-4 py-2 text-white">Subject Code</th>
               </tr>
             </thead>
             <tbody>

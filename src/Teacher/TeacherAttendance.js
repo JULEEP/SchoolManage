@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import TeacherSidebar from "./TeacherSidebar";
+import { FaFingerprint } from 'react-icons/fa';
 
 const TeacherAttendance = () => {
   const [students, setStudents] = useState([]);
@@ -20,6 +21,63 @@ const TeacherAttendance = () => {
   // Filter states
   const [classFilter, setClassFilter] = useState("");
   const [sectionFilter, setSectionFilter] = useState("");
+  const [scanStatus, setScanStatus] = useState('idle'); // 'idle', 'scanning', 'success', 'failed'
+  const [message, setMessage] = useState(''); // Start with empty message
+
+  const getColor = () => {
+    switch (scanStatus) {
+      case 'success': return 'text-blue-500 border-blue-500';
+      case 'failed': return 'text-red-500 border-red-500';
+      case 'scanning': return 'text-yellow-500 border-yellow-500 animate-spin';
+      default: return 'text-gray-500 border-gray-500';
+    }
+  };
+
+  const handleFingerTouch = () => {
+    setMessage('Scanning...');
+    setScanStatus('scanning');
+
+    // Simulating fingerprint scan delay
+    setTimeout(() => {
+      const isMatch = Math.random() > 0.5; // Random success/fail simulation
+      if (isMatch) {
+        setScanStatus('success');
+        setMessage('Fingerprint captured successfully!');
+        markAttendance(); // Automatically mark attendance on success
+      } else {
+        setScanStatus('failed');
+        setMessage('Fingerprint not recognized. Try again.');
+      }
+    }, 3000);
+  };
+
+  const markAttendance = async () => {
+    const { id } = selectedStudent;  // Get the student's ID
+    const { date, subject, status } = attendanceData;  // Get the attendance form data
+
+    try {
+      // Make the API call to the backend to submit the attendance
+      const response = await axios.post(
+        `https://school-backend-1-2xki.onrender.com/api/teacher/add-attendance/${id}`,
+        {
+          date: date,
+          subject: subject,
+          attendanceStatus: status,
+        }
+      );
+
+      if (response.status === 200) {
+        // If the attendance is successfully marked, close the popup and reset the form
+        closePopup();
+        alert("Attendance marked successfully!");
+      } else {
+        alert("Failed to mark attendance. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error marking attendance", err);
+      alert("An error occurred while marking attendance. Please try again.");
+    }
+  };
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,6 +119,8 @@ const TeacherAttendance = () => {
   // Open popup for marking attendance
   const openPopup = (student) => {
     setSelectedStudent(student);
+    setScanStatus('idle');  // Reset status to idle when opening popup
+    setMessage('');  // Clear any message from previous scan attempts
     setShowPopup(true);
   };
 
@@ -75,54 +135,22 @@ const TeacherAttendance = () => {
     });
   };
 
-  // Handle attendance submission
-  const submitAttendance = async () => {
-    try {
-      const { id } = selectedStudent;  // Get the student's ID
-      const { date, subject, status } = attendanceData;  // Get the attendance form data
-
-      // Make the API call to the backend to submit the attendance
-      const response = await axios.post(
-        `https://school-backend-1-2xki.onrender.com/api/teacher/add-attendance/${id}`,  // Dynamic student ID in URL
-        {
-          date: date,     // Pass the date
-          subject: subject,  // Pass the subject
-          attendanceStatus: status,  // Pass the attendance status
-        }
-      );
-
-      if (response.status === 200) {
-        // If the attendance is successfully marked, close the popup and reset the form
-        closePopup();
-        alert("Attendance marked successfully!");
-      } else {
-        alert("Failed to mark attendance. Please try again.");
-      }
-    } catch (err) {
-      console.error("Error marking attendance", err);
-      alert("An error occurred while marking attendance. Please try again.");
-    }
+  // Handle filter change for class
+  const handleClassFilterChange = (e) => {
+    setClassFilter(e.target.value);
   };
 
-  // Handle filter change for class
-const handleClassFilterChange = (e) => {
-  setClassFilter(e.target.value);
-};
+  // Handle filter change for section
+  const handleSectionFilterChange = (e) => {
+    setSectionFilter(e.target.value);
+  };
 
-// Handle filter change for section
-const handleSectionFilterChange = (e) => {
-  setSectionFilter(e.target.value);
-};
-
-// Filter students based on class and section
-const filteredStudents = students.filter((student) => {
-  // Ensure class comparison is correct (both should be strings or both should be numbers)
-  const classMatches = classFilter ? student.class === parseInt(classFilter) : true;  // Convert classFilter to number for accurate comparison
-  
-  const sectionMatches = sectionFilter ? student.section === sectionFilter : true;
-
-  return classMatches && sectionMatches;
-});
+  // Filter students based on class and section
+  const filteredStudents = students.filter((student) => {
+    const classMatches = classFilter ? student.class === parseInt(classFilter) : true;
+    const sectionMatches = sectionFilter ? student.section === sectionFilter : true;
+    return classMatches && sectionMatches;
+  });
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
@@ -187,8 +215,6 @@ const filteredStudents = students.filter((student) => {
                   <option value="Class 8">8</option>
                   <option value="Class 9">9</option>
                   <option value="Class 10">10</option>
-
-                  {/* Add more as needed */}
                 </select>
               </div>
 
@@ -200,139 +226,130 @@ const filteredStudents = students.filter((student) => {
                   className="p-2 border rounded-lg"
                 >
                   <option value="">All</option>
-                  {/* Add the available sections here */}
                   <option value="A">A</option>
                   <option value="B">B</option>
                   <option value="C">C</option>
-                  {/* Add more as needed */}
                 </select>
               </div>
             </div>
 
             {/* Students Table */}
             {!loading && !error && (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border text-center">
-                    <thead className="bg-gray-200">
-                      <tr>
-                        <th className="border p-2">Roll</th>
-                        <th className="border p-2">Name</th>
-                        <th className="border p-2">Class</th>
-                        <th className="border p-2">Section</th>
-                        <th className="border p-2">Action</th>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border text-center">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th className="border p-2">Roll</th>
+                      <th className="border p-2">Name</th>
+                      <th className="border p-2">Class</th>
+                      <th className="border p-2">Section</th>
+                      <th className="border p-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentStudents.map((student) => (
+                      <tr key={student.id} className="even:bg-gray-100">
+                        <td className="border p-2">{student.roll}</td>
+                        <td className="border p-2">{student.name}</td>
+                        <td className="border p-2">{student.class}</td>
+                        <td className="border p-2">{student.section}</td>
+                        <td className="border p-2">
+                          <button
+                            onClick={() => openPopup(student)}
+                            className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                          >
+                            Mark Attendance
+                          </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {currentStudents.map((student) => (
-                        <tr key={student.id} className="even:bg-gray-100">
-                          <td className="border p-2">{student.roll}</td>
-                          <td className="border p-2">{student.name}</td>
-                          <td className="border p-2">{student.class}</td>
-                          <td className="border p-2">{student.section}</td>
-                          <td className="border p-2">
-                            <button
-                              onClick={() => openPopup(student)}
-                              className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                            >
-                              Mark Attendance
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Pagination Controls */}
-                <div className="flex justify-between items-center mt-4">
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    className="px-4 py-2 text-white bg-purple-300 rounded-md hover:bg-gray-400"
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <span>
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    className="px-4 py-2 text-white bg-purple-500 rounded-md hover:bg-gray-400"
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* Attendance Popup */}
-            {showPopup && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">
-                <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-                  <h2 className="text-xl font-bold mb-4">
-                    Mark Attendance for {selectedStudent?.name}
-                  </h2>
-                  <div className="mb-4">
-                    <label className="block font-medium mb-1">Date:</label>
-                    <input
-                      type="date"
-                      value={attendanceData.date}
-                      onChange={(e) =>
-                        setAttendanceData({ ...attendanceData, date: e.target.value })
-                      }
-                      className="p-2 border rounded-lg w-full"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block font-medium mb-1">Subject:</label>
-                    <select
-                      value={attendanceData.subject}
-                      onChange={(e) =>
-                        setAttendanceData({ ...attendanceData, subject: e.target.value })
-                      }
-                      className="p-2 border rounded-lg w-full"
-                    >
-                      {subjects.map((subject, index) => (
-                        <option key={index} value={subject}>
-                          {subject}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label className="block font-medium mb-1">Status:</label>
-                    <select
-                      value={attendanceData.status}
-                      onChange={(e) =>
-                        setAttendanceData({ ...attendanceData, status: e.target.value })
-                      }
-                      className="p-2 border rounded-lg w-full"
-                    >
-                      <option value="Present">Present</option>
-                      <option value="Absent">Absent</option>
-                      <option value="Late">Late</option>
-                    </select>
-                  </div>
-                  <div className="flex justify-between">
-                    <button
-                      onClick={closePopup}
-                      className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={submitAttendance}
-                      className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-blue-600"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
+
+            {/* Pagination Controls */}
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="px-4 py-2 text-white bg-purple-300 rounded-md hover:bg-gray-400"
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className="px-4 py-2 text-white bg-purple-500 rounded-md hover:bg-gray-400"
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
           </div>
+
+          {/* Attendance Popup */}
+          {showPopup && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-30 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-md shadow-lg w-1/2">
+                <h2 className="text-2xl font-bold text-center mb-4">
+                  Mark Attendance for {selectedStudent.name}
+                </h2>
+                <div className="flex flex-col mb-4">
+                  <label className="font-medium">Date:</label>
+                  <input
+                    type="date"
+                    value={attendanceData.date}
+                    onChange={(e) => setAttendanceData({ ...attendanceData, date: e.target.value })}
+                    className="p-2 border rounded-lg"
+                  />
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="font-medium">Subject:</label>
+                  <select
+                    value={attendanceData.subject}
+                    onChange={(e) => setAttendanceData({ ...attendanceData, subject: e.target.value })}
+                    className="p-2 border rounded-lg"
+                  >
+                    {subjects.map((subject) => (
+                      <option key={subject} value={subject}>
+                        {subject}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="font-medium">Status:</label>
+                  <select
+                    value={attendanceData.status}
+                    onChange={(e) => setAttendanceData({ ...attendanceData, status: e.target.value })}
+                    className="p-2 border rounded-lg"
+                  >
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                  </select>
+                </div>
+
+                <div className="flex justify-center items-center">
+                  <div
+                    className={`border-4 rounded-lg p-4 cursor-pointer ${getColor()} flex flex-col items-center`}
+                    onClick={handleFingerTouch}
+                  >
+                    <FaFingerprint className="text-4xl" />
+                    <p>{message}</p>
+                  </div>
+                </div>
+
+                <div className="flex justify-between mt-6">
+                  <button onClick={closePopup} className="text-white bg-gray-500 rounded-md px-6 py-2">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

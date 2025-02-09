@@ -160,11 +160,11 @@ const StudentAttendance = () => {
           <h2 className="text-lg text-gray-700 mb-4">Attendance Records</h2>
 
           {/* Scrollable Table Wrapper */}
-          <div className="overflow-x-auto">
-            {/* Table */}
+          <div className="overflow-x-auto mt-8">
+          {/* Table */}
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-purple-600 text-white">
                   <th className="px-4 py-2 text-left border-b">Admission No</th>
                   <th className="px-4 py-2 text-left border-b">Name</th>
                   <th className="px-4 py-2 text-left border-b">Class</th>

@@ -17,6 +17,8 @@ import {
   LinearScale,
   LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend,
 } from 'chart.js';
+import IntroJs from "intro.js";
+import "intro.js/introjs.css"; // Intro.js CSS import
 
 // Registering necessary components for Bar chart
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend);
@@ -52,10 +54,115 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
+    const intro = IntroJs();
+  
+    intro.setOptions({
+      steps: [
+        {
+          element: ".intro-step-student",  // Student Section highlight
+          intro: "This section allows you to manage the student details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-teacher",  // Teacher Section highlight
+          intro: "This section allows you to manage teacher details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-parent",  // Parent Section highlight
+          intro: "This section allows you to manage parent details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-staff",  // Staff Section highlight
+          intro: "This section allows you to manage staff details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-subject",  // Subjects Section highlight
+          intro: "This section allows you to manage subject details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-class",  // Classes Section highlight
+          intro: "This section allows you to manage class details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-section",  // Sections Section highlight
+          intro: "This section allows you to manage sections.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-lesson",  // Lesson Section highlight
+          intro: "This section allows you to manage lessons.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-holidays",  // Holidays Section highlight
+          intro: "This section allows you to manage holiday details.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-fees",  // Fees Record Section highlight
+          intro: "This section allows you to manage fees records.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-routine",  // Routine Section highlight
+          intro: "This section allows you to manage student routines.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-vehicles",  // Vehicles Section highlight
+          intro: "This section allows you to track the school vehicles.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-dashboard-analytics",  // Dashboard Analytics Section highlight
+          intro: "This section displays the analytics data in a visual format.",
+          position: "top"
+        },
+        // Add Growth Over Time Section Step
+        {
+          element: ".intro-step-growth-over-time",  // Growth Over Time Section highlight
+          intro: "This section visualizes the growth over time, helping you track progress.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-notices",  // Highlight Notices Table
+          intro: "This table shows the available notices. You can edit the notice by clicking the 'Edit' button.",
+          position: "top"
+        },
+        // Add steps for Fee Summary Section
+        {
+          element: ".intro-step-fee-summary",  // Highlight Fee Summary Section
+          intro: "This section provides a summary of the paid and pending fees.",
+          position: "top"
+        },   
+  
+      ],
+      highlightClass: "rounded",
+      nextLabel: "Next",
+      prevLabel: "Previous",
+      overlayOpacity: 0.8,
+    });
+  
+    intro.onbeforechange((targetElement) => {
+      // Smooth scroll to the target element
+      targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  
+    intro.start();
+  }, []); // Empty dependency array ensures this effect runs only once
+  
+  
+
+  useEffect(() => {
     // Fetching data from the API
     const fetchFeeDetails = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/admin/totalamount');
+        const response = await fetch('https://school-backend-1-2xki.onrender.com/api/admin/totalamount');
         const data = await response.json();
         if (data.message === 'Fee details fetched successfully') {
           setFeeDetails({
@@ -200,36 +307,33 @@ const Dashboard = () => {
     fetchNotices();
   }, []);
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar - Always visible on large screens */}
-      <div
-        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg w-64 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform lg:transform-none lg:block`}
-      >
-        <Sidebar />
+    <div className="min-h-screen flex bg-gray-100">
+    {/* Sidebar Overlay */}
+    <div
+      className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+      onClick={toggleSidebar}
+    ></div>
+
+    {/* Sidebar */}
+    <div
+      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+    >
+      <Sidebar />
+    </div>
+
+    {/* Main Content */}
+    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+        <h1 className="text-lg font-bold">Admin DashBoard</h1>
+        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
-
-      {/* Overlay for small screens */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-
-      {/* Main Content */}
-      <div className={`flex-1 flex flex-col ${isSidebarOpen ? "pl-64" : ""} lg:pl-64`}>
-        {/* Header (only visible on small screens) */}
-        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Admin Dashboard</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-2xl focus:outline-none"
-          >
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
 
         {/* Content */}
         <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
@@ -237,137 +341,159 @@ const Dashboard = () => {
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {/* Student Section (Light Blue) */}
-              <div className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/managestudent" className="flex flex-col items-center">
-                  <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
-                  <h2 className="font-semibold text-xl text-white">Students</h2>
-                  <p className="text-gray-200">Total Students</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
+            {/* Student Section (Light Blue) */}
+<div
+className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-student" // Add this class for highlighting
+>
+<NavLink to="/managestudent" className="flex flex-col items-center">
+  <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
+  <h2 className="font-semibold text-xl text-white">Students</h2>
+  <p className="text-gray-200">Total Students</p>
+  <p className="text-2xl font-bold text-white">0</p>
+</NavLink>
+</div>
 
 
-              {/* Teacher Section (Black) */}
-              <div className="bg-gradient-to-r from-black to-gray-800 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/teacher" className="flex flex-col items-center">
-                  <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
-                  <h2 className="font-semibold text-xl text-white">Teachers</h2>
-                  <p className="text-gray-300">Total Teachers</p>
-                  <p className="text-2xl font-bold text-white">50</p>
-                </NavLink>
-              </div>
-              {/* Parent Section (Light Red) */}
-              <div className="bg-gradient-to-r from-red-300 to-red-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/parentlist" className="flex flex-col items-center">
-                  <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
-                  <h2 className="font-semibold text-xl text-white">Parents</h2>
-                  <p className="text-gray-200">Total Parents</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
+             {/* Teacher Section (Black) */}
+<div
+className="bg-gradient-to-r from-black to-gray-800 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-teacher" // Add this class for highlighting
+>
+<NavLink to="/teacher" className="flex flex-col items-center">
+  <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
+  <h2 className="font-semibold text-xl text-white">Teachers</h2>
+  <p className="text-gray-300">Total Teachers</p>
+  <p className="text-2xl font-bold text-white">50</p>
+</NavLink>
+</div>
+{/* Parent Section (Light Red) */}
+<div
+  className="bg-gradient-to-r from-red-300 to-red-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-parent" // Add this class for highlighting
+>
+  <NavLink to="/parentlist" className="flex flex-col items-center">
+    <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
+    <h2 className="font-semibold text-xl text-white">Parents</h2>
+    <p className="text-gray-200">Total Parents</p>
+    <p className="text-2xl font-bold text-white">0</p>
+  </NavLink>
+</div>
 
-              {/* Staff Section (Light Green) */}
-              <div className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/staffs" className="flex flex-col items-center">
-                  <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
-                  <h2 className="font-semibold text-xl text-white">Staffs</h2>
-                  <p className="text-gray-200">Total Staffs</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
-              {/* Subjects Section (Light Yellow) */}
-              <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/subjectlist" className="flex flex-col items-center">
-                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
-                  <h2 className="font-semibold text-xl text-white">Subjects</h2>
-                  <p className="text-gray-200">Total Subjects</p>
-                  <p className="text-2xl font-bold text-white">10</p>
-                </NavLink>
-              </div>
-
-              {/* Classes Section (Light Purple) */}
-              <div className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/classlist" className="flex flex-col items-center">
-                  <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
-                  <h2 className="font-semibold text-xl text-white">Classes</h2>
-                  <p className="text-gray-200">Total Classes</p>
-                  <p className="text-2xl font-bold text-white">5</p>
-                </NavLink>
-              </div>
-
-              {/* Sections Section (Light Orange) */}
-              <div className="bg-gradient-to-r from-orange-300 to-orange-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/sections" className="flex flex-col items-center">
-                  <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
-                  <h2 className="font-semibold text-xl text-white">Sections</h2>
-                  <p className="text-gray-200">Total Sections</p>
-                  <p className="text-2xl font-bold text-white">8</p>
-                </NavLink>
-              </div>
-
-              {/* Lesson Section (Unique Gradient with Modern Touch) */}
-              <div className="bg-gradient-to-r from-teal-400 via-purple-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/lessonlist" className="flex flex-col items-center">
-                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Lesson */}
-                  <h2 className="font-semibold text-xl text-white">Lesson</h2>
-                  <p className="text-gray-200">View Lessons</p>
-                  <p className="text-2xl font-bold text-white">Explore Now</p>
-                </NavLink>
-              </div>
-
-              {/* Holidays Section (Light Green) */}
-              <div className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/holidays" className="flex flex-col items-center">
-                  <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
-                  <h2 className="font-semibold text-xl text-white">Holidays</h2>
-                  <p className="text-gray-200">Total Holidays</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
-
-              {/* Fees Record Section (Light Blue) */}
-              <div className="bg-gradient-to-r from-teal-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/fees-details" className="flex flex-col items-center">
-                  <FaDollarSign className="text-4xl text-white mb-3" /> {/* Icon for Fees Record */}
-                  <h2 className="font-semibold text-xl text-white">Fees Record</h2>
-                  <p className="text-gray-200">Total Fees Records</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
-              {/* Routine Section (Unique Gradient with Modern Touch) */}
-              <div className="bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/classroutinelist" className="flex flex-col items-center">
-                  <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
-                  <h2 className="font-semibold text-xl text-white">Student Routine</h2>
-                  <p className="text-gray-200">Student Routine</p>
-                  <p className="text-2xl font-bold text-white">View Routine</p>
-                </NavLink>
-              </div>
+{/* Staff Section (Light Green) */}
+<div
+  className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-staff" // Add this class for highlighting
+>
+  <NavLink to="/staffs" className="flex flex-col items-center">
+    <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
+    <h2 className="font-semibold text-xl text-white">Staffs</h2>
+    <p className="text-gray-200">Total Staffs</p>
+    <p className="text-2xl font-bold text-white">0</p>
+  </NavLink>
+</div>
+             {/* Subjects Section (Light Yellow) */}
+<div
+className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-subject" // Add this class for highlighting
+>
+<NavLink to="/subjectlist" className="flex flex-col items-center">
+  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
+  <h2 className="font-semibold text-xl text-white">Subjects</h2>
+  <p className="text-gray-200">Total Subjects</p>
+  <p className="text-2xl font-bold text-white">10</p>
+</NavLink>
+</div>
+             {/* Classes Section (Light Purple) */}
+<div
+className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-class" // Add this class for highlighting
+>
+<NavLink to="/classlist" className="flex flex-col items-center">
+  <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
+  <h2 className="font-semibold text-xl text-white">Classes</h2>
+  <p className="text-gray-200">Total Classes</p>
+  <p className="text-2xl font-bold text-white">5</p>
+</NavLink>
+</div>
 
 
+           {/* Sections Section (Light Orange) */}
+<div
+className="bg-gradient-to-r from-orange-300 to-orange-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-section" // Add this class for highlighting
+>
+<NavLink to="/sections" className="flex flex-col items-center">
+  <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
+  <h2 className="font-semibold text-xl text-white">Sections</h2>
+  <p className="text-gray-200">Total Sections</p>
+  <p className="text-2xl font-bold text-white">8</p>
+</NavLink>
+</div>
 
-              {/* Vehicles Section (Light Teal) */}
-              <div className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
-                <NavLink to="/vehiclelist" className="flex flex-col items-center">
-                  <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
-                  <h2 className="font-semibold text-xl text-white">Vehicles</h2>
-                  <p className="text-gray-200">Total Vehicles</p>
-                  <p className="text-2xl font-bold text-white">4</p>
-                </NavLink>
-              </div>
+{/* Lesson Section (Unique Gradient with Modern Touch) */}
+<div
+  className="bg-gradient-to-r from-teal-400 via-purple-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-lesson" // Add this class for highlighting
+>
+  <NavLink to="/lessonlist" className="flex flex-col items-center">
+    <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Lesson */}
+    <h2 className="font-semibold text-xl text-white">Lesson</h2>
+    <p className="text-gray-200">View Lessons</p>
+    <p className="text-2xl font-bold text-white">Explore Now</p>
+  </NavLink>
+</div>
+
+          {/* Holidays Section (Light Green) */}
+<div
+className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-holidays" // Add this class for highlighting
+>
+<NavLink to="/holidays" className="flex flex-col items-center">
+  <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
+  <h2 className="font-semibold text-xl text-white">Holidays</h2>
+  <p className="text-gray-200">Total Holidays</p>
+  <p className="text-2xl font-bold text-white">0</p>
+</NavLink>
+</div>
+
+{/* Fees Record Section (Light Blue) */}
+<div
+  className="bg-gradient-to-r from-teal-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-fees" // Add this class for highlighting
+>
+  <NavLink to="/fees-details" className="flex flex-col items-center">
+    <FaDollarSign className="text-4xl text-white mb-3" /> {/* Icon for Fees Record */}
+    <h2 className="font-semibold text-xl text-white">Fees Record</h2>
+    <p className="text-gray-200">Total Fees Records</p>
+    <p className="text-2xl font-bold text-white">0</p>
+  </NavLink>
+</div>
+{/* Routine Section (Unique Gradient with Modern Touch) */}
+<div
+  className="bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-routine" // Add this class for highlighting
+>
+  <NavLink to="/classroutinelist" className="flex flex-col items-center">
+    <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
+    <h2 className="font-semibold text-xl text-white">Student Routine</h2>
+    <p className="text-gray-200">Student Routine</p>
+    <p className="text-2xl font-bold text-white">View Routine</p>
+  </NavLink>
+</div>
+
+
+
+            {/* Vehicles Section (Light Teal) */}
+<div
+className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-vehicles" // Add this class for highlighting
+>
+<NavLink to="/bus-tracking" className="flex flex-col items-center">
+  <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
+  <h2 className="font-semibold text-xl text-white">Vehicles</h2>
+</NavLink>
+</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden">
+        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden intro-step-dashboard-analytics">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Dashboard Analytics</h2>
           <div className="relative w-full h-[300px] sm:h-[400px] overflow-x-auto">
             <canvas ref={chartRef} className="w-full h-full max-w-full" />
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden">
+        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden intro-step-growth-over-time">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Growth Over Time</h2>
           <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-x-auto">
             <canvas ref={lineChartRef} className="w-full h-full max-w-full" />
@@ -478,7 +604,7 @@ const Dashboard = () => {
           )}
 
           {/* Table with gray borders */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto intro-step-notices">
             <table className="min-w-full mt-4 border-collapse">
               <thead>
                 <tr>
@@ -512,7 +638,7 @@ const Dashboard = () => {
             </table>
           </div>
                     {/* Fee Summary Section */}
-<Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+<Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }} className="intro-step-fee-summary">
 <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
 <TableContainer component={Paper}>
   <Table>

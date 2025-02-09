@@ -1,114 +1,168 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Sidebar from "./Sidebar";
-import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
-import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const HomeworkList = () => {
-  const [homeworks, setHomeworks] = useState([]);
-  const [search, setSearch] = useState(""); // Search query state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
+  const [homeworkAssignments, setHomeworkAssignments] = useState([]);
+  const [selectedClass, setSelectedClass] = useState("10"); // Default class 10
+  const [selectedSection, setSelectedSection] = useState("A"); // Default section A
+  const [currentPage, setCurrentPage] = useState(1);
+  const [homeworkPerPage] = useState(5); // Number of homeworks per page set to 5
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchHomeworks = async () => {
       try {
-        // Dismiss any existing toast notifications before triggering a new one
-        toast.dismiss();
-  
-        const response = await axios.get("https://school-backend-1-2xki.onrender.com/api/admin/homeworks");
-        setHomeworks(response.data); // Set the fetched homeworks to state
-        toast.success('Homework data loaded successfully!'); // Success toast after data fetch
+        const response = await fetch(
+          `https://school-backend-1-2xki.onrender.com/api/teacher/get-homeworks?class=${selectedClass}&section=${selectedSection}`
+        );
+        const data = await response.json();
+        if (data.message === "Homework retrieved successfully") {
+          setHomeworkAssignments(data.data); 
+        } else {
+          console.error("Failed to retrieve homework data");
+        }
       } catch (error) {
         console.error("Error fetching homework data:", error);
       }
     };
-  
+
     fetchHomeworks();
-  }, []);
-  
-  const handleInputChange = (e) => {
-    setSearch(e.target.value); // Update the search query
+  }, [selectedClass, selectedSection]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Filter homeworks based on search query
-  const filteredHomeworks = homeworks.filter((hw) =>
-    hw.subject && hw.subject.toLowerCase().includes(search.toLowerCase())
+  const handleClassChange = (e) => {
+    setSelectedClass(e.target.value);
+    setSelectedSection(""); // Reset section on class change
+  };
+
+  const handleSectionChange = (e) => {
+    setSelectedSection(e.target.value);
+  };
+
+  const filteredHomework = homeworkAssignments.flatMap((student) =>
+    student.homework.map((homework) => ({
+      ...homework,
+      studentId: student.studentId,
+      studentName: `${student.firstName} ${student.lastName}`,
+    }))
   );
 
-  return (
-    <div className="flex min-h-screen">
-      {/* Sidebar Overlay for Mobile */}
-      <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-        onClick={() => setIsSidebarOpen(false)}
-      ></div>
+  const indexOfLastHomework = currentPage * homeworkPerPage;
+  const indexOfFirstHomework = indexOfLastHomework - homeworkPerPage;
+  const currentHomework = filteredHomework.slice(indexOfFirstHomework, indexOfLastHomework);
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  return (
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg transition-transform transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 lg:static lg:shadow-none w-64`}
       >
         <Sidebar />
       </div>
 
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
       {/* Main Content */}
-      <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
-        {/* Mobile Header */}
+      <div className="flex-grow overflow-y-auto lg:ml-64">
+        {/* Header for Mobile */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Homework List</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-2xl focus:outline-none"
-          >
+          <h1 className="text-lg font-bold">Assigned Homework</h1>
+          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Title */}
-        <h1 className="text-xl text-gray-700 p-6">Homework List</h1>
+        {/* Filters */}
+        <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-6 mb-6 bg-white shadow-lg p-4 rounded-lg">
+          <div className="flex-1">
+            <label className="block mb-2">Select Class:</label>
+            <select
+              className="p-2 rounded-lg border border-gray-300 w-full"
+              value={selectedClass}
+              onChange={handleClassChange}
+            >
+              <option value="10">Class 10</option>
+              {/* Add other classes if needed */}
+            </select>
+          </div>
 
-        {/* Search Bar */}
-        <div className="p-6">
-          <input
-            type="text"
-            placeholder="Search by Subject"
-            value={search}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
+          <div className="flex-1">
+            <label className="block mb-2">Select Section:</label>
+            <select
+              className="p-2 rounded-lg border border-gray-300 w-full"
+              value={selectedSection}
+              onChange={handleSectionChange}
+              disabled={!selectedClass}
+            >
+              <option value="A">Section A</option>
+              {/* Add other sections if needed */}
+            </select>
+          </div>
         </div>
 
         {/* Homework List */}
-        <div className="p-6">
-          {filteredHomeworks.length === 0 ? (
-            <p>No homework found.</p>
-          ) : (
-            <div className="space-y-4">
-              {filteredHomeworks.map((homework) => (
-                <div key={homework._id} className="bg-white shadow-md rounded-lg p-4">
-                  <h2 className="font-bold text-lg">{homework.subject} - {homework.class}</h2>
-                  <p className="text-sm text-gray-600">Section: {homework.section}</p>
-                  <p className="text-sm text-gray-600">Homework Date: {homework.homeworkDate}</p>
-                  <p className="text-sm text-gray-600">Submission Date: {homework.submissionDate}</p>
-                  <p className="text-sm text-gray-600">Marks: {homework.marks}</p>
-                  <p className="text-sm text-gray-600">{homework.description}</p>
-                  <div className="mt-4">
-                    {homework.file && (
-                      <a
-                        href={homework.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        Download File
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {currentHomework.length > 0 ? (
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+            <table className="min-w-full table-auto text-center">
+              <thead>
+                <tr className="bg-purple-600 text-white">
+                  <th className="px-4 py-2 text-left">Student Name</th>
+                  <th className="px-4 py-2 text-left">Homework Title</th>
+                  <th className="px-4 py-2">Homework Date</th>
+                  <th className="px-4 py-2">Submission Date</th>
+                  <th className="px-4 py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentHomework.map((homework) => (
+                  <tr key={homework.homeworkId}>
+                    <td className="px-4 py-2">{homework.studentName}</td>
+                    <td className="px-4 py-2">{homework.homeworkTitle}</td>
+                    <td className="px-4 py-2">{new Date(homework.homeworkDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-2">{homework.submissionDate ? new Date(homework.submissionDate).toLocaleDateString() : 'Not Submitted'}</td>
+                    <td className="px-4 py-2">{homework.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-4 text-gray-600">No homework found for the selected class and section.</p>
+        )}
+
+        {/* Pagination */}
+        {filteredHomework.length > homeworkPerPage && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg mr-2"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === Math.ceil(filteredHomework.length / homeworkPerPage)}
+              className="px-4 py-2 bg-purple-500 text-white rounded-lg"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

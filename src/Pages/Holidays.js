@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { toast, ToastContainer } from 'react-toastify'; // Importing toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const HolidayPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [holidays, setHolidays] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [holidaysPerPage] = useState(5);
 
   useEffect(() => {
     const fetchHolidays = async () => {
@@ -19,16 +19,22 @@ const HolidayPage = () => {
         }
         const data = await response.json();
         setHolidays(data.holidays);
-        toast.success('Holidays fetched successfully!'); // Success toast after fetching holidays
       } catch (err) {
         setError(err.message);
-        toast.error('Error fetching holidays'); // Error toast in case of failure
       } finally {
         setLoading(false);
       }
     };
     fetchHolidays();
   }, []);
+
+  // Get current holidays for the current page
+  const indexOfLastHoliday = currentPage * holidaysPerPage;
+  const indexOfFirstHoliday = indexOfLastHoliday - holidaysPerPage;
+  const currentHolidays = holidays.slice(indexOfFirstHoliday, indexOfLastHoliday);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -75,7 +81,7 @@ const HolidayPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {holidays.map((holiday) => (
+                  {currentHolidays.map((holiday) => (
                     <tr key={holiday._id} className="border-t">
                       <td className="px-6 py-4">{holiday.holidayName}</td>
                       <td className="px-6 py-4">{new Date(holiday.fromDate).toLocaleDateString()}</td>
@@ -88,11 +94,26 @@ const HolidayPage = () => {
               </table>
             </div>
           )}
+
+          {/* Pagination */}
+          <div className="mt-4 flex justify-center">
+            <button
+              className="px-4 py-2 bg-purple-500 text-white rounded-l"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            <button
+              className="px-4 py-2 bg-purple-500 text-white"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage * holidaysPerPage >= holidays.length}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Toast Container */}
-      <ToastContainer />
     </div>
   );
 };

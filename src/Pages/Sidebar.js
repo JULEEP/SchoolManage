@@ -294,11 +294,6 @@ const Sidebar = () => {
                         <span>Add Transport Route</span>
                       </NavLink>
                     </li>
-                    <li>
-                      <NavLink to="/vehicle" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Vehicle</span>
-                      </NavLink>
-                    </li>
                   </ul>
                 )}
               </li>
@@ -500,24 +495,6 @@ const Sidebar = () => {
                   </ul>
                 )}
               </li>
-
-              {/* Assignments */}
-              <li>
-                <div className="flex items-center cursor-pointer" onClick={() => setIsAssignmentsOpen(!isAssignmentsOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Assignments</span>
-                  {isAssignmentsOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
-                </div>
-                {isAssignmentsOpen && (
-                  <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/assignment" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>View Assignment List</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
               {/* Student Attendance */}
               <li>
                 <div className="flex items-center cursor-pointer" onClick={() => setIsStudentAttendanceOpen(!isStudentAttendanceOpen)}>
@@ -586,40 +563,6 @@ const Sidebar = () => {
                 )}
               </li>
 
-              {/* Lesson Section */}
-              <li>
-                <div className="flex items-center cursor-pointer" onClick={() => setIsLessonSectionOpen(!isLessonSectionOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Lessons</span>
-                  {isLessonSectionOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
-                </div>
-                {isLessonSectionOpen && (
-                  <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/lessonlist" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>View Lesson List</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
-              {/* Topic Section */}
-              <li>
-                <div className="flex items-center cursor-pointer" onClick={() => setIsTopicSectionOpen(!isTopicSectionOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Topics</span>
-                  {isTopicSectionOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
-                </div>
-                {isTopicSectionOpen && (
-                  <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/topiclist" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>View Topic List</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
               {/* Topic Section */}
               <li>
                 <div className="flex items-center cursor-pointer" onClick={() => setIsLeaveSectionOpen(!isLeaveSectionOpen)}>
@@ -630,9 +573,14 @@ const Sidebar = () => {
                   <ul className="pl-4 space-y-2">
                     <li>
                       <NavLink to="/leaves" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>View Leave List</span>
+                        <span>Student Leave List</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/teacher-leaves" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Teacher Leave List</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>
@@ -671,11 +619,6 @@ const Sidebar = () => {
                     <li>
                       <NavLink to="/transportlist" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>View Transport Routes</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/vehiclelist" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>View Vehicle List</span>
                       </NavLink>
                     </li>
                   </ul>

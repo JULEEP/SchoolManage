@@ -7,8 +7,12 @@ const StudentHomeworkList = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(""); // Error state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [assignedByFilter, setAssignedByFilter] = useState(""); // Assigned by filter
+  const [homeworkDate, setHomeworkDate] = useState(""); // Homework date filter
+  const itemsPerPage = 5; // Limit per page
 
-  const studentId = "676bb21bd06928a8432c676a"; // Static studentId (change if needed)
+  const studentId = "6799137209c338219c673fe3"; // Updated studentId
 
   // Fetch homework when component mounts
   useEffect(() => {
@@ -20,7 +24,7 @@ const StudentHomeworkList = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setHomework(data);
+          setHomework(data.homework); // Extract the homework array from response
         } else {
           setError(data.message || "Error fetching homework");
         }
@@ -36,6 +40,35 @@ const StudentHomeworkList = () => {
 
   // Toggle Sidebar for Mobile View
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  const filteredHomework = homework.filter((hw) => {
+    const matchesAssignedBy = assignedByFilter
+      ? hw.homeworkBy.toLowerCase().includes(assignedByFilter.toLowerCase())
+      : true;
+    
+    const matchesHomeworkDate = homeworkDate 
+      ? new Date(hw.homeworkDate).toISOString().split("T")[0] === homeworkDate
+      : true;
+  
+    return matchesAssignedBy && matchesHomeworkDate;
+  });
+  
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentHomework = filteredHomework.slice(indexOfFirstItem, indexOfLastItem);
+
+  const nextPage = () => {
+    if (indexOfLastItem < filteredHomework.length) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   // Handle Loading/Error states
   if (loading) {
@@ -71,62 +104,66 @@ const StudentHomeworkList = () => {
           </button>
         </div>
 
-        {/* Heading */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">10 (A)</h2>
-          <div className="my-4 border-t border-gray-300"></div>
-
-          {/* Week Section */}
-
-          {/* Homework Table */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-4 py-2 text-left text-gray-400">Subject</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Marks</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Homework Date</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Submission Date</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Evaluation Date</th>
-                  <th className="px-4 py-2 text-left text-gray-400">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Render each homework dynamically */}
-                {homework.length > 0 ? (
-                  homework.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2 text-gray-600">{item.subject}</td>
-                      <td className="px-4 py-2 text-gray-600">{item.marks}</td>
-                      <td className="px-4 py-2 text-gray-600">
-                        {item.homeworkDate
-                          ? new Date(item.homeworkDate).toLocaleDateString()
-                          : "N/A"}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">
-                        {item.submissionDate
-                          ? new Date(item.submissionDate).toLocaleDateString()
-                          : "N/A"}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">
-                        {item.updatedAt
-                          ? new Date(item.updatedAt).toLocaleDateString()
-                          : "N/A"}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">{item.status}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="px-4 py-2 text-center text-gray-600">
-                      No Homework Available
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+        {/* Filters */}
+        <div className="p-4 bg-white shadow-md rounded-lg flex space-x-4">
+          <input
+            type="text"
+            placeholder="Filter by Assigned By"
+            value={assignedByFilter}
+            onChange={(e) => setAssignedByFilter(e.target.value)}
+            className="border p-2 rounded"
+          />
+          <input
+            type="date"
+            value={homeworkDate}
+            onChange={(e) => setHomeworkDate(e.target.value)}
+            className="border p-2 rounded"
+          />
         </div>
+
+        {/* Homework Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left text-gray-400">Title</th>
+                <th className="px-4 py-2 text-left text-gray-400">Description</th>
+                <th className="px-4 py-2 text-left text-gray-400">Assigned By</th>
+                <th className="px-4 py-2 text-left text-gray-400">Homework Date</th>
+                <th className="px-4 py-2 text-left text-gray-400">Submission Date</th>
+                <th className="px-4 py-2 text-left text-gray-400">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentHomework.length > 0 ? (
+                currentHomework.map((item, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-2 text-gray-600">{item.homeworkTitle}</td>
+                    <td className="px-4 py-2 text-gray-600">{item.description}</td>
+                    <td className="px-4 py-2 text-gray-600">{item.homeworkBy}</td>
+                    <td className="px-4 py-2 text-gray-600">{new Date(item.homeworkDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-2 text-gray-600">{new Date(item.submissionDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-2 text-gray-600">{item.status}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="px-4 py-2 text-center text-gray-600">No Homework Available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+         {/* Pagination Controls */}
+         <div className="flex justify-between mt-4">
+         <button onClick={prevPage} disabled={currentPage === 1} className="px-4 py-2 bg-purple-600 text-white rounded disabled:bg-gray-400">
+           Previous
+         </button>
+         <span className="text-gray-600">Page {currentPage}</span>
+         <button onClick={nextPage} disabled={indexOfLastItem >= homework.length} className="px-4 py-2 bg-purple-600 text-white rounded disabled:bg-gray-400">
+           Next
+         </button>
+       </div>
       </div>
     </div>
   );
