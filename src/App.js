@@ -207,13 +207,18 @@ import TeacherLeavePage from './Teacher/TeacherLeave';
 import TeacherLogin from './Teacher/TeacherLogin';
 import TeacherSidebar from './Teacher/TeacherSidebar';
 import TeacherSubjects from './Teacher/TeacherSubjects';
-import StudentsMarksPage from './Pages/AddMarks';
-import Complaints from './Pages/Complaints';
-import ComplaintPage from './Student/MyComplaintPage';
-import MyChildComplaintPage from './Parents/MyChildrenComplaint';
-import AddMeeting from './Pages/AddMeeting';
-import MeetingPage from './Pages/MeetingTable';
-import TeacherMeetingPage from './Teacher/Meetings';
+import RoomsVc from './Teacher/RoomsVc';
+import GenerateId from './Teacher/GenerateId';
+import UserGuide from './Student/UserGuide'
+import LiveMeeting from './Parents/LiveMeeting';
+import LiveClass from './Student/LiveClass';
+// import StudentsMarksPage from './Pages/AddMarks';
+// import Complaints from './Pages/Complaints';
+// import ComplaintPage from './Student/MyComplaintPage';
+// import MyChildComplaintPage from './Parents/MyChildrenComplaint';
+// import AddMeeting from './Pages/AddMeeting';
+// import MeetingPage from './Pages/MeetingTable';
+// import TeacherMeetingPage from './Teacher/Meetings';
 function App() {
   return (
     <Router> {/* Wrap everything in Router to enable routing */}        
@@ -390,6 +395,8 @@ function App() {
             <Route path="/add-meeting" element={<AddMeeting/>} />
             <Route path="/meetings" element={<MeetingPage/>} />
             <Route path="/student-complaint" element={<ComplaintPage/>} />
+            <Route path="/live-class" element={<LiveClass/>} />
+            
 
 
 
@@ -431,6 +438,7 @@ function App() {
            <Route path="/ask-queries" element={<CommunicationForm/>} />
            <Route path="/children-holidays" element={<ParentHolidayPage/>} />
            <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
+           <Route path='/parent-live-meeting' element={<LiveMeeting/>} />
 
 
 

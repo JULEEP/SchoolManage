@@ -20,10 +20,7 @@ import StudentSidebar from "../Sidebar";
 import IntroJs from "intro.js";
 import "intro.js/introjs.css"; // Intro.js CSS import
 
-<<<<<<< HEAD
 // Importing images
-=======
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
 
 const book = "https://media1.tenor.com/images/107e39e6cccecb07771733a383291bd9/tenor.gif?itemid=12632259";
 const transport = "https://i.gifer.com/Wdf9.gif";
@@ -75,7 +72,6 @@ const StudentDashboard = () => {
   const [transportData, setTransportData] = useState([]);
   const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
 
-<<<<<<< HEAD
 
   const startTour = () => {
     const tour = driver({
@@ -161,7 +157,6 @@ const StudentDashboard = () => {
 
 
 
-=======
   useEffect(() => {
     // Initialize Intro.js to highlight all grid sections and tables
     const intro = IntroJs();
@@ -215,7 +210,6 @@ const StudentDashboard = () => {
   
   
 
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   
   useEffect(() => {
     const fetchTransportData = async () => {
@@ -365,12 +359,9 @@ style={{
             borderRadius: "8px",
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
             textAlign: "center",
-<<<<<<< HEAD
             backgroundColor: "#add8e6",
             marginTop: "12px",
-=======
             transition: "transform 0.3s ease, box-shadow 0.3s ease",
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
           }}
           className={`category-box-${index}`} // Added dynamic class based on the index
         >
@@ -386,22 +377,10 @@ style={{
             }}
           />
           <Box
-<<<<<<< HEAD
-            id="categories-section"
-            display="grid"
-            gridTemplateColumns="repeat(7, 1fr)"
-            gap="5px"
-            justifyItems="center"
-            sx={{
-              "@media (max-width: 1200px)": { gridTemplateColumns: "repeat(4, 1fr)" },
-              "@media (max-width: 900px)": { gridTemplateColumns: "repeat(3, 1fr)" },
-              "@media (max-width: 600px)": { gridTemplateColumns: "repeat(2, 1fr)" },
-=======
             style={{
               backgroundColor: "white",
               padding: "10px",
               borderRadius: "4px",
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
               width: "100%",
               marginTop: "10px",
             }}
@@ -410,49 +389,6 @@ style={{
               {category.name}
             </p>
           </Box>
-<<<<<<< HEAD
-
-          <Box mt={5} id="subjects-section">
-      <Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
-        <h3 style={{ fontWeight: "bold" }}>Subjects</h3>
-
-        {/* Start Tour Button */}
-        <Button onClick={startTour} variant="contained" color="primary" style={{ marginBottom: "10px" }}>
-          Start Tour
-        </Button>
-
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Subject</TableCell>
-                <TableCell>Teacher</TableCell>
-                <TableCell>Time</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {subjectsData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.teacher}</TableCell>
-                  <TableCell>{row.time}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-
-      <Box
-  id="teachers-section"
-  mb={4}
-  style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }}
->
-  {/* Section Heading */}
-  <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
-
-  {/* Teachers Table */}
-=======
         </Box>
       </Link>
     </Box>
@@ -487,7 +423,6 @@ style={{
 
 <Box mb={4} style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }} className="intro-step-2">
   <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -510,31 +445,8 @@ style={{
   </TableContainer>
 </Box>
 
-<<<<<<< HEAD
-
-<Box
-  id="classes-section"
-  mb={4}
-  style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}
->
-  {/* Section Heading */}
-  <h3 style={{ fontWeight: "bold" }}>Classes</h3>
-
-  {/* Start Tour Button */}
-  <Button
-    onClick={startTour}
-    variant="contained"
-    color="primary"
-    style={{ marginBottom: "10px" }}
-  >
-    Start Tour
-  </Button>
-
-  {/* Classes Table */}
-=======
 <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }} className="intro-step-3">
   <h3 style={{ fontWeight: "bold" }}>Classes</h3>
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -557,33 +469,8 @@ style={{
   </TableContainer>
 </Box>
 
-<<<<<<< HEAD
-
-<Box
-  id="transport-section"
-  mb={4}
-  style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }}
->
-  {/* Section Heading */}
-  <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>
-    Transport Routes (Today)
-  </h3>
-
-  {/* Start Tour Button */}
-  <Button
-    onClick={startTour}
-    variant="contained"
-    color="primary"
-    style={{ marginBottom: "10px" }}
-  >
-    Start Tour
-  </Button>
-
-  {/* Transport Routes Table */}
-=======
 <Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }} className="intro-step-4">
   <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Transport Routes (Today)</h3>
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -620,49 +507,6 @@ style={{
   </TableContainer>
 </Box>
 
-<<<<<<< HEAD
-       {/* Content Area */}
-       <Container
-        maxWidth="xl"
-        style={{
-          padding: "20px",
-          textAlign: "center",
-          backgroundColor: "#add8e6", // Light blue background
-          marginTop: "12px",
-        }}
-      >
-        {/* Start Tour Button */}
-        <Button
-          onClick={startTour}
-          variant="contained"
-          color="primary"
-          style={{ marginBottom: "10px" }}
-        >
-          Start Tour
-        </Button>
-
-        {/* Fee Summary Table */}
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Total Paid</TableCell>
-                <TableCell>Total Pending</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell>{feeSummary.totalPaid}</TableCell>
-                <TableCell>{feeSummary.totalPending}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-        </Container>
-        </Box>
-        </Container>
-
-=======
 {/* Fee Summary Section */}
 <Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }} className="intro-step-5">
   <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
@@ -685,7 +529,6 @@ style={{
 </Box>
 </Box>
 </Container>
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
       </div>
     </div>
   );

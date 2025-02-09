@@ -34,11 +34,8 @@ const bestCategories = [
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
   { img: holidays, name: "Holidays", link: "/children-holidays" },
-<<<<<<< HEAD
   { img: liveMeeting, name: "Live Meetings", link: "/parent-live-meeting" },
 
-=======
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
 ];
 const ParentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

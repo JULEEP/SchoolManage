@@ -473,7 +473,6 @@ className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg
 
 
 
-<<<<<<< HEAD
               {/* Vehicles Section (Light Teal) */}
               <div className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300">
                 <NavLink to="/vehiclelist" className="flex flex-col items-center">
@@ -490,7 +489,6 @@ className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg
                   <h2 className="font-semibold text-xl text-white">Meet</h2>
                 </NavLink>
               </div>
-=======
             {/* Vehicles Section (Light Teal) */}
 <div
 className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-vehicles" // Add this class for highlighting
@@ -500,7 +498,6 @@ className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg h
   <h2 className="font-semibold text-xl text-white">Vehicles</h2>
 </NavLink>
 </div>
->>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
             </div>
           </div>
         </div>
