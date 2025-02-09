@@ -121,15 +121,6 @@ const TeacherSidebar = () => {
                   Exam Schedule
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to="/teacher-marks"
-                  className="block text-gray-400 p-2 text-sm hover:bg-gray-700 rounded-md"
-                  activeClassName="bg-gray-700"
-                >
-                  Exam Results
-                </NavLink>
-              </li>
             </ul>
           )}
         </li>

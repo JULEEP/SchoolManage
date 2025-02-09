@@ -90,7 +90,7 @@ const Teacher = () => {
         <div className="overflow-x-auto mt-8">
           <table className="w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-purple-600 text-white">
                 <th className="px-4 py-2 border-b border-gray-300">SL</th>
                 <th className="px-4 py-2 border-b border-gray-300">Teacher Name</th>
                 <th className="px-4 py-2 border-b border-gray-300">Email</th>

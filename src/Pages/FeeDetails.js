@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar'; // Import Sidebar component
+import { jsPDF } from 'jspdf';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Sidebar toggle icons
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 function FeeDetails() {
   const [feeData, setFeeData] = useState([]);
@@ -32,12 +31,10 @@ function FeeDetails() {
         setFeeData(response.data.fees);
         setFilteredData(response.data.fees); // Initial data
         setLoading(false);
-        toast.success("Fee data loaded successfully!"); // Success Toast
       })
       .catch((err) => {
         setError("Failed to fetch data");
         setLoading(false);
-        toast.error("Error fetching fee data"); // Error Toast
       });
   }, []);
 
@@ -126,8 +123,6 @@ function FeeDetails() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    toast.success("CSV file generated successfully!"); // Success Toast for CSV generation
   };
 
 // Function to update fee status
@@ -135,13 +130,12 @@ const updateFeeStatus = async () => {
   if (!selectedFee) return;
 
   try {
-    await axios.put('http://localhost:4000/api/admin/update-fee', {
+    await axios.put('https://school-backend-1-2xki.onrender.com/api/admin/update-fee', {
       feeId: selectedFee._id,
       newStatus,
       paidAmount: newPaidAmount,
     });
 
-    toast.success("Fee status updated successfully!");
 
     const updatedData = feeData.map(fee =>
       fee._id === selectedFee._id
@@ -153,7 +147,6 @@ const updateFeeStatus = async () => {
     setFilteredData(updatedData);
     closeModal();
   } catch (error) {
-    toast.error("Failed to update fee status");
   }
 };
 
@@ -177,6 +170,29 @@ const updateFeeStatus = async () => {
         return 'bg-gray-300 text-gray-800';
     }
   };
+
+  // Function to generate invoice as PDF
+  const downloadInvoice = (fee) => {
+    const doc = new jsPDF();
+
+    doc.setFont("helvetica", "normal");
+    doc.text("Invoice", 20, 20);
+    doc.text(`Invoice Number: ${fee.invoiceNumber}`, 20, 30);
+    doc.text(`Student: ${fee.studentId.firstName} ${fee.studentId.lastName}`, 20, 40);
+    doc.text(`Class: ${fee.studentId.class}`, 20, 50);
+    doc.text(`Section: ${fee.studentId.section}`, 20, 60);
+    doc.text(`Amount: ${fee.amount}`, 20, 70);
+    doc.text(`Paid Amount: ${fee.paidAmount}`, 20, 80);
+    doc.text(`Payment Method: ${fee.paymentMethod}`, 20, 90);
+    doc.text(`Status: ${fee.status}`, 20, 100);
+    doc.text(`Paid Date: ${new Date(fee.paidDate).toLocaleDateString()}`, 20, 110);
+    doc.text(`Pending Payment: ${fee.pendingPayment}`, 20, 120);
+    doc.text(`Created At: ${new Date(fee.createdAt).toLocaleDateString()}`, 20, 130);
+    doc.text(`Updated At: ${new Date(fee.updatedAt).toLocaleDateString()}`, 20, 140);
+
+    doc.save(`invoice_${fee.invoiceNumber}.pdf`);
+  };
+
 
   if (loading) {
     return <div className="text-center p-4">Loading...</div>;
@@ -269,7 +285,7 @@ const updateFeeStatus = async () => {
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto border-collapse">
               <thead>
-                <tr className="bg-gray-100 text-gray-700">
+                <tr className="bg-purple-600 text-white">
                   <th className="px-6 py-3 text-left">Student Name</th>
                   <th className="px-6 py-3 text-left">Class</th>
                   <th className="px-6 py-3 text-left">Section</th>
@@ -285,6 +301,8 @@ const updateFeeStatus = async () => {
                   <th className="px-6 py-3 text-left">Created At</th>
                   <th className="px-6 py-3 text-left">Updated At</th>
                   <th className="px-6 py-3 text-left">Action</th> {/* Action Column */}
+                  <th className="px-6 py-3 text-left">Download</th> 
+
                 </tr>
               </thead>
               <tbody>
@@ -311,11 +329,19 @@ const updateFeeStatus = async () => {
                     <td className="px-6 py-4">
                     <button
                       onClick={() => openModal(fee)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                      className="px-4 py-2 bg-purple-500 text-white rounded-md"
                     >
                       Update
                     </button>
                   </td>
+                  <td className="px-6 py-4 text-center">
+                  <button
+                    onClick={() => downloadInvoice(fee)} // Added downloadInvoice function
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Download Invoice
+                  </button>
+                </td>                 
                   </tr>
                 ))}
               </tbody>
@@ -334,7 +360,7 @@ const updateFeeStatus = async () => {
             <button
               onClick={() => paginate(currentPage + 1)}
               disabled={currentPage * itemsPerPage >= filteredData.length}
-              className="px-4 py-2 bg-gray-500 text-white rounded-r-md"
+              className="px-4 py-2 bg-purple-600 text-white rounded-r-md"
             >
               Next
             </button>
@@ -362,8 +388,6 @@ const updateFeeStatus = async () => {
         </div>
       )}
       </div>
-
-      <ToastContainer />
     </div>
   );
 }

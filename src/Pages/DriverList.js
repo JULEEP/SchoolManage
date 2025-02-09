@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa"; // Sidebar toggle icons
 import Sidebar from "./Sidebar";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const DriverListPage = () => {
   const [driverList, setDriverList] = useState([]);
@@ -23,7 +21,6 @@ const DriverListPage = () => {
         setDriverList(data); // Set drivers data
       } catch (err) {
         setError(err.message || "Something went wrong");
-        toast.error(err.message || "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -73,14 +70,14 @@ const DriverListPage = () => {
 
         <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
           <table className="min-w-full table-auto border border-gray-200">
-            <thead className="bg-gray-200">
+            <thead className="bg-purple-600 text-white">
               <tr>
-                <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                <th className="px-4 py-2 text-left text-gray-600">Name</th>
-                <th className="px-4 py-2 text-left text-gray-600">Email</th>
-                <th className="px-4 py-2 text-left text-gray-600">Age</th>
-                <th className="px-4 py-2 text-left text-gray-600">Mobile Number</th>
-                <th className="px-4 py-2 text-left text-gray-600">Joining Date</th>
+                <th className="px-4 py-2 text-left">SL</th>
+                <th className="px-4 py-2 text-left">Name</th>
+                <th className="px-4 py-2 text-left">Email</th>
+                <th className="px-4 py-2 text-left">Age</th>
+                <th className="px-4 py-2 text-left">Mobile Number</th>
+                <th className="px-4 py-2 text-left">Joining Date</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +115,6 @@ const DriverListPage = () => {
           </table>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

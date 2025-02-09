@@ -8,10 +8,14 @@ const ApplyLeave = () => {
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
   const [leaves, setLeaves] = useState([]);
+  const [leaveType, setLeaveType] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId
 
@@ -47,6 +51,7 @@ const ApplyLeave = () => {
       startDate,
       endDate,
       reason,
+      leaveType
     };
 
     try {
@@ -81,6 +86,17 @@ const ApplyLeave = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  // Pagination Logic
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentLeaves = leaves.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(leaves.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   // Toggle Sidebar for Mobile View
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -153,6 +169,16 @@ const ApplyLeave = () => {
               </div>
             </div>
 
+            <div>
+            <label htmlFor="leaveType" className="block text-gray-600 mb-2">Leave Type</label>
+            <select id="leaveType" value={leaveType} onChange={(e) => setLeaveType(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700">
+              <option value="">Select Leave Type</option>
+              <option value="Sick Leave">Sick Leave</option>
+              <option value="Casual Leave">Casual Leave</option>
+              <option value="Vacation Leave">Vacation Leave</option>
+            </select>
+          </div>
+
             {/* Apply Leave Button */}
             <div className="text-right">
               <button
@@ -173,9 +199,9 @@ const ApplyLeave = () => {
         <div className="bg-white shadow-md rounded-xl p-6 mb-8">
           <h2 className="text-xl font-medium text-gray-700 mb-4">My Leaves</h2>
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-gray-50 rounded-lg">
+            <table className="w-full border-collapse rounded-lg">
               <thead>
-                <tr className="text-left text-gray-600 border-b">
+                <tr className="text-left bg-purple-500 text-white rouded-lg border-b">
                   <th className="py-3 px-4">Start Date</th>
                   <th className="py-3 px-4">End Date</th>
                   <th className="py-3 px-4">Reason</th>
@@ -183,7 +209,7 @@ const ApplyLeave = () => {
                 </tr>
               </thead>
               <tbody>
-                {leaves.map((leave) => (
+                {currentLeaves.map((leave) => (
                   <tr key={leave._id} className="text-gray-700 border-b">
                     <td className="py-3 px-4">{new Date(leave.startDate).toLocaleDateString()}</td>
                     <td className="py-3 px-4">{new Date(leave.endDate).toLocaleDateString()}</td>
@@ -194,6 +220,33 @@ const ApplyLeave = () => {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 mx-1 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
+          >
+            Prev
+          </button>
+          {[...Array(totalPages).keys()].map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => handlePageChange(pageNumber + 1)}
+              className={`px-4 py-2 mx-1 rounded-lg ${currentPage === pageNumber + 1 ? "bg-purple-500 text-white" : "bg-gray-200"}`}
+            >
+              {pageNumber + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 mx-1 bg-purple-500 text-white rounded-lg disabled:bg-gray-300"
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

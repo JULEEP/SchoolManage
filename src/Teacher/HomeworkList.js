@@ -4,21 +4,22 @@ import { FaBars, FaTimes } from "react-icons/fa";
 
 const TeacherHomework = () => {
   const [homeworkAssignments, setHomeworkAssignments] = useState([]);
-  const [selectedClass, setSelectedClass] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+  const [selectedClass, setSelectedClass] = useState("10"); // Default class 10
+  const [selectedSection, setSelectedSection] = useState("A"); // Default section A
   const [currentPage, setCurrentPage] = useState(1);
   const [homeworkPerPage] = useState(10); // Number of homeworks per page
   const [statusData, setStatusData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Fetch homework data from API
   useEffect(() => {
     const fetchHomeworks = async () => {
       try {
-        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/teacher/homeworks");
+        const response = await fetch(
+          `https://school-backend-1-2xki.onrender.com/api/teacher/get-homeworks?class=${selectedClass}&section=${selectedSection}`
+        );
         const data = await response.json();
-        if (data.message === "Homeworks retrieved successfully!") {
-          setHomeworkAssignments(data.homeworks);
+        if (data.message === "Homework retrieved successfully") {
+          setHomeworkAssignments(data.data); 
         } else {
           console.error("Failed to retrieve homework data");
         }
@@ -28,7 +29,7 @@ const TeacherHomework = () => {
     };
 
     fetchHomeworks();
-  }, []);
+  }, [selectedClass, selectedSection]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -43,12 +44,13 @@ const TeacherHomework = () => {
     setSelectedSection(e.target.value);
   };
 
-  const filteredHomework = homeworkAssignments.filter((homework) => {
-    return (
-      (selectedClass ? homework.class === selectedClass : true) &&
-      (selectedSection ? homework.section === selectedSection : true)
-    );
-  });
+  const filteredHomework = homeworkAssignments.flatMap((student) =>
+    student.homework.map((homework) => ({
+      ...homework,
+      studentId: student.studentId,
+      studentName: `${student.firstName} ${student.lastName}`,
+    }))
+  );
 
   const indexOfLastHomework = currentPage * homeworkPerPage;
   const indexOfFirstHomework = indexOfLastHomework - homeworkPerPage;
@@ -56,19 +58,19 @@ const TeacherHomework = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleStatusChange = async (homeworkId, newStatus) => {
+  const handleStatusChange = async (studentId, homeworkId, newStatus) => {
     try {
-      const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/teacher/update-status/${homeworkId}`, {
+      const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/teacher/update-status/${studentId}/${homeworkId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ status: newStatus }),
       });
-
+  
       const data = await response.json();
-
-      if (data.message === "Status updated successfully!") {
+  
+      if (data.message === "Homework status updated successfully") {
         setStatusData((prevStatus) => ({
           ...prevStatus,
           [homeworkId]: newStatus,
@@ -80,7 +82,7 @@ const TeacherHomework = () => {
       console.error("Error updating status:", error);
     }
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
       {/* Sidebar */}
@@ -109,9 +111,6 @@ const TeacherHomework = () => {
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
-
-        <h1 className="text-xl text-purple-700 mb-6">Assigned Homework</h1>
-
         {/* Filters */}
         <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-6 mb-6 bg-white shadow-lg p-4 rounded-lg">
           <div className="flex-1">
@@ -121,12 +120,8 @@ const TeacherHomework = () => {
               value={selectedClass}
               onChange={handleClassChange}
             >
-              <option value="">Select Class</option>
-              {[...new Set(homeworkAssignments.map((hw) => hw.class))].map((classOption) => (
-                <option key={classOption} value={classOption}>
-                  {classOption}
-                </option>
-              ))}
+              <option value="10">Class 10</option>
+              {/* Add other classes if needed */}
             </select>
           </div>
 
@@ -138,12 +133,8 @@ const TeacherHomework = () => {
               onChange={handleSectionChange}
               disabled={!selectedClass}
             >
-              <option value="">Select Section</option>
-              {[...new Set(homeworkAssignments.filter((hw) => hw.class === selectedClass).map((hw) => hw.section))].map((section) => (
-                <option key={section} value={section}>
-                  {section}
-                </option>
-              ))}
+              <option value="A">Section A</option>
+              {/* Add other sections if needed */}
             </select>
           </div>
         </div>
@@ -154,35 +145,31 @@ const TeacherHomework = () => {
             <table className="min-w-full table-auto text-center">
               <thead>
                 <tr className="bg-gray-200">
+                  <th className="px-4 py-2 text-left">Student Name</th>
                   <th className="px-4 py-2 text-left">Homework Title</th>
-                  <th className="px-4 py-2 text-left">Description</th>
                   <th className="px-4 py-2">Homework Date</th>
                   <th className="px-4 py-2">Submission Date</th>
-                  <th className="px-4 py-2">Marks</th>
                   <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Created At</th>
                 </tr>
               </thead>
               <tbody>
                 {currentHomework.map((homework) => (
-                  <tr key={homework._id}>
+                  <tr key={homework.homeworkId}>
+                    <td className="px-4 py-2">{homework.studentName}</td>
                     <td className="px-4 py-2">{homework.homeworkTitle}</td>
-                    <td className="px-4 py-2">{homework.description}</td>
                     <td className="px-4 py-2">{new Date(homework.homeworkDate).toLocaleDateString()}</td>
-                    <td className="px-4 py-2">{new Date(homework.submissionDate).toLocaleDateString()}</td>
-                    <td className="px-4 py-2">{homework.marks}</td>
+                    <td className="px-4 py-2">{homework.submissionDate ? new Date(homework.submissionDate).toLocaleDateString() : 'Not Submitted'}</td>
                     <td className="px-4 py-2">
-                      <select
-                        value={statusData[homework._id] || homework.status}
-                        onChange={(e) => handleStatusChange(homework._id, e.target.value)}
-                        className="p-2 rounded-lg border border-gray-300"
-                      >
-                        <option value="Not Submitted">Not Submitted</option>
-                        <option value="Submitted">Submitted</option>
-                        <option value="Graded">Graded</option>
-                      </select>
+                    <select
+                    value={statusData[homework.homeworkId] || homework.status}
+                    onChange={(e) => handleStatusChange(homework.studentId, homework.homeworkId, e.target.value)}
+                    className="p-2 rounded-lg border border-gray-300"
+                  >
+                    <option value="Not Submitted">Not Submitted</option>
+                    <option value="Submitted">Submitted</option>
+                    <option value="Graded">Graded</option>
+                  </select>                  
                     </td>
-                    <td className="px-4 py-2">{new Date(homework.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

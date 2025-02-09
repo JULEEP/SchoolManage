@@ -17,8 +17,13 @@ import { Button } from "@mui/material"; // ✅ Add this line
 import { FaBars, FaTimes } from "react-icons/fa"; // Icons for sidebar toggle
 import { Link } from "react-router-dom"; // For navigation
 import StudentSidebar from "../Sidebar";
+import IntroJs from "intro.js";
+import "intro.js/introjs.css"; // Intro.js CSS import
 
+<<<<<<< HEAD
 // Importing images
+=======
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
 
 const book = "https://media1.tenor.com/images/107e39e6cccecb07771733a383291bd9/tenor.gif?itemid=12632259";
 const transport = "https://i.gifer.com/Wdf9.gif";
@@ -42,7 +47,7 @@ const bestCategories = [
   { img: attendance, name: "Attendance", link: "/student-attendance" },
   { img: notice, name: "Notice", link: "/student-notice-board" },
   { img: book, name: "Books", link: "/student-booklist" },
-  { img: transport, name: "Transport", link: "/student-transport" },
+  { img: transport, name: "Transport", link: "/studentbus-tracking" },
   { img: routine, name: "Routines", link: "/class-routine" },
   { img: result, name: "Results", link: "/student-result" },
   { img: fee, name: "My Fees", link: "/student-fees" },
@@ -70,6 +75,7 @@ const StudentDashboard = () => {
   const [transportData, setTransportData] = useState([]);
   const [feeSummary, setFeeSummary] = useState({ totalPaid: 0, totalPending: 0 });
 
+<<<<<<< HEAD
 
   const startTour = () => {
     const tour = driver({
@@ -155,6 +161,61 @@ const StudentDashboard = () => {
 
 
 
+=======
+  useEffect(() => {
+    // Initialize Intro.js to highlight all grid sections and tables
+    const intro = IntroJs();
+  
+    intro.setOptions({
+      steps: [
+        ...bestCategories.map((category, index) => ({
+          element: `.category-box-${index}`, // Dynamic class for each category box
+          intro: `This is the ${category.name} section.`,
+        })),
+        {
+          element: '.intro-step-1',
+          intro: 'Here are the subjects table.',
+        },
+        {
+          element: '.intro-step-2',
+          intro: 'This is the teachers table.',
+        },
+        {
+          element: '.intro-step-3',
+          intro: 'This is the classes table.',
+        },
+        {
+          element: '.intro-step-4',
+          intro: 'This is the transport routes table.',
+        },
+        {
+          element: '.intro-step-5',
+          intro: 'This is the fee summary table.',
+        },
+      ],
+      highlightClass: 'rounded', // Add rounded corners for highlights
+      nextLabel: 'Next', // Set Next button label
+      prevLabel: 'Previous', // Set Previous button label
+      overlayOpacity: 0.8, // Set overlay opacity to make it less harsh
+    });
+  
+    // Customizing highlight styles directly for purple background and white text
+    intro.onbeforechange(() => {
+      const highlightElements = document.querySelectorAll('.introjs-overlay');
+      highlightElements.forEach(el => {
+        el.style.backgroundColor = 'purple';
+        el.style.color = 'white';
+      });
+    });
+  
+    // Start the intro guide after component mounts
+    intro.start();
+  }, []);
+  
+  
+  
+
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   
   useEffect(() => {
     const fetchTransportData = async () => {
@@ -268,17 +329,64 @@ const StudentDashboard = () => {
           Start Tour
         </button>
 
-        {/* Content Area */}
-        <Container
-          maxWidth="xl"
+     {/* Content Area */}
+<Container
+maxWidth="xl"
+style={{
+  padding: "20px",
+  textAlign: "center",
+  backgroundColor: "#add8e6", // Light blue color
+  marginTop: "12px",
+}}
+>
+<Box
+  display="grid"
+  gridTemplateColumns="repeat(7, 1fr)"
+  gap="5px"
+  justifyItems="center"
+  sx={{
+    "@media (max-width: 1200px)": { gridTemplateColumns: "repeat(4, 1fr)" },
+    "@media (max-width: 900px)": { gridTemplateColumns: "repeat(3, 1fr)" },
+    "@media (max-width: 600px)": { gridTemplateColumns: "repeat(2, 1fr)" },
+    width: "100%",
+    boxSizing: "border-box",
+  }}
+>
+  {bestCategories.map((category, index) => (
+    <Box key={category.name} style={{ padding: "5px" }}>
+      <Link to={category.link} style={{ textDecoration: "none" }}>
+        <Box
           style={{
-            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "10px",
+            backgroundColor: "#f5f5f5",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
             textAlign: "center",
+<<<<<<< HEAD
             backgroundColor: "#add8e6",
             marginTop: "12px",
+=======
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
           }}
+          className={`category-box-${index}`} // Added dynamic class based on the index
         >
+          <img
+            src={category.img}
+            alt={category.name}
+            style={{
+              width: "150px",
+              height: "150px",
+              objectFit: "cover",
+              borderRadius: "8px",
+              marginBottom: "10px",
+            }}
+          />
           <Box
+<<<<<<< HEAD
             id="categories-section"
             display="grid"
             gridTemplateColumns="repeat(7, 1fr)"
@@ -288,56 +396,21 @@ const StudentDashboard = () => {
               "@media (max-width: 1200px)": { gridTemplateColumns: "repeat(4, 1fr)" },
               "@media (max-width: 900px)": { gridTemplateColumns: "repeat(3, 1fr)" },
               "@media (max-width: 600px)": { gridTemplateColumns: "repeat(2, 1fr)" },
+=======
+            style={{
+              backgroundColor: "white",
+              padding: "10px",
+              borderRadius: "4px",
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
               width: "100%",
-              boxSizing: "border-box",
+              marginTop: "10px",
             }}
           >
-            {bestCategories.map((category) => (
-              <Box key={category.name} style={{ padding: "5px" }}>
-                <Link to={category.link} style={{ textDecoration: "none" }}>
-                  <Box
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      padding: "10px",
-                      backgroundColor: "#f5f5f5",
-                      borderRadius: "8px",
-                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                      textAlign: "center",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
-                    className="category-box"
-                  >
-                    <img
-                      src={category.img}
-                      alt={category.name}
-                      style={{
-                        width: "150px",
-                        height: "150px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        marginBottom: "10px",
-                      }}
-                    />
-                    <Box
-                      style={{
-                        backgroundColor: "white",
-                        padding: "10px",
-                        borderRadius: "4px",
-                        width: "100%",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <p style={{ fontWeight: "bold", color: "black", margin: 0 }}>
-                        {category.name}
-                      </p>
-                    </Box>
-                  </Box>
-                </Link>
-              </Box>
-            ))}
+            <p style={{ fontWeight: "bold", color: "black", margin: 0 }}>
+              {category.name}
+            </p>
           </Box>
+<<<<<<< HEAD
 
           <Box mt={5} id="subjects-section">
       <Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
@@ -379,6 +452,42 @@ const StudentDashboard = () => {
   <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
 
   {/* Teachers Table */}
+=======
+        </Box>
+      </Link>
+    </Box>
+  ))}
+</Box>
+
+      {/* Tables Section */}
+<Box mt={5}>
+<Box mb={4} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }} className="intro-step-1">
+  <h3 style={{ fontWeight: "bold" }}>Subjects</h3>
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Subject</TableCell>
+          <TableCell>Teacher</TableCell>
+          <TableCell>Time</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {subjectsData.map((row, index) => (
+          <TableRow key={index}>
+            <TableCell>{row.name}</TableCell>
+            <TableCell>{row.teacher}</TableCell>
+            <TableCell>{row.time}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>
+
+<Box mb={4} style={{ backgroundColor: "#e6ffe6", padding: "20px", borderRadius: "10px" }} className="intro-step-2">
+  <h3 style={{ fontWeight: "bold" }}>Teachers</h3>
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -401,6 +510,7 @@ const StudentDashboard = () => {
   </TableContainer>
 </Box>
 
+<<<<<<< HEAD
 
 <Box
   id="classes-section"
@@ -421,6 +531,10 @@ const StudentDashboard = () => {
   </Button>
 
   {/* Classes Table */}
+=======
+<Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }} className="intro-step-3">
+  <h3 style={{ fontWeight: "bold" }}>Classes</h3>
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -443,6 +557,7 @@ const StudentDashboard = () => {
   </TableContainer>
 </Box>
 
+<<<<<<< HEAD
 
 <Box
   id="transport-section"
@@ -465,6 +580,10 @@ const StudentDashboard = () => {
   </Button>
 
   {/* Transport Routes Table */}
+=======
+<Box mb={4} style={{ backgroundColor: "#fff3e6", padding: "20px", borderRadius: "10px" }} className="intro-step-4">
+  <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Transport Routes (Today)</h3>
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -501,6 +620,7 @@ const StudentDashboard = () => {
   </TableContainer>
 </Box>
 
+<<<<<<< HEAD
        {/* Content Area */}
        <Container
         maxWidth="xl"
@@ -542,6 +662,30 @@ const StudentDashboard = () => {
         </Box>
         </Container>
 
+=======
+{/* Fee Summary Section */}
+<Box mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }} className="intro-step-5">
+  <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Total Paid</TableCell>
+          <TableCell>Total Pending</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>{feeSummary.totalPaid}</TableCell>
+          <TableCell>{feeSummary.totalPending}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Box>
+</Box>
+</Container>
+>>>>>>> b9d859a023e4059355f4a265eda83d3ebbb828c6
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const FeeManagement = () => {
   // Handle class and section change to filter students
   const handleFilterStudents = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/admin/get-students?class=${selectedClass}&section=${selectedSection}`);
+      const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/admin/get-students?class=${selectedClass}&section=${selectedSection}`);
       const data = await response.json();
 
       if (data && data.students) {
@@ -333,8 +333,6 @@ const FeeManagement = () => {
         )}
       </div>
 
-      {/* ToastContainer for Toast Notifications */}
-      <ToastContainer autoClose={2000} hideProgressBar={false} newestOnTop={true} closeOnClick pauseOnHover={false} draggable />
       </div>
   );
 };

@@ -207,7 +207,7 @@ const StudentPromote = () => {
           ) : (
             <table className="w-full border-collapse border border-gray-300">
               <thead>
-                <tr className="bg-gray-200">
+                <tr className="bg-purple-600 text-white">
                   <th className="px-4 py-2 border-b">SL</th>
                   <th className="px-4 py-2 border-b">First Name</th>
                   <th className="px-4 py-2 border-b">Last Name</th>
