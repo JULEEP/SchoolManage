@@ -234,6 +234,8 @@ import StudentBusTracking from './Student/StudentBusTracking';
 import FingerprintAttendance from './Pages/FingerPrintAttendance';
 import ParentBusTracking from './Parents/ParentBusTracking';
 import TeacherBusTracking from './Teacher/TeacherBusTracking';
+import LiveMeetingTeacher from './Teacher/LiveMeetingTeacher';
+import TeacherMeetings from './Teacher/TeacherMeetings';
 
 function App() {
   return (
@@ -420,6 +422,7 @@ function App() {
             <Route path="/studentbus-tracking" element={<StudentBusTracking />} />
             <Route path="/fingerprint" element={<FingerprintAttendance />} />
             <Route path="/bus-form" element={<BusForm />} />
+            <Route path="/managemeeting" element={<TeacherMeetings />} />
 
             
 
