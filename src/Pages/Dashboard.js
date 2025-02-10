@@ -222,7 +222,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/admin/get-alldashboard');
+        const response = await axios.get('https://school-backend-1-2xki.onrender.com/api/admin/get-alldashboard');
         setDashboardData(response.data); // Set the fetched data to state
       } catch (error) {
         console.error('Error fetching dashboard data', error);
@@ -406,89 +406,92 @@ const Dashboard = () => {
         <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
         <div className="font-sans">
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-      {/* Bus Locations */}
-      <div
-        className="intro-step-bus-location bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/bus-tracking" className="flex flex-col items-center">
-          <FaBus className="text-green-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h4 className="text-xl font-semibold text-black mb-2 text-center">Bus Locations</h4>
-        </NavLink>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 custom-grid">
+        {/* Bus Locations */}
+        <div className="intro-step-bus-location bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/bus-tracking" className="flex flex-col items-center mt-4">
+            <FaBus className="text-green-500 text-2xl mb-2" />
+            <h4 className="text-xs sm:text-xl font-semibold text-black mb-2 text-center">Bus Locations</h4>
+          </NavLink>
+        </div>
+
+        {/* Meeting */}
+        <div className="intro-step-meeting bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/managemeeting" className="flex flex-col items-center">
+            <FaUsers className="text-purple-500 text-2xl mb-2" />
+            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Meetings</h2>
+            <p className="text-xl font-bold text-black">{dashboardData.totalMeetings}</p>
+          </NavLink>
+        </div>
+
+        {/* Attendance */}
+        <div className="intro-step-attendance bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/studentattendance" className="flex flex-col items-center">
+            <FaChalkboardTeacher className="text-yellow-500 text-2xl mb-2" />
+            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Attendance</h2>
+            <p className="text-xl font-bold text-black">0</p>
+          </NavLink>
+        </div>
+
+        {/* Fee Total Received */}
+        <div className="intro-step-fee-received bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/fees-details" className="flex flex-col items-center">
+            <FaMoneyBillAlt className="text-blue-500 text-2xl mb-2" />
+            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Fee Received</h2>
+            <p className="text-xl font-bold text-black">
+              <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPaid}
+            </p>
+          </NavLink>
+        </div>
+
+        {/* Fee Pending */}
+        <div className="intro-step-fee-pending bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/fees-details" className="flex flex-col items-center">
+            <FaClipboardList className="text-red-500 text-2xl mb-2" />
+            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Fee Pending</h2>
+            <p className="text-xl font-bold text-black">
+              <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPending}
+            </p>
+          </NavLink>
+        </div>
+
+        {/* Total Fee */}
+        <div className="intro-step-total-fee bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+          <NavLink to="/fees-details" className="flex flex-col items-center">
+            <FaFileInvoiceDollar className="text-indigo-500 text-2xl mb-2" />
+            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Total Fee</h2>
+            <p className="text-xl font-bold text-black">
+              <span className="text-sm text-blue-500">₹</span>{dashboardData.totalAmount}
+            </p>
+          </NavLink>
+        </div>
       </div>
 
-      {/* Meeting */}
-      <div
-        className="intro-step-meeting bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/managemeeting" className="flex flex-col items-center">
-          <FaUsers className="text-purple-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h2 className="font-semibold text-xl text-black mb-2">Meetings</h2>
-          <p className="text-xl font-bold text-black">{dashboardData.totalMeetings}</p>
-        </NavLink>
-      </div>
-
-      {/* Attendance */}
-      <div
-        className="intro-step-attendance bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/studentattendance" className="flex flex-col items-center">
-          <FaChalkboardTeacher className="text-yellow-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h2 className="font-semibold text-xl text-black mb-2">Attendance</h2>
-          <p className="text-xl font-bold text-black">0</p>
-        </NavLink>
-      </div>
-
-      {/* Fee Total Received */}
-      <div
-        className="intro-step-fee-received bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/fees-details" className="flex flex-col items-center">
-          <FaMoneyBillAlt className="text-blue-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h2 className="font-semibold text-xl text-black mb-2">Fee Received</h2>
-          <p className="text-xl font-bold text-black">
-          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPaid}
-        </p>        </NavLink>
-      </div>
-
-      {/* Fee Pending */}
-      <div
-        className="intro-step-fee-pending bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/fees-details" className="flex flex-col items-center">
-          <FaClipboardList className="text-red-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h2 className="font-semibold text-xl text-black mb-2">Fee Pending</h2>
-          <p className="text-xl font-bold text-black">
-          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPending}
-        </p>        </NavLink>
-      </div>
-
-      {/* Total Fee */}
-      <div
-        className="intro-step-total-fee bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
-      >
-        <NavLink to="/fees-details" className="flex flex-col items-center">
-          <FaFileInvoiceDollar className="text-indigo-500 text-2xl mb-2" /> {/* Smaller icon */}
-          <h2 className="font-semibold text-xl text-black mb-2">Total Fee</h2>
-          <p className="text-xl font-bold text-black">
-          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalAmount}
-        </p>
-        </NavLink>
-      </div>
-    </div>
+      <style>
+      {`
+        @media (min-width: 400px) and (max-width: 700px) {
+          .custom-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 6px;
+          }
+        }
+      `}
+    </style>
+    
 
 
 
             {/* Dashboard Cards */}
-            <div className="grid sm:grid-cols-2 mt-4 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 mt-4 md:grid-cols-3 lg:grid-cols-4 gap-6 custom-grid">
 
             <div
             className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-add-student" // Add this class for highlighting
           >
             <NavLink to="/studentadmission" className="flex flex-col items-center">
             <FaUserPlus className="text-4xl text-white mb-3" /> {/* Icon for Admission */}
-            <h2 className="font-semibold text-xl text-white">Add A Studnet</h2>
-              <p className="text-gray-200">Studnet Form</p>
+            <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Add A Studnet</h2>
+              <p className="text-gray-200 text-xs sm:text-xl">Studnet Form</p>
               </NavLink>
           </div>
 
@@ -498,8 +501,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/managestudent" className="flex flex-col items-center">
                   <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
-                  <h2 className="font-semibold text-xl text-white">Students</h2>
-                  <p className="text-gray-200">Total Students</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Students</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Students</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalStudents}</p>
                   </NavLink>
               </div>
@@ -511,8 +514,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/teacher" className="flex flex-col items-center">
                   <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
-                  <h2 className="font-semibold text-xl text-white">Teachers</h2>
-                  <p className="text-gray-300">Total Teachers</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Teachers</h2>
+                  <p className="text-gray-300 text-xs sm:text-xl">Total Teachers</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalTeachers}</p>
                 </NavLink>
               </div>
@@ -522,8 +525,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/parentlist" className="flex flex-col items-center">
                   <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
-                  <h2 className="font-semibold text-xl text-white">Parents</h2>
-                  <p className="text-gray-200">Total Parents</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Parents</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Parents</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalParents}</p>
                 </NavLink>
               </div>
@@ -534,8 +537,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/staffs" className="flex flex-col items-center">
                   <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
-                  <h2 className="font-semibold text-xl text-white">Staffs</h2>
-                  <p className="text-gray-200">Total Staffs</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Staffs</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Staffs</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalStaffs}</p>
                 </NavLink>
               </div>
@@ -545,8 +548,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/subjectlist" className="flex flex-col items-center">
                   <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
-                  <h2 className="font-semibold text-xl text-white">Subjects</h2>
-                  <p className="text-gray-200">Total Subjects</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Subjects</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Subjects</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalSubjects}</p>
                 </NavLink>
               </div>
@@ -556,8 +559,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/classlist" className="flex flex-col items-center">
                   <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
-                  <h2 className="font-semibold text-xl text-white">Classes</h2>
-                  <p className="text-gray-200">Total Classes</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Classes</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Classes</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalClasses}</p>
                 </NavLink>
               </div>
@@ -569,8 +572,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/sections" className="flex flex-col items-center">
                   <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
-                  <h2 className="font-semibold text-xl text-white">Sections</h2>
-                  <p className="text-gray-200">Total Sections</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Sections</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Sections</p>
                   <p className="text-xl font-bold text-white">8</p>
                 </NavLink>
               </div>
@@ -580,8 +583,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/holidays" className="flex flex-col items-center">
                   <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
-                  <h2 className="font-semibold text-xl text-white">Holidays</h2>
-                  <p className="text-gray-200">Total Holidays</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Holidays</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Total Holidays</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalHolidays}</p>
                 </NavLink>
               </div>
@@ -591,8 +594,8 @@ const Dashboard = () => {
               >
                 <NavLink to="/classroutinelist" className="flex flex-col items-center">
                   <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
-                  <h2 className="font-semibold text-xl text-white">Total Routine</h2>
-                  <p className="text-gray-200">Student Routine</p>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Total Routine</h2>
+                  <p className="text-gray-200 text-xs sm:text-xl">Student Routine</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalRoutines}</p>
 
                 </NavLink>
@@ -603,7 +606,7 @@ const Dashboard = () => {
               >
                 <NavLink to="/generateid" className="flex flex-col items-center">
                   <FaLaptopCode className="text-4xl text-white mb-3" />
-                  <h2 className="font-semibold text-xl text-white">Meet</h2>
+                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Meet</h2>
                 </NavLink>
               </div>
             </div>
