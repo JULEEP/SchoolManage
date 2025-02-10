@@ -10,6 +10,8 @@ const StudentList = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const studentsPerPage = 10;
   
 
   // Fetch students
@@ -85,6 +87,15 @@ const StudentList = () => {
     document.body.removeChild(link);
   };
 
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = filteredStudents.slice(
+    indexOfFirstStudent,
+    indexOfLastStudent
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
   return (
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar Overlay */}
@@ -206,9 +217,9 @@ const StudentList = () => {
             </thead>
             <tbody>
               {filteredStudents.length > 0 ? (
-                filteredStudents.map((student, index) => (
+                currentStudents.map((student, index) => (
                   <tr key={student._id}>
-                    <td className="px-4 py-2 border-b">{index + 1}</td>
+                    <td className="px-4 py-2 border-b">{indexOfFirstStudent + index + 1}</td>
                     <td className="px-4 py-2 border-b">{student.firstName}</td>
                     <td className="px-4 py-2 border-b">{student.lastName}</td>
                     <td className="px-4 py-2 border-b">{student.roll}</td>
@@ -237,6 +248,24 @@ const StudentList = () => {
               )}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center mt-4">
+          {Array.from(
+            { length: Math.ceil(filteredStudents.length / studentsPerPage) },
+            (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => paginate(index + 1)}
+                className={`mx-1 px-3 py-1 rounded ${
+                  currentPage === index + 1
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-300"
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>
