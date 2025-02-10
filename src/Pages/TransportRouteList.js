@@ -6,72 +6,76 @@ import { toast, ToastContainer } from 'react-toastify'; // Importing toast and T
 import 'react-toastify/dist/ReactToastify.css'; // Importing the toast styles
 
 const TransportRouteListPage = () => {
-  const [routeList, setRouteList] = useState([]);
+  const [busList, setBusList] = useState([]); // Renamed to busList
   const [search, setSearch] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
   const [dateFilter, setDateFilter] = useState(""); // New state for date filter
   const [startDate, setStartDate] = useState(""); // Start date for custom filter
   const [endDate, setEndDate] = useState(""); // End date for custom filter
-  const [filteredRoutes, setFilteredRoutes] = useState([]);
+  const [filteredBuses, setFilteredBuses] = useState([]); // Renamed to filteredBuses
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [itemsPerPage] = useState(5); // Number of items per page
 
   useEffect(() => {
-    // Fetch route list data
-    const fetchRoutes = async () => {
+    // Fetch bus data from the new API
+    const fetchBuses = async () => {
       try {
-        const response = await axios.get(
-          "https://school-backend-1-2xki.onrender.com/api/admin/get-transport-route"
-        );
-        setRouteList(response.data.routes); // Update with the new data structure
+        const response = await axios.get("http://localhost:4000/api/bus/get-all-buses");
+        setBusList(response.data.buses); // Update with the new data structure
       } catch (error) {
-        console.error("Error fetching route list:", error);
-        toast.error("Error fetching route list. Please try again later."); // Toast notification on error
+        console.error("Error fetching bus data:", error);
       }
     };
 
-    fetchRoutes();
+    fetchBuses();
   }, []);
 
-  const filterByDate = (routes) => {
+  const filterByDate = (buses) => {
     const today = new Date().setHours(0, 0, 0, 0); // Midnight today
     const yesterday = new Date(today - 24 * 60 * 60 * 1000); // Midnight yesterday
   
-    return routes.filter(route => {
-      const routeDate = new Date(route.date).setHours(0, 0, 0, 0); // Normalize to midnight
+    return buses.filter(bus => {
+      const busDate = new Date(bus.createdAt).setHours(0, 0, 0, 0); // Normalize to midnight
   
       switch (dateFilter) {
         case "today":
-          return routeDate === today;
+          return busDate === today;
         case "yesterday":
-          return routeDate === yesterday;
+          return busDate === yesterday;
         case "custom":
-          // Ensure that the start and end date comparisons are set to include the entire range of the day
           const start = new Date(startDate).setHours(0, 0, 0, 0); // Start of the selected start date
           const end = new Date(endDate).setHours(23, 59, 59, 999); // End of the selected end date
-  
-          // Check if the route's date is within the start and end range
-          return routeDate >= start && routeDate <= end;
+          return busDate >= start && busDate <= end;
         default:
-          return true; // If no filter is applied, show all
+          return true;
       }
     });
   };
-  
-  // Filter routes based on search term
+
+  // Filter buses based on search term
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
 
   useEffect(() => {
-    // Apply search and date filter to routes
-    const filteredBySearch = routeList.filter(route =>
-      route.routeTitle ? route.routeTitle.toLowerCase().includes(search.toLowerCase()) : true
+    // Apply search and date filter to buses
+    const filteredBySearch = busList.filter(bus =>
+      bus.busNumber ? bus.busNumber.toLowerCase().includes(search.toLowerCase()) : true
     );
 
     // Apply date filter
-    const finalFilteredRoutes = filterByDate(filteredBySearch);
-    setFilteredRoutes(finalFilteredRoutes);
+    const finalFilteredBuses = filterByDate(filteredBySearch);
+    setFilteredBuses(finalFilteredBuses);
 
-  }, [routeList, search, dateFilter, startDate, endDate]);
+  }, [busList, search, dateFilter, startDate, endDate]);
+
+  // Paginate buses
+  const indexOfLastBus = currentPage * itemsPerPage;
+  const indexOfFirstBus = indexOfLastBus - itemsPerPage;
+  const currentBuses = filteredBuses.slice(indexOfFirstBus, indexOfLastBus);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex min-h-screen">
@@ -104,7 +108,7 @@ const TransportRouteListPage = () => {
         {/* Title and Filter */}
         <div className="flex flex-wrap gap-8 px-6 mt-4">
           <div className="w-full">
-            <h2 className="text-lg text-gray-600 mb-4">Routes List</h2>
+            <h2 className="text-lg text-gray-600 mb-4">Buses List</h2>
 
             {/* Search Bar */}
             <input
@@ -156,49 +160,47 @@ const TransportRouteListPage = () => {
 
             <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md">
               <table className="min-w-full table-auto border border-gray-200">
-                <thead className="bg-gray-200">
+                <thead className="bg-purple-600">
                   <tr>
-                    <th className="px-4 py-2 text-left text-gray-600">SL</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Route Title</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Driver</th>
-                    <th className="px-4 py-2 text-left text-gray-600">Driver Mobile</th>
-                    <th className="px-6 py-2 text-left text-gray-600">Stops & Arrival Time</th> {/* Merged column */}
-                    <th className="px-4 py-2 text-left text-gray-600">Date</th>
-                    <th className="px-6 py-2 text-left text-gray-600">Created At</th> {/* Increased width */}
+                    <th className="px-4 py-2 text-left text-white">SL</th>
+                    <th className="px-4 py-2 text-left text-white">Bus Number</th>
+                    <th className="px-4 py-2 text-left text-white">Route Stops</th>
+                    <th className="px-6 py-2 text-left text-white">Current Location</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredRoutes.length === 0 ? (
+                  {currentBuses.length === 0 ? (
                     <tr>
-                      <td colSpan="9" className="text-center py-4 text-gray-500">
+                      <td colSpan="4" className="text-center py-4 text-gray-500">
                         No Data Available In Table
                       </td>
                     </tr>
                   ) : (
-                    filteredRoutes.map((route, index) => (
-                      <tr key={route._id} className="border-t">
+                    currentBuses.map((bus, index) => (
+                      <tr key={bus._id} className="border-t">
                         <td className="px-4 py-2 text-sm sm:text-base">{index + 1}</td>
-                        <td className="px-4 py-2 text-sm sm:text-base">{route.routeTitle || "N/A"}</td>
-                        <td className="px-4 py-2 text-sm sm:text-base">{route.driver?.name || "N/A"}</td>
-                        <td className="px-4 py-2 text-sm sm:text-base">{route.driver?.mobileNumber || "N/A"}</td>
-                        <td className="px-6 py-2 text-sm sm:text-base">
-                          {route.stops && route.stops.length > 0 ? (
-                            route.stops.map((stop, stopIndex) => (
+                        <td className="px-4 py-2 text-sm sm:text-base">{bus.busNumber || "N/A"}</td>
+                        <td className="px-4 py-2 text-sm sm:text-base">
+                          {bus.route && bus.route.length > 0 ? (
+                            bus.route.map((stop, stopIndex) => (
                               <div
                                 key={stop._id}
                                 className="inline-block mr-2 mb-1 sm:mb-0 text-ellipsis overflow-hidden whitespace-nowrap"
                               >
                                 {stop.stopName} {stop.arrivalTime && `- ${stop.arrivalTime}`}
-                                {stopIndex < route.stops.length - 1 && ", "}
+                                {stopIndex < bus.route.length - 1 && ", "}
                               </div>
                             ))
                           ) : (
                             "No Stops Available"
                           )}
                         </td>
-                        <td className="px-4 py-2 text-sm sm:text-base">{new Date(route.date).toLocaleDateString() || "N/A"}</td>
                         <td className="px-6 py-2 text-sm sm:text-base">
-                          {route.createdAt ? new Date(route.createdAt).toLocaleString() : "N/A"}
+                          {bus.currentLocation ? (
+                            `Lat: ${bus.currentLocation.lat}, Lng: ${bus.currentLocation.lng}`
+                          ) : (
+                            "Location Unknown"
+                          )}
                         </td>
                       </tr>
                     ))
@@ -207,16 +209,34 @@ const TransportRouteListPage = () => {
               </table>
             </div>
 
+            {/* Pagination */}
+            <div className="mt-4 flex justify-between items-center">
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                className="px-4 py-2 bg-purple-600 text-white rounded disabled:bg-gray-300"
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span className="text-gray-600">
+                Page {currentPage} of {Math.ceil(filteredBuses.length / itemsPerPage)}
+              </span>
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                className="px-4 py-2 bg-purple-600 text-white rounded disabled:bg-gray-300"
+                disabled={currentPage === Math.ceil(filteredBuses.length / itemsPerPage)}
+              >
+                Next
+              </button>
+            </div>
+
             {/* Footer */}
             <div className="mt-4 text-gray-500 text-sm px-6">
-              Showing {filteredRoutes.length} entries
+              Showing {currentBuses.length} entries
             </div>
           </div>
         </div>
       </div>
-
-      {/* ToastContainer for showing notifications */}
-      <ToastContainer />
     </div>
   );
 };

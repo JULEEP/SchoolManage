@@ -134,19 +134,19 @@ const TeacherDashboard = () => {
 
           {/* Statistics Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6">
-            {[{ title: "Total Students", value: "120", icon: <FaUserGraduate className="text-3xl" />, link: "/teacher-students" },
-              { title: "Total Homework", value: "45", icon: <FaTasks className="text-3xl" />, link: "/teacher-homeworklist" },
-              { title: "Total Attendance", value: "98%", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-attendance" },
-              { title: "Total Leave", value: "12", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-leave" },
-              { title: "Total Subjects", value: "6", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-subjects" },
-              { title: "Total Projects", value: "5", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
-              { title: "Total Meetings", value: "15", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-coming-soon" },
-              { title: "Total Reports", value: "22", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
-              { title: "Total Feedback", value: "30", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-coming-soon" },
-              { title: "Total Queries", value: "50", icon: <FaQuestionCircle className="text-3xl" />, link: "/teacher-queries" },
-              { title: "Total Holidays", value: "5", icon: <FaCalendarAlt className="text-3xl" />, link: "/teacher-holidays" },
-              { title: "Live Classes", value: "", icon: <FaLaptopCode className="text-3xl" />, link: "/generateid" },
-              { title: "Transport", value: "5", icon: <FaBusAlt className="text-3xl" />, link: "/teacher-transport" },
+            {[{ title: "Total Students", value: "0", icon: <FaUserGraduate className="text-3xl" />, link: "/teacher-students" },
+              { title: "Total Homework", value: "0", icon: <FaTasks className="text-3xl" />, link: "/teacher-homeworklist" },
+              { title: "Total Attendance", value: "0", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-attendance" },
+              { title: "Total Leave", value: "0", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-leave" },
+              { title: "Total Subjects", value: "0", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-subjects" },
+              { title: "Total Projects", value: "0", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
+              { title: "Total Meetings", value: "0", icon: <FaPlaneDeparture className="text-3xl" />, link: "/teacher-coming-soon" },
+              { title: "Total Reports", value: "0", icon: <FaTasks className="text-3xl" />, link: "/teacher-coming-soon" },
+              { title: "Total Feedback", value: "0", icon: <FaClipboardList className="text-3xl" />, link: "/teacher-coming-soon" },
+              { title: "Total Queries", value: "0", icon: <FaQuestionCircle className="text-3xl" />, link: "/teacher-queries" },
+              { title: "Total Holidays", value: "0", icon: <FaCalendarAlt className="text-3xl" />, link: "/teacher-holidays" },
+              { title: "Live Classes", value: "0", icon: <FaLaptopCode className="text-3xl" />, link: "/generateid" },
+              { title: "Transport", value: "0", icon: <FaBusAlt className="text-3xl" />, link: "/teacher-transport" },
 
 
 

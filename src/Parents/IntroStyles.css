@@ -1,0 +1,64 @@
+/* Small, Rounded, Stylish Buttons for Intro.js */
+.introjs-button {
+    padding: 6px 14px !important; /* Smaller button size */
+    border-radius: 20px !important; /* Rounded corners */
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Next Button */
+  .introjs-nextbutton,
+  .custom-next-button {
+    background-color: #6b46c1 !important; /* Purple color */
+    color: white !important;
+    border: none !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .introjs-nextbutton:hover,
+  .custom-next-button:hover {
+    background-color: #553c9a !important; /* Darker purple on hover */
+  }
+  
+  /* Previous Button */
+  .introjs-prevbutton,
+  .custom-prev-button {
+    background-color: #6b46c1 !important;
+    color: white !important;
+    border: none !important;
+    margin-right: 10px !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .introjs-prevbutton:hover,
+  .custom-prev-button:hover {
+    background-color: #553c9a !important;
+  }
+  
+  /* Make the tooltip box rounded */
+  .introjs-tooltip {
+    border-radius: 12px !important;
+  }
+  
+  /* Change the highlight border to rounded */
+  .introjs-highlight-element {
+    border-radius: 10px !important;
+  }
+  
+  /* Dim the overlay slightly */
+  .introjs-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  /* Hide step numbers in Intro.js */
+.introjs-helperNumberLayer {
+  display: none !important;
+}
+
+/* Hide the "..." dots from tooltip */
+.introjs-bullets {
+  display: none !important;
+}
+
+  

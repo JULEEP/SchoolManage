@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import axios from 'axios'; // We'll use axios to make API calls
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom'; // For navigation links
-import { FaUserGraduate, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaMoneyBillAlt, FaUserFriends, FaRegClock, FaUsers, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide, FaLaptopCode } from 'react-icons/fa'; // For icons
+import { FaUserGraduate, FaUserPlus, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaUserFriends, FaRegClock, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide, FaLaptopCode, FaBus, FaUsers, FaClipboardList, FaMoneyBillAlt, FaFileInvoiceDollar } from 'react-icons/fa'; // For icons
 import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 
@@ -59,6 +59,41 @@ const Dashboard = () => {
     intro.setOptions({
       steps: [
         {
+          element: ".intro-step-bus-location",
+          intro: "This section helps you track bus locations in real-time.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-meeting",  
+          intro: "This section allows you to manage and schedule meetings.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-attendance",
+          intro: "This section lets you manage student attendance records.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-fee-received",
+          intro: "This section shows the total fees received so far.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-fee-pending",
+          intro: "This section shows the total pending fees.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-total-fee",
+          intro: "This section shows the total fee amount collected.",
+          position: "top"
+        },
+        {
+          element: ".intro-step-add-student",  // Student Section highlight
+          intro: "This section allows you to add the student.",
+          position: "top"
+        },
+        {
           element: ".intro-step-student",  // Student Section highlight
           intro: "This section allows you to manage the student details.",
           position: "top"
@@ -89,13 +124,8 @@ const Dashboard = () => {
           position: "top"
         },
         {
-          element: ".intro-step-section",  // Sections Section highlight
-          intro: "This section allows you to manage sections.",
-          position: "top"
-        },
-        {
-          element: ".intro-step-lesson",  // Lesson Section highlight
-          intro: "This section allows you to manage lessons.",
+          element: ".intro-step-section",  // Classes Section highlight
+          intro: "This section allows you to manage section details.",
           position: "top"
         },
         {
@@ -104,23 +134,13 @@ const Dashboard = () => {
           position: "top"
         },
         {
-          element: ".intro-step-fees",  // Fees Record Section highlight
-          intro: "This section allows you to manage fees records.",
-          position: "top"
-        },
-        {
           element: ".intro-step-routine",  // Routine Section highlight
           intro: "This section allows you to manage student routines.",
           position: "top"
         },
         {
-          element: ".intro-step-vehicles",  // Vehicles Section highlight
-          intro: "This section allows you to track the school vehicles.",
-          position: "top"
-        },
-        {
-          element: ".intro-step-meeting",  // Vehicles Section highlight
-          intro: "This section allows you to track the school vehicles.",
+          element: ".intro-step-start-meeting",  // Vehicles Section highlight
+          intro: "This section allows you to start a meeting.",
           position: "top"
         },
         {
@@ -183,6 +203,36 @@ const Dashboard = () => {
     fetchFeeDetails();
   }, []);
 
+  const [dashboardData, setDashboardData] = useState({
+    totalStudents: 0,
+    totalParents: 0,
+    totalTeachers: 0,
+    totalStaffs: 0,
+    totalSubjects: 0,
+    totalClasses: 0,
+    totalHolidays: 0,
+    totalMeetings: 0,
+    totalRoutines: 0,
+    totalPaid: 0,
+    totalPending: 0,
+    totalAmount: 0
+  });
+
+  // Fetch the dashboard data from the API
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/admin/get-alldashboard');
+        setDashboardData(response.data); // Set the fetched data to state
+      } catch (error) {
+        console.error('Error fetching dashboard data', error);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+
 
   useEffect(() => {
     const lineCtx = lineChartRef.current.getContext('2d');
@@ -229,6 +279,7 @@ const Dashboard = () => {
 
 
 
+  // Create and update the chart with real data
   useEffect(() => {
     const ctx = chartRef.current.getContext('2d');
 
@@ -241,14 +292,23 @@ const Dashboard = () => {
     chartInstanceRef.current = new Chart(ctx, {
       type: 'bar', // Bar chart type
       data: {
-        labels: ['Students', 'Teachers', 'Parents', 'Staffs', 'Subjects', 'Classes', 'Sections', 'Vehicles', 'Meetings'],
+        labels: ['Students', 'Teachers', 'Parents', 'Staffs', 'Subjects', 'Classes', 'Holidays', 'Meetings'], // Updated labels
         datasets: [
           {
             label: 'Count',
-            data: [0, 50, 0, 0, 10, 5, 8, 4, ""], // Example data
+            data: [
+              dashboardData.totalStudents,
+              dashboardData.totalTeachers,
+              dashboardData.totalParents,
+              dashboardData.totalStaffs,
+              dashboardData.totalSubjects,
+              dashboardData.totalClasses,
+              dashboardData.totalHolidays,
+              dashboardData.totalMeetings
+            ], // Use real data here
             backgroundColor: [
               '#ADD8E6', '#000000', '#FFB6C1', '#90EE90',
-              '#FFFFE0', '#D8BFD8', '#FFA500', '#40E0D0', '#ADD8E6'
+              '#FFFFE0', '#D8BFD8', '#FFA500', '#40E0D0'
             ],
           }
         ]
@@ -271,7 +331,7 @@ const Dashboard = () => {
         chartInstanceRef.current.destroy();
       }
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, [dashboardData]); // Re-run the chart update when dashboardData changes
 
 
   // Function to handle form input changes
@@ -346,8 +406,92 @@ const Dashboard = () => {
         <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
         <div className="font-sans">
 
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      {/* Bus Locations */}
+      <div
+        className="intro-step-bus-location bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/bus-tracking" className="flex flex-col items-center">
+          <FaBus className="text-green-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h4 className="text-xl font-semibold text-black mb-2 text-center">Bus Locations</h4>
+        </NavLink>
+      </div>
+
+      {/* Meeting */}
+      <div
+        className="intro-step-meeting bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/managemeeting" className="flex flex-col items-center">
+          <FaUsers className="text-purple-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h2 className="font-semibold text-xl text-black mb-2">Meetings</h2>
+          <p className="text-xl font-bold text-black">{dashboardData.totalMeetings}</p>
+        </NavLink>
+      </div>
+
+      {/* Attendance */}
+      <div
+        className="intro-step-attendance bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/studentattendance" className="flex flex-col items-center">
+          <FaChalkboardTeacher className="text-yellow-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h2 className="font-semibold text-xl text-black mb-2">Attendance</h2>
+          <p className="text-xl font-bold text-black">0</p>
+        </NavLink>
+      </div>
+
+      {/* Fee Total Received */}
+      <div
+        className="intro-step-fee-received bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/fees-details" className="flex flex-col items-center">
+          <FaMoneyBillAlt className="text-blue-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h2 className="font-semibold text-xl text-black mb-2">Fee Received</h2>
+          <p className="text-xl font-bold text-black">
+          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPaid}
+        </p>        </NavLink>
+      </div>
+
+      {/* Fee Pending */}
+      <div
+        className="intro-step-fee-pending bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/fees-details" className="flex flex-col items-center">
+          <FaClipboardList className="text-red-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h2 className="font-semibold text-xl text-black mb-2">Fee Pending</h2>
+          <p className="text-xl font-bold text-black">
+          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPending}
+        </p>        </NavLink>
+      </div>
+
+      {/* Total Fee */}
+      <div
+        className="intro-step-total-fee bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full"
+      >
+        <NavLink to="/fees-details" className="flex flex-col items-center">
+          <FaFileInvoiceDollar className="text-indigo-500 text-2xl mb-2" /> {/* Smaller icon */}
+          <h2 className="font-semibold text-xl text-black mb-2">Total Fee</h2>
+          <p className="text-xl font-bold text-black">
+          <span className="text-sm text-blue-500">₹</span>{dashboardData.totalAmount}
+        </p>
+        </NavLink>
+      </div>
+    </div>
+
+
+
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 mt-4 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            <div
+            className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-add-student" // Add this class for highlighting
+          >
+            <NavLink to="/studentadmission" className="flex flex-col items-center">
+            <FaUserPlus className="text-4xl text-white mb-3" /> {/* Icon for Admission */}
+            <h2 className="font-semibold text-xl text-white">Add A Studnet</h2>
+              <p className="text-gray-200">Studnet Form</p>
+              </NavLink>
+          </div>
+
               {/* Student Section (Light Blue) */}
               <div
                 className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-student" // Add this class for highlighting
@@ -356,8 +500,8 @@ const Dashboard = () => {
                   <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
                   <h2 className="font-semibold text-xl text-white">Students</h2>
                   <p className="text-gray-200">Total Students</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
+                  <p className="text-2xl font-bold text-white">{dashboardData.totalStudents}</p>
+                  </NavLink>
               </div>
 
 
@@ -369,7 +513,7 @@ const Dashboard = () => {
                   <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
                   <h2 className="font-semibold text-xl text-white">Teachers</h2>
                   <p className="text-gray-300">Total Teachers</p>
-                  <p className="text-2xl font-bold text-white">50</p>
+                  <p className="text-xl font-bold text-white">{dashboardData.totalTeachers}</p>
                 </NavLink>
               </div>
               {/* Parent Section (Light Red) */}
@@ -380,7 +524,7 @@ const Dashboard = () => {
                   <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
                   <h2 className="font-semibold text-xl text-white">Parents</h2>
                   <p className="text-gray-200">Total Parents</p>
-                  <p className="text-2xl font-bold text-white">0</p>
+                  <p className="text-xl font-bold text-white">{dashboardData.totalParents}</p>
                 </NavLink>
               </div>
 
@@ -392,7 +536,7 @@ const Dashboard = () => {
                   <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
                   <h2 className="font-semibold text-xl text-white">Staffs</h2>
                   <p className="text-gray-200">Total Staffs</p>
-                  <p className="text-2xl font-bold text-white">0</p>
+                  <p className="text-xl font-bold text-white">{dashboardData.totalStaffs}</p>
                 </NavLink>
               </div>
               {/* Subjects Section (Light Yellow) */}
@@ -403,7 +547,7 @@ const Dashboard = () => {
                   <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
                   <h2 className="font-semibold text-xl text-white">Subjects</h2>
                   <p className="text-gray-200">Total Subjects</p>
-                  <p className="text-2xl font-bold text-white">10</p>
+                  <p className="text-xl font-bold text-white">{dashboardData.totalSubjects}</p>
                 </NavLink>
               </div>
               {/* Classes Section (Light Purple) */}
@@ -414,7 +558,7 @@ const Dashboard = () => {
                   <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
                   <h2 className="font-semibold text-xl text-white">Classes</h2>
                   <p className="text-gray-200">Total Classes</p>
-                  <p className="text-2xl font-bold text-white">5</p>
+                  <p className="text-xl font-bold text-white">{dashboardData.totalClasses}</p>
                 </NavLink>
               </div>
 
@@ -427,22 +571,9 @@ const Dashboard = () => {
                   <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
                   <h2 className="font-semibold text-xl text-white">Sections</h2>
                   <p className="text-gray-200">Total Sections</p>
-                  <p className="text-2xl font-bold text-white">8</p>
+                  <p className="text-xl font-bold text-white">8</p>
                 </NavLink>
               </div>
-
-              {/* Lesson Section (Unique Gradient with Modern Touch) */}
-              <div
-                className="bg-gradient-to-r from-teal-400 via-purple-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-lesson" // Add this class for highlighting
-              >
-                <NavLink to="/lessonlist" className="flex flex-col items-center">
-                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Lesson */}
-                  <h2 className="font-semibold text-xl text-white">Lesson</h2>
-                  <p className="text-gray-200">View Lessons</p>
-                  <p className="text-2xl font-bold text-white">Explore Now</p>
-                </NavLink>
-              </div>
-
               {/* Holidays Section (Light Green) */}
               <div
                 className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-holidays" // Add this class for highlighting
@@ -451,19 +582,7 @@ const Dashboard = () => {
                   <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
                   <h2 className="font-semibold text-xl text-white">Holidays</h2>
                   <p className="text-gray-200">Total Holidays</p>
-                  <p className="text-2xl font-bold text-white">0</p>
-                </NavLink>
-              </div>
-
-              {/* Fees Record Section (Light Blue) */}
-              <div
-                className="bg-gradient-to-r from-teal-400 to-pink-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-fees" // Add this class for highlighting
-              >
-                <NavLink to="/fees-details" className="flex flex-col items-center">
-                  <FaDollarSign className="text-4xl text-white mb-3" /> {/* Icon for Fees Record */}
-                  <h2 className="font-semibold text-xl text-white">Fees Record</h2>
-                  <p className="text-gray-200">Total Fees Records</p>
-                  <p className="text-2xl font-bold text-white">0</p>
+                  <p className="text-2xl font-bold text-white">{dashboardData.totalHolidays}</p>
                 </NavLink>
               </div>
               {/* Routine Section (Unique Gradient with Modern Touch) */}
@@ -472,26 +591,15 @@ const Dashboard = () => {
               >
                 <NavLink to="/classroutinelist" className="flex flex-col items-center">
                   <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
-                  <h2 className="font-semibold text-xl text-white">Student Routine</h2>
+                  <h2 className="font-semibold text-xl text-white">Total Routine</h2>
                   <p className="text-gray-200">Student Routine</p>
-                  <p className="text-2xl font-bold text-white">View Routine</p>
-                </NavLink>
-              </div>
+                  <p className="text-2xl font-bold text-white">{dashboardData.totalRoutines}</p>
 
-
-
-              {/* Vehicles Section (Light Teal) */}
-              <div
-                className="bg-gradient-to-r from-teal-300 to-teal-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-vehicles" // Add this class for highlighting
-              >
-                <NavLink to="/bus-tracking" className="flex flex-col items-center">
-                  <FaCarSide className="text-4xl text-white mb-3" /> {/* Icon for Vehicles */}
-                  <h2 className="font-semibold text-xl text-white">Vehicles</h2>
                 </NavLink>
               </div>
 
               <div
-                className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-meeting"
+                className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-start-meeting"
               >
                 <NavLink to="/generateid" className="flex flex-col items-center">
                   <FaLaptopCode className="text-4xl text-white mb-3" />

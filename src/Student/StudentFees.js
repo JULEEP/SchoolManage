@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
 import StudentSidebar from "../Sidebar";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function StudentFees() {
   const [fees, setFees] = useState([]);
@@ -49,26 +50,34 @@ function StudentFees() {
   const totalPages = Math.ceil(filteredFees.length / feesPerPage);
 
   const downloadInvoice = (fee) => {
-    const doc = new jsPDF();
-  
-    // Title
-    doc.setFontSize(18);
-    doc.text("Fee Receipt", 14, 20);
-  
-    // Fee Details
-    doc.setFontSize(12);
-    doc.text(`Invoice Number: ${String(fee.invoiceNumber)}`, 14, 30);
-    doc.text(`Fees Type: ${String(fee.feesType)}`, 14, 40);
-    doc.text(`Amount: ${String(fee.amount)}`, 14, 50);
-    doc.text(`Paid Amount: ${String(fee.paidAmount)}`, 14, 60);
-    doc.text(`Pending Payment: ${String(fee.pendingPayment)}`, 14, 70);
-    doc.text(`Status: ${String(fee.status)}`, 14, 80);
-    doc.text(`Payment Method: ${String(fee.paymentMethod)}`, 14, 90);
-    doc.text(`Paid Date: ${new Date(fee.paidDate).toLocaleDateString()}`, 14, 100);
-  
-    // Save PDF
-    doc.save(`Invoice_${String(fee.invoiceNumber)}.pdf`);
-  };
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text("Fee Receipt", 14, 20);
+
+  const tableColumn = ["Field", "Details"];
+  const tableRows = [
+    ["Invoice Number", fee.invoiceNumber],
+    ["Fees Type", fee.feesType],
+    ["Amount", fee.amount],
+    ["Paid Amount", fee.paidAmount],
+    ["Pending Payment", fee.pendingPayment],
+    ["Status", fee.status],
+    ["Payment Method", fee.paymentMethod],
+    ["Paid Date", new Date(fee.paidDate).toLocaleDateString()],
+  ];
+
+  autoTable(doc, {
+    startY: 30,
+    head: [tableColumn],
+    body: tableRows,
+    theme: "grid",
+  });
+
+  doc.save(`Invoice_${fee.invoiceNumber}.pdf`);
+};
+
+
   
   return (
     <div className="min-h-screen flex bg-gray-100">

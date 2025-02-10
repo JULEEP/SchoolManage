@@ -236,29 +236,6 @@ const Sidebar = () => {
                   </ul>
                 )}
               </li>
-
-              {/* Content Section */}
-              <li>
-                <div className="flex items-center cursor-pointer" onClick={() => setIsContentSectionOpen(!isContentSectionOpen)}>
-                  <span className="text-sm font-semibold text-gray-300">Lession/Topic</span>
-                  {isContentSectionOpen ? <FaChevronDown className="ml-2 text-white" /> : <FaChevronRight className="ml-2 text-white" />}
-                </div>
-                {isContentSectionOpen && (
-                  <ul className="pl-4 space-y-2">
-                    <li>
-                      <NavLink to="/lesson" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Lesson</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/topic" className="flex items-center text-sm text-white hover:text-gray-400">
-                        <span>Add Topic</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
               {/* Fees Section */}
               <li>
                 <div className="flex items-center cursor-pointer" onClick={() => setIsFeesSectionOpen(!isFeesSectionOpen)}>

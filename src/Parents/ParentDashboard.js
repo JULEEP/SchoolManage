@@ -12,6 +12,7 @@ import attendance from "../Images/attendance.jpeg";
 import student from "../Images/student.jpeg";
 import IntroJs from "intro.js";
 import "intro.js/introjs.css"; // Intro.js CSS import
+import './IntroStyles.css'
 
 const book = 'https://static.vecteezy.com/system/resources/previews/003/812/674/large_2x/pink-book-closed-free-vector.jpg';
 const transport = 'https://static.vecteezy.com/system/resources/previews/002/373/903/large_2x/cartoon-school-bus-with-children-free-vector.jpg';
@@ -19,7 +20,9 @@ const fees = 'https://th.bing.com/th/id/R.9e223a9b2c0ef9a333764f8c4a87dbd2?rik=f
 const pendingHomework = 'https://th.bing.com/th/id/R.c1a735d2fa8cba39f15d088f3ea069f0?rik=fa6UqGzr2a49ww&riu=http%3a%2f%2fwikiclipart.com%2fwp-content%2fuploads%2f2017%2f09%2fStudent-thinking-students-images-clip-art-clipart-collection.jpg&ehk=bL3ekc6319OyCeNLIQldxn6RYl7IQRc6q2a73cPEnhg%3d&risl=&pid=ImgRaw&r=0';
 const queries = 'https://cdn-icons-png.flaticon.com/512/5013/5013104.png';
 const holidays = 'https://th.bing.com/th/id/R.afb1e164709a7fa37526f8c4720ec764?rik=RvY3GKnJUEQkWA&riu=http%3a%2f%2fclipartbarn.com%2fwp-content%2fuploads%2f2016%2f10%2fHappy-holidays-holiday-animated-clipart-kid.jpg&ehk=JmTBybzuHIjgczoFTumv%2bSCP5o3VCJJYB98KmZx37QY%3d&risl=&pid=ImgRaw&r=0';
-const liveMeeting='https://media.tenor.com/33gJyOCSrIYAAAAj/live.gif'
+const liveMeeting='https://www.corporatevision-news.com/wp-content/uploads/2020/10/virtual-meeting.jpg';
+const liveClasses='https://cdn.dribbble.com/users/1681709/screenshots/4735856/gif.gif'
+
 
 const bestCategories = [
   { img: subject, name: "Subjects", link: "/parent-subjects" },
@@ -35,6 +38,8 @@ const bestCategories = [
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
   { img: holidays, name: "Holidays", link: "/children-holidays" },
   { img: liveMeeting, name: "Live Meetings", link: "/parent-live-meeting" },
+  { img: liveClasses, name: "Live Classes", link: "/parent-live-meeting" },
+
 
 ];
 const ParentDashboard = () => {
@@ -56,45 +61,43 @@ const ParentDashboard = () => {
         ...bestCategories.map((category, index) => ({
           element: `.category-box-${index}`,
           intro: `This is the ${category.name} section.`,
-          position: "right"
+          position: "right",
         })),
         {
-          element: ".intro-step-comparison",  // Comparison box highlight
+          element: ".intro-step-comparison",
           intro: "Here you can compare your child's performance with the topper.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-subjects",  // Subjects table highlight
+          element: ".intro-step-subjects",
           intro: "This table displays your child's subjects, their teachers, and the class timing.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-teachers",  // Teachers table highlight
+          element: ".intro-step-teachers",
           intro: "Here you can see the list of teachers along with their subjects and contact details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-classes",  // Classes table highlight
+          element: ".intro-step-classes",
           intro: "This table shows the classes, teachers, and the number of students in each class.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-transport",  // Transport Routes table highlight
+          element: ".intro-step-transport",
           intro: "This table shows the transport routes, drivers, stops, and arrival times for today.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-fee-summary",  // Fee Summary section highlight
+          element: ".intro-step-fee-summary",
           intro: "This section displays the total paid and pending fee amounts.",
-          position: "top"
+          position: "top",
         },
       ],
       highlightClass: "rounded",
-      nextLabel: "Next",
-      prevLabel: "Previous",
+      nextLabel: "<span class='custom-next-button'>Next</span>",
+      prevLabel: "<span class='custom-prev-button'>Previous</span>",
       overlayOpacity: 0.8,
-      showStepNumbers: true,
-      disableInteraction: true,
     });
 
     intro.onbeforechange((targetElement) => {
@@ -102,7 +105,8 @@ const ParentDashboard = () => {
     });
 
     intro.start();
-  }, []);
+  }, [bestCategories]);
+
 
 
   const toggleSidebar = () => {
@@ -514,3 +518,5 @@ const ParentDashboard = () => {
 };
 
 export default ParentDashboard;
+
+
