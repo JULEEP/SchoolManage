@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import StudentSidebar from "../Sidebar";
+import ParentSidebar from './ParentSidebar';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
-const LiveClass = () => {
+const MyChildLiveClass = () => {
   const [liveClasses, setLiveClasses] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const LiveClass = () => {
       <div className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`} onClick={() => setIsSidebarOpen(false)}></div>
       
       <div className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <StudentSidebar />
+        <ParentSidebar />
       </div>
       
       <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
@@ -98,4 +98,4 @@ const LiveClass = () => {
   );
 };
 
-export default LiveClass;
+export default MyChildLiveClass;

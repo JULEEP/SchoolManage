@@ -237,6 +237,7 @@
   import LiveMeetingTeacher from './Teacher/LiveMeetingTeacher';
   import TeacherMeetings from './Teacher/TeacherMeetings';
   import StudentMeeting from './Student/StudentMeetings';
+import MyChildLiveClass from './Parents/MyChildOnlineClasses';
 
   function App() {
     return (
@@ -469,7 +470,7 @@
             <Route path="/ask-queries" element={<CommunicationForm/>} />
             <Route path="/children-holidays" element={<ParentHolidayPage/>} />
             <Route path="/mychild-complaint" element={<MyChildComplaintPage/>} />
-            <Route path='/parent-live-meeting' element={<LiveMeeting/>} />
+            <Route path='/mychile-live-class' element={<MyChildLiveClass/>} />
             <Route path="/mychild-transport" element={<ParentBusTracking/>} />
 
 

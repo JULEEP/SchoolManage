@@ -37,8 +37,7 @@ const bestCategories = [
   { img: pendingHomework, name: "Pending HW", link: "/mychild-pendingleave" },
   { img: queries, name: "Ask Queries", link: "/ask-queries" },
   { img: holidays, name: "Holidays", link: "/children-holidays" },
-  { img: liveMeeting, name: "Live Meetings", link: "/parent-live-meeting" },
-  { img: liveClasses, name: "Live Classes", link: "/parent-live-meeting" },
+  { img: liveClasses, name: "Live Classes", link: "/mychile-live-class" },
 
 
 ];

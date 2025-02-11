@@ -136,7 +136,7 @@ const Sidebar = () => {
                       </NavLink>
                     </li>
                     <li>
-                    <NavLink to="/add-meeting" className="flex items-center text-sm text-white hover:text-gray-400">
+                    <NavLink to="/meetform" className="flex items-center text-sm text-white hover:text-gray-400">
                       <span>Arrenge Meeting</span>
                     </NavLink>
                   </li>
@@ -330,7 +330,7 @@ const Sidebar = () => {
                       </NavLink>
                     </li>
                     <li>
-                    <NavLink to="/meetings" className="flex items-center text-sm text-white hover:text-gray-400">
+                    <NavLink to="/managemeeting" className="flex items-center text-sm text-white hover:text-gray-400">
                       <span>View Meetings</span>
                     </NavLink>
                   </li>
@@ -356,6 +356,11 @@ const Sidebar = () => {
                         <span>View Complaints</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/studentmeeting" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Student Online Classes</span>
+                    </NavLink>
+                  </li>
                   </ul>
                 )}
               </li>
@@ -764,17 +769,6 @@ const Sidebar = () => {
             </ul>
           )}
         </li>
-
-         <li className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8">
-                  <NavLink
-                    to="/meetform"
-                    className="flex items-center text-white hover:text-gray-400"
-                    activeClassName="bg-gray-700 rounded-full"
-                  >
-                    <FaLaptopCode className="mr-3 text-white" />
-                    Live Meet Form
-                  </NavLink>
-                </li>
 
         {/* Admin Setting */}
         <li className="flex items-center text-lg p-3 rounded-md hover:bg-gray-700 mt-8">

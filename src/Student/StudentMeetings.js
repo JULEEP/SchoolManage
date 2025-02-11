@@ -17,10 +17,12 @@ const StudentMeeting = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/teacher-student");
+        // Make sure to use the correct API endpoint
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/students/my-meetings/677904859d0da6e3bee4ba2e"); // Update with the correct student ID or dynamic value
         const data = await response.json();
+
         if (response.ok) {
-          setStudentsMeetings(data.studentsMeetings);
+          setStudentsMeetings(data.meetings); // Use the 'meetings' field from the API response
         } else {
           setError(data.message || "Failed to fetch student meetings");
         }
@@ -89,51 +91,25 @@ const StudentMeeting = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {currentItems.map((item, index) =>
-                      item.meetings && item.meetings.length > 0 ? (
-                        item.meetings.map((meeting, mIndex) => (
-                          <tr key={meeting._id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {indexOfFirstItem + index + 1}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {item.class || "N/A"}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {item.section || "N/A"}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {new Date(meeting.meetingTime).toLocaleString()}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {meeting.subject || "N/A"}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm">
-                              <a
-                                href={meeting.meetingLink}
-                                className="text-blue-500 hover:text-blue-700 underline"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Join Meeting
-                              </a>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {indexOfFirstItem + index + 1}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {item.class || "N/A"}
-                          </td>
-                          <td colSpan="4" className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                            No meetings scheduled
-                          </td>
-                        </tr>
-                      )
-                    )}
+                    {currentItems.map((meeting, index) => (
+                      <tr key={meeting._id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{indexOfFirstItem + index + 1}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{meeting.class || "N/A"}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{meeting.section || "N/A"}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(meeting.meetingTime).toLocaleString()}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{meeting.subject || "N/A"}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <a
+                            href={meeting.meetingLink}
+                            className="text-blue-500 hover:text-blue-700 underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Join Meeting
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
