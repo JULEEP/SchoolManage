@@ -1,21 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Navbar from './Navbar'; // Import Navbar component
-import Sidebar from './Sidebar';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import axios from 'axios'; // We'll use axios to make API calls
-import { FaBars, FaTimes } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
+import { FaBars, FaBook, FaBuilding, FaBus, FaChalkboardTeacher, FaClipboardList, FaFileInvoiceDollar, FaLaptopCode, FaMoneyBillAlt, FaRegCalendarAlt, FaRegClock, FaTable, FaTimes, FaUserFriends, FaUserGraduate, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom'; // For navigation links
-import { FaUserGraduate, FaUserPlus, FaChalkboardTeacher, FaDollarSign, FaMoneyBillWave, FaUserFriends, FaRegClock, FaBook, FaBuilding, FaTable, FaRegCalendarAlt, FaCarSide, FaLaptopCode, FaBus, FaUsers, FaClipboardList, FaMoneyBillAlt, FaFileInvoiceDollar } from 'react-icons/fa'; // For icons
-import { Container, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import Sidebar from './Sidebar';
 
 
 
 import {
-  Chart,
+  ArcElement,
   BarController,
   BarElement,
   CategoryScale,
+  Chart,
+  Legend,
   LinearScale,
-  LineController, LineElement, PointElement, PieController, ArcElement, Tooltip, Legend,
+  LineController, LineElement,
+  PieController,
+  PointElement,
+  Tooltip,
 } from 'chart.js';
 import IntroJs from "intro.js";
 import "intro.js/introjs.css"; // Intro.js CSS import
@@ -376,7 +379,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
     {/* Sidebar Overlay */}
     <div
       className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
@@ -393,7 +396,7 @@ const Dashboard = () => {
     {/* Main Content */}
     <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"} h-screen`}>
       {/* Mobile Header */}
-      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+      <div className="flex items-center justify-between p-4 text-white bg-purple-700 shadow-lg lg:hidden">
         <h1 className="text-lg font-bold">Admin Dashboard</h1>
         <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
           {isSidebarOpen ? <FaTimes /> : <FaBars />}
@@ -403,41 +406,41 @@ const Dashboard = () => {
   
 
         {/* Content */}
-        <div className="p-4 sm:p-6 bg-gray-100 flex-1 overflow-auto">
+        <div className="flex-1 p-4 overflow-auto bg-gray-100 sm:p-6">
         <div className="font-sans">
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 custom-grid">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 custom-grid">
         {/* Bus Locations */}
-        <div className="intro-step-bus-location bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-bus-location hover:bg-gray-200">
           <NavLink to="/bus-tracking" className="flex flex-col items-center mt-4">
-            <FaBus className="text-green-500 text-2xl mb-2" />
-            <h4 className="text-xs sm:text-xl font-semibold text-black mb-2 text-center">Bus Locations</h4>
+            <FaBus className="mb-2 text-2xl text-green-500" />
+            <h4 className="mb-2 text-xs font-semibold text-center text-black sm:text-xl">Bus Locations</h4>
           </NavLink>
         </div>
 
         {/* Meeting */}
-        <div className="intro-step-meeting bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-meeting hover:bg-gray-200">
           <NavLink to="/managemeeting" className="flex flex-col items-center">
-            <FaUsers className="text-purple-500 text-2xl mb-2" />
-            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Meetings</h2>
+            <FaUsers className="mb-2 text-2xl text-purple-500" />
+            <h2 className="mb-2 text-xs text-xl font-semibold text-black sm:text-xl">Meetings</h2>
             <p className="text-xl font-bold text-black">{dashboardData.totalMeetings}</p>
           </NavLink>
         </div>
 
         {/* Attendance */}
-        <div className="intro-step-attendance bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-attendance hover:bg-gray-200">
           <NavLink to="/studentattendance" className="flex flex-col items-center">
-            <FaChalkboardTeacher className="text-yellow-500 text-2xl mb-2" />
-            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Attendance</h2>
+            <FaChalkboardTeacher className="mb-2 text-2xl text-yellow-500" />
+            <h2 className="mb-2 text-xs text-xl font-semibold text-black sm:text-xl">Attendance</h2>
             <p className="text-xl font-bold text-black">0</p>
           </NavLink>
         </div>
 
         {/* Fee Total Received */}
-        <div className="intro-step-fee-received bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-fee-received hover:bg-gray-200">
           <NavLink to="/fees-details" className="flex flex-col items-center">
-            <FaMoneyBillAlt className="text-blue-500 text-2xl mb-2" />
-            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Fee Received</h2>
+            <FaMoneyBillAlt className="mb-2 text-2xl text-blue-500" />
+            <h2 className="mb-2 text-xs text-xl font-semibold text-black sm:text-xl">Fee Received</h2>
             <p className="text-xl font-bold text-black">
               <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPaid}
             </p>
@@ -445,10 +448,10 @@ const Dashboard = () => {
         </div>
 
         {/* Fee Pending */}
-        <div className="intro-step-fee-pending bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-fee-pending hover:bg-gray-200">
           <NavLink to="/fees-details" className="flex flex-col items-center">
-            <FaClipboardList className="text-red-500 text-2xl mb-2" />
-            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Fee Pending</h2>
+            <FaClipboardList className="mb-2 text-2xl text-red-500" />
+            <h2 className="mb-2 text-xs text-xl font-semibold text-black sm:text-xl">Fee Pending</h2>
             <p className="text-xl font-bold text-black">
               <span className="text-sm text-blue-500">₹</span>{dashboardData.totalPending}
             </p>
@@ -456,10 +459,10 @@ const Dashboard = () => {
         </div>
 
         {/* Total Fee */}
-        <div className="intro-step-total-fee bg-white p-4 shadow-lg rounded-lg hover:bg-gray-200 transition-all duration-300 w-full">
+        <div className="w-full p-4 transition-all duration-300 bg-white rounded-lg shadow-lg intro-step-total-fee hover:bg-gray-200">
           <NavLink to="/fees-details" className="flex flex-col items-center">
-            <FaFileInvoiceDollar className="text-indigo-500 text-2xl mb-2" />
-            <h2 className="font-semibold text-xl text-black mb-2 text-xs sm:text-xl">Total Fee</h2>
+            <FaFileInvoiceDollar className="mb-2 text-2xl text-indigo-500" />
+            <h2 className="mb-2 text-xs text-xl font-semibold text-black sm:text-xl">Total Fee</h2>
             <p className="text-xl font-bold text-black">
               <span className="text-sm text-blue-500">₹</span>{dashboardData.totalAmount}
             </p>
@@ -483,26 +486,26 @@ const Dashboard = () => {
 
 
             {/* Dashboard Cards */}
-            <div className="grid sm:grid-cols-2 mt-4 md:grid-cols-3 lg:grid-cols-4 gap-6 custom-grid">
+            <div className="grid gap-6 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 custom-grid">
 
             <div
-            className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-add-student" // Add this class for highlighting
+            className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-purple-300 to-purple-500 hover:scale-105 intro-step-add-student" // Add this class for highlighting
           >
             <NavLink to="/studentadmission" className="flex flex-col items-center">
-            <FaUserPlus className="text-4xl text-white mb-3" /> {/* Icon for Admission */}
-            <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Add A Studnet</h2>
-              <p className="text-gray-200 text-xs sm:text-xl">Studnet Form</p>
+            <FaUserPlus className="mb-3 text-4xl text-white" /> {/* Icon for Admission */}
+            <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Add A Studnet</h2>
+              <p className="text-xs text-gray-200 sm:text-xl">Studnet Form</p>
               </NavLink>
           </div>
 
               {/* Student Section (Light Blue) */}
               <div
-                className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-student" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-blue-300 to-blue-500 hover:scale-105 intro-step-student" // Add this class for highlighting
               >
                 <NavLink to="/managestudent" className="flex flex-col items-center">
-                  <FaUserGraduate className="text-4xl text-white mb-3" /> {/* Icon for Students */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Students</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Students</p>
+                  <FaUserGraduate className="mb-3 text-4xl text-white" /> {/* Icon for Students */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Students</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Students</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalStudents}</p>
                   </NavLink>
               </div>
@@ -510,57 +513,57 @@ const Dashboard = () => {
 
               {/* Teacher Section (Black) */}
               <div
-                className="bg-gradient-to-r from-black to-gray-800 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-teacher" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-black to-gray-800 hover:scale-105 intro-step-teacher" // Add this class for highlighting
               >
                 <NavLink to="/teacher" className="flex flex-col items-center">
-                  <FaChalkboardTeacher className="text-4xl text-white mb-3" /> {/* Icon for Teachers */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Teachers</h2>
-                  <p className="text-gray-300 text-xs sm:text-xl">Total Teachers</p>
+                  <FaChalkboardTeacher className="mb-3 text-4xl text-white" /> {/* Icon for Teachers */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Teachers</h2>
+                  <p className="text-xs text-gray-300 sm:text-xl">Total Teachers</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalTeachers}</p>
                 </NavLink>
               </div>
               {/* Parent Section (Light Red) */}
               <div
-                className="bg-gradient-to-r from-red-300 to-red-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-parent" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-red-300 to-red-500 hover:scale-105 intro-step-parent" // Add this class for highlighting
               >
                 <NavLink to="/parentlist" className="flex flex-col items-center">
-                  <FaUserFriends className="text-4xl text-white mb-3" /> {/* Icon for Parents */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Parents</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Parents</p>
+                  <FaUserFriends className="mb-3 text-4xl text-white" /> {/* Icon for Parents */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Parents</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Parents</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalParents}</p>
                 </NavLink>
               </div>
 
               {/* Staff Section (Light Green) */}
               <div
-                className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-staff" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-green-300 to-green-500 hover:scale-105 intro-step-staff" // Add this class for highlighting
               >
                 <NavLink to="/staffs" className="flex flex-col items-center">
-                  <FaUsers className="text-4xl text-white mb-3" /> {/* Icon for Staff */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Staffs</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Staffs</p>
+                  <FaUsers className="mb-3 text-4xl text-white" /> {/* Icon for Staff */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Staffs</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Staffs</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalStaffs}</p>
                 </NavLink>
               </div>
               {/* Subjects Section (Light Yellow) */}
               <div
-                className="bg-gradient-to-r from-yellow-300 to-yellow-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-subject" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-yellow-300 to-yellow-500 hover:scale-105 intro-step-subject" // Add this class for highlighting
               >
                 <NavLink to="/subjectlist" className="flex flex-col items-center">
-                  <FaBook className="text-4xl text-white mb-3" /> {/* Icon for Subjects */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Subjects</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Subjects</p>
+                  <FaBook className="mb-3 text-4xl text-white" /> {/* Icon for Subjects */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Subjects</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Subjects</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalSubjects}</p>
                 </NavLink>
               </div>
               {/* Classes Section (Light Purple) */}
               <div
-                className="bg-gradient-to-r from-purple-300 to-purple-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-class" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-purple-300 to-purple-500 hover:scale-105 intro-step-class" // Add this class for highlighting
               >
                 <NavLink to="/classlist" className="flex flex-col items-center">
-                  <FaBuilding className="text-4xl text-white mb-3" /> {/* Icon for Classes */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Classes</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Classes</p>
+                  <FaBuilding className="mb-3 text-4xl text-white" /> {/* Icon for Classes */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Classes</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Classes</p>
                   <p className="text-xl font-bold text-white">{dashboardData.totalClasses}</p>
                 </NavLink>
               </div>
@@ -568,73 +571,73 @@ const Dashboard = () => {
 
               {/* Sections Section (Light Orange) */}
               <div
-                className="bg-gradient-to-r from-orange-300 to-orange-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-section" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-orange-300 to-orange-500 hover:scale-105 intro-step-section" // Add this class for highlighting
               >
                 <NavLink to="/sections" className="flex flex-col items-center">
-                  <FaTable className="text-4xl text-white mb-3" /> {/* Icon for Sections */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Sections</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Sections</p>
+                  <FaTable className="mb-3 text-4xl text-white" /> {/* Icon for Sections */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Sections</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Sections</p>
                   <p className="text-xl font-bold text-white">8</p>
                 </NavLink>
               </div>
               {/* Holidays Section (Light Green) */}
               <div
-                className="bg-gradient-to-r from-green-300 to-green-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-holidays" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-green-300 to-green-500 hover:scale-105 intro-step-holidays" // Add this class for highlighting
               >
                 <NavLink to="/holidays" className="flex flex-col items-center">
-                  <FaRegCalendarAlt className="text-4xl text-white mb-3" /> {/* Icon for Holidays */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Holidays</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Total Holidays</p>
+                  <FaRegCalendarAlt className="mb-3 text-4xl text-white" /> {/* Icon for Holidays */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Holidays</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Total Holidays</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalHolidays}</p>
                 </NavLink>
               </div>
               {/* Routine Section (Unique Gradient with Modern Touch) */}
               <div
-                className="bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-routine" // Add this class for highlighting
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-indigo-400 via-pink-400 to-yellow-400 hover:scale-105 intro-step-routine" // Add this class for highlighting
               >
                 <NavLink to="/classroutinelist" className="flex flex-col items-center">
-                  <FaRegClock className="text-4xl text-white mb-3" /> {/* Icon for Routine */}
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Total Routine</h2>
-                  <p className="text-gray-200 text-xs sm:text-xl">Student Routine</p>
+                  <FaRegClock className="mb-3 text-4xl text-white" /> {/* Icon for Routine */}
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Total Routine</h2>
+                  <p className="text-xs text-gray-200 sm:text-xl">Student Routine</p>
                   <p className="text-2xl font-bold text-white">{dashboardData.totalRoutines}</p>
 
                 </NavLink>
               </div>
 
               <div
-                className="bg-gradient-to-r from-blue-300 to-blue-500 p-6 shadow-lg rounded-lg hover:scale-105 transition-transform duration-300 intro-step-start-meeting"
+                className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-blue-300 to-blue-500 hover:scale-105 intro-step-start-meeting"
               >
                 <NavLink to="/generateid" className="flex flex-col items-center">
-                  <FaLaptopCode className="text-4xl text-white mb-3" />
-                  <h2 className="font-semibold text-xl text-white text-xs sm:text-xl">Meet</h2>
+                  <FaLaptopCode className="mb-3 text-4xl text-white" />
+                  <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Meet</h2>
                 </NavLink>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden intro-step-dashboard-analytics">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Dashboard Analytics</h2>
+        <div className="p-6 mt-6 overflow-hidden bg-white rounded-md shadow-md intro-step-dashboard-analytics">
+          <h2 className="mb-4 text-xl font-semibold text-gray-700">Dashboard Analytics</h2>
           <div className="relative w-full h-[300px] sm:h-[400px] overflow-x-auto">
             <canvas ref={chartRef} className="w-full h-full max-w-full" />
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-md rounded-md mt-6 overflow-hidden intro-step-growth-over-time">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Growth Over Time</h2>
+        <div className="p-6 mt-6 overflow-hidden bg-white rounded-md shadow-md intro-step-growth-over-time">
+          <h2 className="mb-4 text-xl font-semibold text-gray-700">Growth Over Time</h2>
           <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-x-auto">
             <canvas ref={lineChartRef} className="w-full h-full max-w-full" />
           </div>
         </div>
         {/* Notice Board Section */}
-        <div className="bg-white p-6 shadow-md mt-28 rounded-md mb-6">
+        <div className="p-6 mb-6 bg-white rounded-md shadow-md mt-28">
           <h2 className="text-xl text-gray-500">Notice Board</h2>
 
           {/* Button for adding new item */}
           <div className="flex justify-end mb-4">
             <button
               onClick={() => setFormVisible(true)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+              className="px-4 py-2 text-white transition-colors bg-purple-600 rounded-md hover:bg-purple-700"
             >
               + ADD
             </button>
@@ -642,18 +645,18 @@ const Dashboard = () => {
 
           {/* Modal for form */}
           {formVisible && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
-              <div className="bg-white rounded-lg p-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3">
-                <h3 className="text-xl font-semibold mb-4">Create Notice</h3>
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
+              <div className="w-full p-6 bg-white rounded-lg sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3">
+                <h3 className="mb-4 text-xl font-semibold">Create Notice</h3>
                 <form onSubmit={handleFormSubmit}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <input
                       type="text"
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
                       placeholder="Title"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <input
@@ -662,7 +665,7 @@ const Dashboard = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       placeholder="Description"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <input
@@ -670,7 +673,7 @@ const Dashboard = () => {
                       name="date"
                       value={formData.date}
                       onChange={handleInputChange}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <input
@@ -679,7 +682,7 @@ const Dashboard = () => {
                       value={formData.class}
                       onChange={handleInputChange}
                       placeholder="Class"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <input
@@ -688,7 +691,7 @@ const Dashboard = () => {
                       value={formData.section}
                       onChange={handleInputChange}
                       placeholder="Section"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <input
@@ -697,7 +700,7 @@ const Dashboard = () => {
                       value={formData.targetAudience}
                       onChange={handleInputChange}
                       placeholder="Target Audience"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                     />
                     <input
                       type="text"
@@ -705,13 +708,13 @@ const Dashboard = () => {
                       value={formData.postedBy}
                       onChange={handleInputChange}
                       placeholder="Posted By"
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-4 py-2 text-sm border border-gray-300 rounded-md"
                       required
                     />
                     <div className="flex justify-end col-span-2 mt-4">
                       <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
+                        className="px-4 py-2 text-sm text-white transition-colors bg-blue-600 rounded-md hover:bg-blue-700"
                       >
                         Submit
                       </button>
@@ -721,7 +724,7 @@ const Dashboard = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     onClick={() => setFormVisible(false)}
-                    className="px-4 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 text-sm"
+                    className="px-4 py-2 text-sm text-white bg-gray-400 rounded-md hover:bg-gray-500"
                   >
                     Close
                   </button>
@@ -735,24 +738,24 @@ const Dashboard = () => {
             <table className="min-w-full mt-4 border-collapse">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border border-gray-300 text-left bg-gray-100">Date</th>
-                  <th className="py-2 px-4 border border-gray-300 text-left bg-gray-100">Title</th>
-                  <th className="py-2 px-4 border border-gray-300 text-left bg-gray-100">Actions</th>
+                  <th className="px-4 py-2 text-left bg-gray-100 border border-gray-300">Date</th>
+                  <th className="px-4 py-2 text-left bg-gray-100 border border-gray-300">Title</th>
+                  <th className="px-4 py-2 text-left bg-gray-100 border border-gray-300">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {notices.length === 0 ? (
                   <tr>
-                    <td colSpan="3" className="py-2 px-4 text-center text-gray-500">No notices available</td>
+                    <td colSpan="3" className="px-4 py-2 text-center text-gray-500">No notices available</td>
                   </tr>
                 ) : (
                   notices.map((notice) => (
                     <tr key={notice._id}>
-                      <td className="py-2 px-4 border border-gray-300">{notice.date}</td>
-                      <td className="py-2 px-4 border border-gray-300">{notice.title}</td>
-                      <td className="py-2 px-4 border border-gray-300 text-center">
+                      <td className="px-4 py-2 border border-gray-300">{notice.date}</td>
+                      <td className="px-4 py-2 border border-gray-300">{notice.title}</td>
+                      <td className="px-4 py-2 text-center border border-gray-300">
                         <button
-                          className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          className="px-3 py-1 text-white bg-blue-600 rounded-md hover:bg-blue-700"
                           onClick={() => alert(`Editing notice: ${notice.title}`)}
                         >
                           Edit
