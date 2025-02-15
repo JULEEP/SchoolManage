@@ -135,27 +135,56 @@ const TeacherAttendance = () => {
     });
   };
 
+  const itemsPerPage = 5; // ✅ Define itemsPerPage
+
   // Handle filter change for class
   const handleClassFilterChange = (e) => {
     setClassFilter(e.target.value);
   };
-
+  
   // Handle filter change for section
   const handleSectionFilterChange = (e) => {
     setSectionFilter(e.target.value);
   };
-
-  // Filter students based on class and section
+  
+  // Filtering students based on class & section
   const filteredStudents = students.filter((student) => {
-    const classMatches = classFilter ? student.class === parseInt(classFilter) : true;
+    const classMatches = classFilter ? student.class === Number(classFilter) : true;
     const sectionMatches = sectionFilter ? student.section === sectionFilter : true;
     return classMatches && sectionMatches;
   });
-
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
-  const startIdx = (currentPage - 1) * rowsPerPage;
-  const currentStudents = filteredStudents.slice(startIdx, startIdx + rowsPerPage);
+  
+  // Calculate Total Pages
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage); // ✅ Define totalPages
+  
+  // Apply Pagination on Filtered Data
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentStudents = filteredStudents.slice(startIndex, endIndex);
+  
+  {/* Pagination Controls */}
+  <div className="flex justify-center mt-4">
+    <button
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mx-2"
+    >
+      Previous
+    </button>
+  
+    <span className="px-4 py-2 text-lg">
+      Page {currentPage} of {totalPages} {/* ✅ No more error */}
+    </span>
+  
+    <button
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg mx-2"
+    >
+      Next
+    </button>
+  </div>
+  
 
   return (
     <div className="flex min-h-screen">
@@ -194,44 +223,36 @@ const TeacherAttendance = () => {
             {loading && <p>Loading students...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
-            {/* Filters */}
-            <div className="flex gap-4 mb-4">
-              <div className="flex flex-col">
-                <label className="font-medium">Class:</label>
-                <select
-                  value={classFilter}
-                  onChange={handleClassFilterChange}
-                  className="p-2 border rounded-lg"
-                >
-                  <option value="">All</option>
-                  {/* Add the available classes here */}
-                  <option value="Class 1">1</option>
-                  <option value="Class 2">2</option>
-                  <option value="Class 3">3</option>
-                  <option value="Class 4">4</option>
-                  <option value="Class 5">5</option>
-                  <option value="Class 6">6</option>
-                  <option value="Class 7">7</option>
-                  <option value="Class 8">8</option>
-                  <option value="Class 9">9</option>
-                  <option value="Class 10">10</option>
-                </select>
-              </div>
+          {/* Filters */}
+<div className="flex gap-4 mb-4">
+<div className="flex flex-col">
+  <label className="font-medium">Class:</label>
+  <select
+    value={classFilter}
+    onChange={handleClassFilterChange}
+    className="p-2 border rounded-lg"
+  >
+    <option value="">All</option>
+    {[...Array(10)].map((_, i) => (
+      <option key={i + 1} value={i + 1}>{i + 1}</option>
+    ))}
+  </select>
+</div>
 
-              <div className="flex flex-col">
-                <label className="font-medium">Section:</label>
-                <select
-                  value={sectionFilter}
-                  onChange={handleSectionFilterChange}
-                  className="p-2 border rounded-lg"
-                >
-                  <option value="">All</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                </select>
-              </div>
-            </div>
+<div className="flex flex-col">
+  <label className="font-medium">Section:</label>
+  <select
+    value={sectionFilter}
+    onChange={handleSectionFilterChange}
+    className="p-2 border rounded-lg"
+  >
+    <option value="">All</option>
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+  </select>
+</div>
+</div>
 
             {/* Students Table */}
             {!loading && !error && (

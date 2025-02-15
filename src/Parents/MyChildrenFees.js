@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
-import StudentSidebar from "../Sidebar";
+import ParentSidebar from "./ParentSidebar";
 import { jsPDF } from "jspdf";
 
 function MyChildrenFees() {
@@ -80,7 +80,7 @@ function MyChildrenFees() {
       <div
         className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <StudentSidebar />
+        <ParentSidebar />
       </div>
 
       <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
