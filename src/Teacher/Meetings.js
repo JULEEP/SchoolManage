@@ -10,18 +10,17 @@ const TeacherMeetingPage = () => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filteredMeetings, setFilteredMeetings] = useState([]);
-  const teacherId = "679b1272d3974a3ee745f810";  // Replace with dynamic teacher ID if needed
 
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/teacher/meetings/${teacherId}`);
+        const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/teacher/admin-meetings/67769d22e51f185d83bc2d99`);
         if (!response.ok) {
           throw new Error('Failed to fetch meetings');
         }
         const data = await response.json();
         setMeetings(data.meetings);
-        setFilteredMeetings(data.meetings); // Initially set all meetings
+        setFilteredMeetings(data.meetings);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -29,15 +28,13 @@ const TeacherMeetingPage = () => {
       }
     };
     fetchMeetings();
-  }, [teacherId]);
+  }, []);
 
-  // Handle date range filter
   const handleDateFilter = () => {
     const filtered = meetings.filter(meeting => {
       const meetingDate = new Date(meeting.date);
       const from = new Date(fromDate);
       const to = new Date(toDate);
-
       return meetingDate >= from && meetingDate <= to;
     });
     setFilteredMeetings(filtered);
@@ -45,59 +42,31 @@ const TeacherMeetingPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar Overlay for Mobile */}
-      <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}
-        onClick={() => setIsSidebarOpen(false)}
-      ></div>
-
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
+      <div className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`} onClick={() => setIsSidebarOpen(false)}></div>
+      <div className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <TeacherSidebar />
       </div>
 
-      {/* Main Content */}
       <div className={`flex-1 overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Meeting List</h1>
+          <h1 className="text-lg font-bold">Meeting With Admin</h1>
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
 
-        {/* Page Content */}
         <div className="p-6">
-          <h1 className="text-xl font-bold text-center text-blue-600 mb-8">Meeting List</h1>
-
-          {/* Date Filter */}
+          <h1 className="text-xl font-bold text-center text-blue-600 mb-8">Meeting With Admin</h1>
           <div className="mb-6 flex justify-center space-x-4">
             <div>
               <label className="text-sm text-gray-700">From Date</label>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="p-2 border rounded-md"
-              />
+              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} className="p-2 border rounded-md" />
             </div>
             <div>
               <label className="text-sm text-gray-700">To Date</label>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="p-2 border rounded-md"
-              />
+              <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="p-2 border rounded-md" />
             </div>
-            <button
-              onClick={handleDateFilter}
-              className="bg-purple-500 text-white p-2 rounded-md"
-            >
-              Filter
-            </button>
+            <button onClick={handleDateFilter} className="bg-purple-500 text-white p-2 rounded-md">Filter</button>
           </div>
 
           {loading ? (
@@ -111,8 +80,7 @@ const TeacherMeetingPage = () => {
                   <tr className="bg-purple-500 text-white">
                     <th className="px-6 py-3 text-left">Date</th>
                     <th className="px-6 py-3 text-left">Time</th>
-                    <th className="px-6 py-3 text-left">Agenda</th>
-                    <th className="px-6 py-3 text-left">Location</th>
+                    <th className="px-6 py-3 text-left">Meeting Link</th>
                     <th className="px-6 py-3 text-left">Created At</th>
                   </tr>
                 </thead>
@@ -121,8 +89,9 @@ const TeacherMeetingPage = () => {
                     <tr key={meeting._id} className="border-t">
                       <td className="px-6 py-4">{new Date(meeting.date).toLocaleDateString()}</td>
                       <td className="px-6 py-4">{meeting.time}</td>
-                      <td className="px-6 py-4">{meeting.agenda}</td>
-                      <td className="px-6 py-4">{meeting.location}</td>
+                      <td className="px-6 py-4">
+                        <a href={meeting.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Join Meeting</a>
+                      </td>
                       <td className="px-6 py-4">{new Date(meeting.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))}

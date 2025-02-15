@@ -183,7 +183,7 @@ import PendingLeaveRequest from './Student/PendingLeaveRequest';
 import StudentDetailsPage from './Student/Profile';
 
 import LecturePages from './Pages/LecturePages';
-import ResultPage from "./Pages/ResultPage";
+import ResultPage from './Student/ResultPage';
 import StudentAttendanceList from './Student/StudentAttendance';
 import StudentDashboard from './Student/StudentDashboard';
 import StudentFees from './Student/StudentFees';
@@ -235,6 +235,10 @@ import StudentBusTracking from './Student/StudentBusTracking';
 import StudentMeeting from './Student/StudentMeetings';
 import TeacherBusTracking from './Teacher/TeacherBusTracking';
 import TeacherMeetings from './Teacher/TeacherMeetings';
+import StudentIDCard from './Student/StudentIdCard';
+import StudentCertificate from './Student/StudentCertificate';
+import StudentIDCardBulkDownload from './Pages/StudentIDCardBulkDownload';
+import AdminCertificatePage from './Pages/AdminCertificatePage';
 
   function App() {
     return (
@@ -422,6 +426,11 @@ import TeacherMeetings from './Teacher/TeacherMeetings';
               <Route path="/fingerprint" element={<FingerprintAttendance />} />
               <Route path="/bus-form" element={<BusForm />} />
               <Route path="/managemeeting" element={<TeacherMeetings />} />
+              <Route path='/studentcard' element={<StudentIDCard/>}/>
+              <Route path='/studentcertifi' element={<StudentCertificate/>}/>
+              <Route path='/studentbulkidcard' element={<StudentIDCardBulkDownload/>}/>
+              <Route path='/studentcertificates' element={<AdminCertificatePage/>}/>
+
 
               <Route path='/studentmeeting' element={<StudentMeeting/>}/>
 

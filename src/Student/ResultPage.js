@@ -18,8 +18,8 @@ const ResultPage = () => {
     const fetchMarks = async () => {
       try {
         const url = examType
-          ? `http://localhost:4000/api/students/marks/${studentId}?examType=${examType}`
-          : `http://localhost:4000/api/students/marks/${studentId}`;
+          ? `https://school-backend-1-2xki.onrender.com/api/students/marks/${studentId}?examType=${examType}`
+          : `https://school-backend-1-2xki.onrender.com/api/students/marks/${studentId}`;
         
         const response = await fetch(url);
         const data = await response.json();

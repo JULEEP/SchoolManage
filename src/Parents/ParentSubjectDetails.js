@@ -1,62 +1,61 @@
 import React, { useEffect, useState } from "react";
+import { FiMenu } from "react-icons/fi"; // Import menu icon for mobile
+import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import ParentSidebar from "./ParentSidebar";
-import axios from "axios";
-import { FaBars, FaTimes } from 'react-icons/fa';
 
 const ParentSubjectDetails = () => {
-  const [subjectDetails, setSubjectDetails] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [subjects, setSubjects] = useState([]); // State to store the subjects
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(""); // Error state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
+  const studentId = "676cf56dfd1eb1caa8426205"; // Static studentId (could be dynamic based on context)
 
-  const parentId = "676f98625b442721a56ee770"; // Example parentId
-  const studentId = "676bb21bd06928a8432c676a"; // Example studentId
-
-  // Fetch subject details data from API
+  // Fetch subject details from API
   useEffect(() => {
-    const fetchSubjectDetails = async () => {
+    const fetchSubjects = async () => {
+      setLoading(true);
+      setError(""); // Reset error
       try {
-        const response = await axios.get(
-          `https://school-backend-1-2xki.onrender.com/api/parent/my-child-subjects/${parentId}/${studentId}`
-        );
-        setSubjectDetails(response.data.subjects);
-        setLoading(false);
+        // Fetch subject details from API
+        const response = await fetch(`https://school-backend-1-2xki.onrender.com/api/students/subjects/${studentId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setSubjects(data.student.subjects); // Set subjects data in state
+        } else {
+          setError(data.message || "Error fetching subjects");
+        }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch subject details");
+        setError("An error occurred while fetching subjects");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchSubjectDetails();
-  }, [parentId, studentId]);
+    fetchSubjects(); // Call the function to fetch subjects
+  }, [studentId]); // This effect runs once when the component mounts
 
-  // Toggle Sidebar for mobile view
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // Toggle Sidebar for Mobile View
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
+    <div className="min-h-screen flex bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={toggleSidebar}
+      ></div>
+
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg transition-transform transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:shadow-none w-64`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <ParentSidebar />
       </div>
 
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
-
       {/* Main Content */}
-      <div className="flex-grow overflow-y-auto lg:ml-64">
-        {/* Header for Mobile */}
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Subject Details</h1>
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
@@ -64,43 +63,55 @@ const ParentSubjectDetails = () => {
           </button>
         </div>
 
-        {/* Title Section */}
+        {/* Title */}
 
-        <h2 className="text-xs font-medium text-gray-700 mt-4 mb-6">Nine (A)</h2>
+        {/* Class and Section */}
+        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">Class: 5 (A)</h2>
 
         {/* Subject Details Section */}
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-blue-500 mb-4">Subject Details</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Subject Details</h3>
 
-          {loading ? (
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : error ? (
-            <p className="text-center text-red-500">{error}</p>
-          ) : subjectDetails.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {subjectDetails.map((subject, index) => (
-                <div key={index} className="flex flex-col items-start">
-                  <span className="text-xs font-medium text-gray-700">Subject:</span>
-                  <div className="border-b border-gray-300 w-full mt-1 mb-2"></div>
-                  <p className="text-xs text-gray-600">{subject.name}</p>
+          {/* Display error if there is any */}
+          {error && <p className="text-red-500">{error}</p>}
 
-                  <span className="text-xs font-medium text-gray-700 mt-4">Teacher:</span>
-                  <div className="border-b border-gray-300 w-full mt-1 mb-2"></div>
-                  <p className="text-xs text-gray-600">{subject.teacherName}</p>
+          {/* Display loading state */}
+          {loading && <p className="text-gray-500">Loading subjects...</p>}
 
-                  <span className="text-xs font-medium text-gray-700 mt-4">Subject Type:</span>
-                  <div className="border-b border-gray-300 w-full mt-1 mb-2"></div>
-                  <p className="text-xs text-gray-600">{subject.type}</p>
+          {/* Subject Details Row */}
+          <div className="flex flex-col lg:flex-row justify-between space-x-8">
+            {subjects.length > 0 ? (
+              subjects.map((subject) => (
+                <div key={subject._id} className="flex-1 flex justify-between items-center mb-4 lg:mb-0">
+                  {/* Subject Column */}
+                  <div className="flex flex-col items-center">
+                    <span className="font-medium text-gray-700">Subject</span>
+                    <p className="text-gray-600">{subject.subjectName}</p>
+                  </div>
+
+                  {/* Teacher Column */}
+                  <div className="flex flex-col items-center">
+                    <span className="font-medium text-gray-700">Teacher</span>
+                    <p className="text-gray-600">{subject.teacher}</p>
+                  </div>
+
+                  {/* Subject Type Column */}
+                  <div className="flex flex-col items-center">
+                    <span className="font-medium text-gray-700">Subject Type</span>
+                    <p className="text-gray-600">{subject.subjectType}</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-gray-500">No subject details available</p>
-          )}
+              ))
+            ) : (
+              <p className="text-gray-500">No subjects available.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+
 
 export default ParentSubjectDetails;

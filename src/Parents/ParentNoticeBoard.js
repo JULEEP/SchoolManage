@@ -1,62 +1,59 @@
 import React, { useEffect, useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
 import ParentSidebar from "./ParentSidebar";
-import axios from "axios";
-import { FaBars, FaTimes } from 'react-icons/fa';
 
 const ParentNoticeBoard = () => {
-  const [notices, setNotices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notices, setNotices] = useState([]); // State to store the notices
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(""); // Error state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar state
 
-  const parentId = "676f98625b442721a56ee770"; // Example parentId
-  const studentId = "676bb21bd06928a8432c676a"; // Example studentId
-
-  // Fetch notices data from API
+  // Fetch notices from API
   useEffect(() => {
     const fetchNotices = async () => {
+      setLoading(true);
+      setError(""); // Reset error
       try {
-        const response = await axios.get(
-          `https://school-backend-1-2xki.onrender.com/api/parent/my-child-notice/${parentId}/${studentId}`
-        );
-        setNotices(response.data.notices);
-        setLoading(false);
+        // Fetch notices from API
+        const response = await fetch("https://school-backend-1-2xki.onrender.com/api/admin/get-notices");
+        const data = await response.json();
+
+        if (response.ok) {
+          setNotices(data.notices); // Set notices data in state
+        } else {
+          setError(data.message || "Error fetching notices");
+        }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch notices");
+        setError("An error occurred while fetching notices");
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchNotices();
-  }, [parentId, studentId]);
+    fetchNotices(); // Call the function to fetch notices
+  }, []); // This effect runs once when the component mounts
 
-  // Toggle Sidebar for mobile view
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // Toggle Sidebar for Mobile View
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-100">
+    <div className="min-h-screen flex bg-gray-100">
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+        onClick={toggleSidebar}
+      ></div>
+
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full z-20 bg-white shadow-lg transition-transform transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:shadow-none w-64`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <ParentSidebar />
       </div>
 
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
-
       {/* Main Content */}
-      <div className="flex-grow overflow-y-auto lg:ml-64">
-        {/* Header for Mobile */}
+      <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
+        {/* Mobile Header */}
         <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
           <h1 className="text-lg font-bold">Notice Board</h1>
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
@@ -64,36 +61,42 @@ const ParentNoticeBoard = () => {
           </button>
         </div>
 
-        {/* Title Section */}
+        {/* Heading */}
+        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">All Notices</h2>
 
         {/* Notices Section */}
-        <div className="bg-white shadow-md rounded-lg mt-6 p-4">
-          <h2 className="text-sm font-medium text-gray-700 mb-3">All Notices</h2>
+        <div className="bg-white shadow-md rounded-lg p-6 mt-8">
+          {/* Display error if there is any */}
+          {error && <p className="text-red-500">{error}</p>}
 
-          {/* Notice Cards */}
-          <div className="space-y-3">
-            {loading ? (
-              <p className="text-center text-gray-500">Loading notices...</p>
-            ) : error ? (
-              <p className="text-center text-red-500">{error}</p>
-            ) : notices.length > 0 ? (
-              notices.map((notice, index) => (
+          {/* Display loading state */}
+          {loading && <p className="text-gray-500">Loading notices...</p>}
+
+          {/* Notices Cards */}
+          <div className="space-y-4">
+            {notices.length > 0 ? (
+              notices.map((notice) => (
                 <div
-                  key={index}
-                  className="border border-gray-300 rounded-lg p-3 bg-gray-50 hover:shadow-md flex justify-between items-start"
+                  key={notice._id}
+                  className="border border-gray-300 rounded-lg p-4 bg-gray-50 hover:shadow-md flex justify-between items-start"
                 >
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-gray-800">{notice.title}</h3>
-                    <p className="text-xs text-gray-700 mt-1">{notice.description}</p>
+                    <h3 className="text-lg font-semibold text-gray-800">{notice.title || "No Title"}</h3>
+                    <p className="text-gray-700 mt-2">{notice.description || "No description available."}</p>
                   </div>
-                  <div className="text-xs text-gray-500 ml-4 flex flex-col items-end">
+                  <div className="text-sm text-gray-500 mt-4 ml-4 flex flex-col items-end">
                     <span className="font-medium">Publish Date:</span>
-                    <span>{notice.publishDate}</span>
+                    <span>{notice.date ? new Date(notice.date).toLocaleDateString() : "N/A"}</span>
+
+                    {/* Show the postedBy field */}
+                    <span className="mt-2 text-gray-600">
+                      <strong>Posted By:</strong> {notice.postedBy || "Unknown"}
+                    </span>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-500">No notices available</p>
+              <p className="text-gray-500">No notices available.</p>
             )}
           </div>
         </div>
@@ -101,5 +104,7 @@ const ParentNoticeBoard = () => {
     </div>
   );
 };
+
+
 
 export default ParentNoticeBoard;

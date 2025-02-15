@@ -12,7 +12,7 @@ const StudentHomeworkList = () => {
   const [homeworkDate, setHomeworkDate] = useState(""); // Homework date filter
   const itemsPerPage = 5; // Limit per page
 
-  const studentId = "6799137209c338219c673fe3"; // Updated studentId
+  const studentId = "677904859d0da6e3bee4ba2e"; // Updated studentId
 
   // Fetch homework when component mounts
   useEffect(() => {

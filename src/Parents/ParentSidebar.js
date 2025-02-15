@@ -69,25 +69,6 @@ const ParentSidebar = () => {
             <span>Fees</span>
           </NavLink>
         </li>
-
-        {/* Lesson Plan */}
-        <li className="flex flex-col items-start p-3 text-lg rounded-md hover:bg-gray-100">
-          <div className="flex items-center w-full cursor-pointer" onClick={toggleParentLessonPlan}>
-            <FaList className="mr-3 text-purple-600" />
-            <span className="text-sky-500">Lesson</span>
-            {isParentLessonPlanOpen ? <FaChevronDown className="ml-2 text-purple-600" /> : <FaChevronRight className="ml-2 text-purple-600" />}
-          </div>
-          {isParentLessonPlanOpen && (
-            <ul className="pl-8 mt-2 space-y-4">
-              <li>
-                <NavLink to="/mychild-lesson-plan" className="text-lg text-sky-500 hover:text-sky-400">
-                  Lesson Plan
-                </NavLink>
-              </li>
-            </ul>
-          )}
-        </li>
-
         {/* Examinations */}
         <li className="flex flex-col items-start p-3 text-lg rounded-md hover:bg-gray-100">
           <div className="flex items-center w-full cursor-pointer" onClick={toggleParentExaminations}>
@@ -100,24 +81,6 @@ const ParentSidebar = () => {
               <li>
                 <NavLink to="/mychild-exam-schedule" className="text-lg text-sky-500 hover:text-sky-400">
                   Exam Schedule
-                </NavLink>
-              </li>
-            </ul>
-          )}
-        </li>
-
-        {/* Library */}
-        <li className="flex flex-col items-start p-3 text-lg rounded-md hover:bg-gray-100">
-          <div className="flex items-center w-full cursor-pointer" onClick={toggleParentLibrary}>
-            <FaBook className="mr-3 text-purple-600" />
-            <span className="text-sky-500">Library</span>
-            {isParentLibraryOpen ? <FaChevronDown className="ml-2 text-purple-600" /> : <FaChevronRight className="ml-2 text-purple-600" />}
-          </div>
-          {isParentLibraryOpen && (
-            <ul className="pl-8 mt-2 space-y-4">
-              <li>
-                <NavLink to="/parent-booklist" className="text-lg text-sky-500 hover:text-sky-400">
-                  Book List
                 </NavLink>
               </li>
             </ul>

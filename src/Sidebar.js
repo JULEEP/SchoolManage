@@ -147,14 +147,6 @@ const StudentSidebar = () => {
           </NavLink>
         </li>
 
-        {/* User Guide */}
-        <li>
-          <NavLink to="/user-guide" className="flex items-center p-3 rounded-md hover:bg-gray-100">
-            <div className="p-2 text-white bg-blue-500 rounded-full"><FaBook /></div>
-            <span className="ml-3 text-black">User Guide</span>
-          </NavLink>
-        </li>
-
         {/* ✅ Logout Button */}
         <li>
           <button onClick={handleLogout} className="flex items-center w-full p-3 rounded-md hover:bg-gray-100">

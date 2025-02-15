@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa"; // Mobile sidebar toggle icons
-import StudentSidebar from "../Sidebar"; // Import the StudentSidebar component
+import ParentSidebar from "./ParentSidebar";
 
 const MyChildStudentHomeworkList = () => {
   const [homework, setHomework] = useState([]); // Homework state
@@ -12,7 +12,7 @@ const MyChildStudentHomeworkList = () => {
   const [homeworkDate, setHomeworkDate] = useState(""); // Homework date filter
   const itemsPerPage = 5; // Limit per page
 
-  const studentId = "6799137209c338219c673fe3"; // Updated studentId
+  const studentId = "677904859d0da6e3bee4ba2e"; // Updated studentId
 
   // Fetch homework when component mounts
   useEffect(() => {
@@ -91,7 +91,7 @@ const MyChildStudentHomeworkList = () => {
       <div
         className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <StudentSidebar />
+        <ParentSidebar />
       </div>
 
       {/* Main Content */}

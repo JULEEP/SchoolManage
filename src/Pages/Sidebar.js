@@ -157,6 +157,16 @@ const Sidebar = () => {
                         <span>Student Admission</span>
                       </NavLink>
                     </li>
+                    <li>
+                    <NavLink to="/studentcertificates" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <span>Student Certificate</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                  <NavLink to="/studentbulkidcard" className="flex items-center text-sm text-white hover:text-gray-400">
+                    <span>Student ID Card</span>
+                  </NavLink>
+                </li>
                   </ul>
                 )}
               </li>
@@ -599,7 +609,7 @@ const Sidebar = () => {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink to="/transportlist" className="flex items-center text-sm text-white hover:text-gray-400">
+                      <NavLink to="/bus-tracking" className="flex items-center text-sm text-white hover:text-gray-400">
                         <span>View Transport Routes</span>
                       </NavLink>
                     </li>
