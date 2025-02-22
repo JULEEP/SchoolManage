@@ -54,8 +54,8 @@ function GenerateMeeting() {
         <div className="bg-white shadow-lg rounded-lg p-6 md:p-8 w-full max-w-4xl flex flex-col md:flex-row items-center">
           {/* Form Section */}
           <div className="md:w-1/2 w-full text-center md:text-left">
-            <h1 className="text-2xl font-bold text-gray-800">Welcome to Live Classes</h1>
-            <p className="text-gray-600 mt-2">Start a video call with a randomly generated Room ID</p>
+            <h1 className="text-2xl font-bold text-purple-800">Welcome!</h1>
+            <p className="text-gray-600 mt-2">Start a video meeting call with a randomly generated Room ID</p>
 
             <div className="mt-4 flex items-center">
               <input
