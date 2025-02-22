@@ -607,7 +607,7 @@ const Dashboard = () => {
               <div
                 className="p-6 transition-transform duration-300 rounded-lg shadow-lg bg-gradient-to-r from-blue-300 to-blue-500 hover:scale-105 intro-step-start-meeting"
               >
-                <NavLink to="/generateid" className="flex flex-col items-center">
+                <NavLink to="/generate-meeting" className="flex flex-col items-center">
                   <FaLaptopCode className="mb-3 text-4xl text-white" />
                   <h2 className="text-xs text-xl font-semibold text-white sm:text-xl">Meet</h2>
                 </NavLink>

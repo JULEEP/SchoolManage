@@ -239,6 +239,7 @@ import StudentIDCard from './Student/StudentIdCard';
 import StudentCertificate from './Student/StudentCertificate';
 import StudentIDCardBulkDownload from './Pages/StudentIDCardBulkDownload';
 import AdminCertificatePage from './Pages/AdminCertificatePage';
+import GenerateMeeting from './Pages/GenerateMeeting';
 
   function App() {
     return (
@@ -430,6 +431,7 @@ import AdminCertificatePage from './Pages/AdminCertificatePage';
               <Route path='/studentcertifi' element={<StudentCertificate/>}/>
               <Route path='/studentbulkidcard' element={<StudentIDCardBulkDownload/>}/>
               <Route path='/studentcertificates' element={<AdminCertificatePage/>}/>
+              <Route path='/generate-meeting' element={<GenerateMeeting/>}/>
 
 
               <Route path='/studentmeeting' element={<StudentMeeting/>}/>
