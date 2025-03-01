@@ -51,59 +51,70 @@ const ParentDashboard = () => {
 
 
   useEffect(() => {
-    const intro = IntroJs();
-
-    intro.setOptions({
-      steps: [
-        ...bestCategories.map((category, index) => ({
-          element: `.category-box-${index}`,
-          intro: `This is the ${category.name} section.`,
-          position: "right",
-        })),
-        {
-          element: ".intro-step-comparison",
-          intro: "Here you can compare your child's performance with the topper.",
-          position: "top",
-        },
-        {
-          element: ".intro-step-subjects",
-          intro: "This table displays your child's subjects, their teachers, and the class timing.",
-          position: "top",
-        },
-        {
-          element: ".intro-step-teachers",
-          intro: "Here you can see the list of teachers along with their subjects and contact details.",
-          position: "top",
-        },
-        {
-          element: ".intro-step-classes",
-          intro: "This table shows the classes, teachers, and the number of students in each class.",
-          position: "top",
-        },
-        {
-          element: ".intro-step-transport",
-          intro: "This table shows the transport routes, drivers, stops, and arrival times for today.",
-          position: "top",
-        },
-        {
-          element: ".intro-step-fee-summary",
-          intro: "This section displays the total paid and pending fee amounts.",
-          position: "top",
-        },
-      ],
-      highlightClass: "rounded",
-      nextLabel: "<span class='custom-next-button'>Next</span>",
-      prevLabel: "<span class='custom-prev-button'>Previous</span>",
-      overlayOpacity: 0.8,
-    });
-
-    intro.onbeforechange((targetElement) => {
-      targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-
-    intro.start();
+    const introSeen = localStorage.getItem("introSeen");
+  
+    if (!introSeen) {
+      const intro = IntroJs();
+  
+      intro.setOptions({
+        steps: [
+          ...bestCategories.map((category, index) => ({
+            element: `.category-box-${index}`,
+            intro: `This is the ${category.name} section.`,
+            position: "right",
+          })),
+          {
+            element: ".intro-step-comparison",
+            intro: "Here you can compare your child's performance with the topper.",
+            position: "top",
+          },
+          {
+            element: ".intro-step-subjects",
+            intro: "This table displays your child's subjects, their teachers, and the class timing.",
+            position: "top",
+          },
+          {
+            element: ".intro-step-teachers",
+            intro: "Here you can see the list of teachers along with their subjects and contact details.",
+            position: "top",
+          },
+          {
+            element: ".intro-step-classes",
+            intro: "This table shows the classes, teachers, and the number of students in each class.",
+            position: "top",
+          },
+          {
+            element: ".intro-step-transport",
+            intro: "This table shows the transport routes, drivers, stops, and arrival times for today.",
+            position: "top",
+          },
+          {
+            element: ".intro-step-fee-summary",
+            intro: "This section displays the total paid and pending fee amounts.",
+            position: "top",
+          },
+        ],
+        highlightClass: "rounded",
+        nextLabel: "<span class='custom-next-button'>Next</span>",
+        prevLabel: "<span class='custom-prev-button'>Previous</span>",
+        overlayOpacity: 0.8,
+      });
+  
+      intro.onbeforechange((targetElement) => {
+        targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+  
+      intro.oncomplete(() => {
+        localStorage.setItem("introSeen", "true");
+      });
+  
+      intro.onexit(() => {
+        localStorage.setItem("introSeen", "true");
+      });
+  
+      intro.start();
+    }
   }, [bestCategories]);
-
 
 
   const toggleSidebar = () => {
@@ -486,26 +497,35 @@ const ParentDashboard = () => {
               </TableContainer>
             </Box>
 
-            {/* Fee Summary Section */}
-            <Box className="intro-step-fee-summary" mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
-              <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Total Paid</TableCell>
-                      <TableCell>Total Pending</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>{feeSummary.totalPaid}</TableCell>
-                      <TableCell>{feeSummary.totalPending}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+         {/* Fee Summary Section */}
+<Box className="intro-step-fee-summary" mt={5} style={{ backgroundColor: "#f0f8ff", padding: "20px", borderRadius: "10px" }}>
+  <h3 style={{ marginBottom: "10px", fontWeight: "bold" }}>Fee Summary</h3>
+  <TableContainer component={Paper}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Total Paid</TableCell>
+          <TableCell>Total Pending</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>{feeSummary.totalPaid}</TableCell>
+          <TableCell>{feeSummary.totalPending}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </TableContainer>
+
+ {/* Fee Reminder Section */}
+<Box mt={3} p={2} style={{ backgroundColor: "#ffebcc", borderRadius: "8px", border: "2px solid purple" }}>
+  <h4 style={{ marginBottom: "5px", fontWeight: "bold", color: "red" }}>Next Fee Reminder</h4>
+  <p style={{ color: "#1e3a8a" }}> {/* Blue-900 */}
+    Your next fee payment of <strong>₹5000</strong> is due by <strong>10th March 2025</strong>. Please make the payment before the due date to avoid late fees.
+  </p>
+</Box>
+
+</Box>
 
           </Box>
         </Container>

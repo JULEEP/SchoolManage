@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { MdOutlineLocalPrintshop } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
 
@@ -11,6 +12,7 @@ const TeacherList = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const tableRef = useRef(null);
   const itemsPerPage = 5;
 
   // Fetch teachers
@@ -30,6 +32,15 @@ const TeacherList = () => {
     };
     fetchTeachers();
   }, []);
+
+  const handlePrint = () => {
+    const printContent = tableRef.current.innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = `<html><head><title>Print</title></head><body>${printContent}</body></html>`;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -128,17 +139,27 @@ const TeacherList = () => {
         value={searchTerm}
         onChange={handleSearch}
       />
-      
-          <button
-            onClick={exportToCSV}
-            className="ml-4 px-4 py-2 bg-purple-600 text-white mt-4 rounded-md hover:bg-purple-700"
-          >
-            Export CSV
-          </button>
+      <div className="flex items-center space-x-4 mt-4">
+  <button 
+    onClick={handlePrint} 
+    className="p-2 bg-transparent text-purple-600 hover:text-purple-800 text-2xl"
+  >
+    <MdOutlineLocalPrintshop />
+  </button>            
+  
+  <button
+    onClick={exportToCSV}
+    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+  >
+    Export CSV
+  </button>
+</div>
+
         </div>
 
         {/* Teacher Table */}
         <div className="overflow-x-auto mb-8">
+        <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md" ref={tableRef}>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-purple-600 text-white">
@@ -204,9 +225,7 @@ const TeacherList = () => {
           </button>
         </div>
       </div>
-
-      {/* Toast Container */}
-      <ToastContainer />
+    </div>
     </div>
   );
 };

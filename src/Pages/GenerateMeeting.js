@@ -9,33 +9,39 @@ function GenerateMeeting() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Function to generate a unique Room ID
   const handleRoomIdGenerate = () => {
     const randomId = Math.random().toString(36).substring(2, 9);
     const timestamp = Date.now().toString().slice(-4);
-    setRoomId(randomId + timestamp);
+    const newRoomId = randomId + timestamp; 
+    setRoomId(newRoomId);
   };
 
+  // Function to navigate to One-on-One Meeting
   const handleOneAndOneCall = () => {
     if (!roomId) {
       alert("Please Generate Room Id First");
       return;
     }
-    navigate(`room/${roomId}?type=one-on-one`);
+    navigate(`/room/${roomId}?type=one-on-one`);
   };
 
+  // Function to navigate to Group Call Meeting
   const handleGroupCall = () => {
     if (!roomId) {
       alert("Please Generate Room Id First");
       return;
     }
-    navigate(`room/${roomId}?type=group-call`);
+    navigate(`/room/${roomId}?type=group-call`);
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <Sidebar />
       </div>
@@ -45,7 +51,10 @@ function GenerateMeeting() {
         {/* Mobile Header */}
         <div className="flex items-center justify-between bg-blue-700 text-white p-4 shadow-lg w-full lg:hidden">
           <h1 className="text-lg font-bold">Live Classes</h1>
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-2xl focus:outline-none"
+          >
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -55,7 +64,9 @@ function GenerateMeeting() {
           {/* Form Section */}
           <div className="md:w-1/2 w-full text-center md:text-left">
             <h1 className="text-2xl font-bold text-purple-800">Welcome!</h1>
-            <p className="text-gray-600 mt-2">Start a video meeting call with a randomly generated Room ID</p>
+            <p className="text-gray-600 mt-2">
+              Start a video meeting call with a randomly generated Room ID
+            </p>
 
             <div className="mt-4 flex items-center">
               <input
@@ -65,7 +76,7 @@ function GenerateMeeting() {
                 value={roomId}
                 readOnly
               />
-              <button 
+              <button
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r mx-4"
                 onClick={handleRoomIdGenerate}
               >

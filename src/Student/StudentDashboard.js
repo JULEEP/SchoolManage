@@ -65,11 +65,10 @@ const StudentDashboard = () => {
 
 
 
+useEffect(() => {
+  const introSeen = localStorage.getItem("introSeen");
 
-
-
-  useEffect(() => {
-    // Initialize Intro.js to highlight all grid sections and tables
+  if (!introSeen) {
     const intro = IntroJs();
 
     intro.setOptions({
@@ -79,44 +78,55 @@ const StudentDashboard = () => {
           intro: `This is the ${category.name} section.`,
         })),
         {
-          element: '.intro-step-1',
-          intro: 'Here are the subjects table.',
+          element: ".intro-step-1",
+          intro: "Here are the subjects table.",
         },
         {
-          element: '.intro-step-2',
-          intro: 'This is the teachers table.',
+          element: ".intro-step-2",
+          intro: "This is the teachers table.",
         },
         {
-          element: '.intro-step-3',
-          intro: 'This is the classes table.',
+          element: ".intro-step-3",
+          intro: "This is the classes table.",
         },
         {
-          element: '.intro-step-4',
-          intro: 'This is the transport routes table.',
+          element: ".intro-step-4",
+          intro: "This is the transport routes table.",
         },
         {
-          element: '.intro-step-5',
-          intro: 'This is the fee summary table.',
+          element: ".intro-step-5",
+          intro: "This is the fee summary table.",
         },
       ],
-      highlightClass: 'rounded', // Add rounded corners for highlights
-      nextLabel: 'Next', // Set Next button label
-      prevLabel: 'Previous', // Set Previous button label
+      highlightClass: "rounded", // Add rounded corners for highlights
+      nextLabel: "Next", // Set Next button label
+      prevLabel: "Previous", // Set Previous button label
       overlayOpacity: 0.8, // Set overlay opacity to make it less harsh
     });
 
     // Customizing highlight styles directly for purple background and white text
     intro.onbeforechange(() => {
-      const highlightElements = document.querySelectorAll('.introjs-overlay');
-      highlightElements.forEach(el => {
-        el.style.backgroundColor = 'purple';
-        el.style.color = 'white';
+      const highlightElements = document.querySelectorAll(".introjs-overlay");
+      highlightElements.forEach((el) => {
+        el.style.backgroundColor = "purple";
+        el.style.color = "white";
       });
     });
 
-    // Start the intro guide after component mounts
+    // When user completes or exits the guide, store in localStorage
+    intro.oncomplete(() => {
+      localStorage.setItem("introSeen", "true");
+    });
+
+    intro.onexit(() => {
+      localStorage.setItem("introSeen", "true");
+    });
+
+    // Start the intro guide
     intro.start();
-  }, []);
+  }
+}, []);
+
 
 
 

@@ -30,6 +30,8 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineContro
 const Dashboard = () => {
   const [notices, setNotices] = useState([]); // State to store notices from API
   const [formVisible, setFormVisible] = useState(false); // State to manage form visibility
+  const feesChartRef = useRef(null);
+  const feesChartInstanceRef = useRef(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -56,7 +58,12 @@ const Dashboard = () => {
     totalPending: 0
   });
 
-  useEffect(() => {
+
+
+useEffect(() => {
+  const introSeen = localStorage.getItem("introSeen");
+
+  if (!introSeen) {
     const intro = IntroJs();
 
     intro.setOptions({
@@ -64,111 +71,108 @@ const Dashboard = () => {
         {
           element: ".intro-step-bus-location",
           intro: "This section helps you track bus locations in real-time.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-meeting",  
+          element: ".intro-step-meeting",
           intro: "This section allows you to manage and schedule meetings.",
-          position: "top"
+          position: "top",
         },
         {
           element: ".intro-step-attendance",
           intro: "This section lets you manage student attendance records.",
-          position: "top"
+          position: "top",
         },
         {
           element: ".intro-step-fee-received",
           intro: "This section shows the total fees received so far.",
-          position: "top"
+          position: "top",
         },
         {
           element: ".intro-step-fee-pending",
           intro: "This section shows the total pending fees.",
-          position: "top"
+          position: "top",
         },
         {
           element: ".intro-step-total-fee",
           intro: "This section shows the total fee amount collected.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-add-student",  // Student Section highlight
+          element: ".intro-step-add-student",
           intro: "This section allows you to add the student.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-student",  // Student Section highlight
+          element: ".intro-step-student",
           intro: "This section allows you to manage the student details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-teacher",  // Teacher Section highlight
+          element: ".intro-step-teacher",
           intro: "This section allows you to manage teacher details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-parent",  // Parent Section highlight
+          element: ".intro-step-parent",
           intro: "This section allows you to manage parent details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-staff",  // Staff Section highlight
+          element: ".intro-step-staff",
           intro: "This section allows you to manage staff details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-subject",  // Subjects Section highlight
+          element: ".intro-step-subject",
           intro: "This section allows you to manage subject details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-class",  // Classes Section highlight
+          element: ".intro-step-class",
           intro: "This section allows you to manage class details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-section",  // Classes Section highlight
+          element: ".intro-step-section",
           intro: "This section allows you to manage section details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-holidays",  // Holidays Section highlight
+          element: ".intro-step-holidays",
           intro: "This section allows you to manage holiday details.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-routine",  // Routine Section highlight
+          element: ".intro-step-routine",
           intro: "This section allows you to manage student routines.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-start-meeting",  // Vehicles Section highlight
+          element: ".intro-step-start-meeting",
           intro: "This section allows you to start a meeting.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-dashboard-analytics",  // Dashboard Analytics Section highlight
+          element: ".intro-step-dashboard-analytics",
           intro: "This section displays the analytics data in a visual format.",
-          position: "top"
+          position: "top",
         },
-        // Add Growth Over Time Section Step
         {
-          element: ".intro-step-growth-over-time",  // Growth Over Time Section highlight
+          element: ".intro-step-growth-over-time",
           intro: "This section visualizes the growth over time, helping you track progress.",
-          position: "top"
+          position: "top",
         },
         {
-          element: ".intro-step-notices",  // Highlight Notices Table
+          element: ".intro-step-notices",
           intro: "This table shows the available notices. You can edit the notice by clicking the 'Edit' button.",
-          position: "top"
+          position: "top",
         },
-        // Add steps for Fee Summary Section
         {
-          element: ".intro-step-fee-summary",  // Highlight Fee Summary Section
+          element: ".intro-step-fee-summary",
           intro: "This section provides a summary of the paid and pending fees.",
-          position: "top"
+          position: "top",
         },
-
       ],
       highlightClass: "rounded",
       nextLabel: "Next",
@@ -177,12 +181,21 @@ const Dashboard = () => {
     });
 
     intro.onbeforechange((targetElement) => {
-      // Smooth scroll to the target element
       targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
+    intro.oncomplete(() => {
+      localStorage.setItem("introSeen", "true");
+    });
+
+    intro.onexit(() => {
+      localStorage.setItem("introSeen", "true");
+    });
+
     intro.start();
-  }, []); // Empty dependency array ensures this effect runs only once
+  }
+}, []);
+
 
 
 
@@ -205,6 +218,50 @@ const Dashboard = () => {
 
     fetchFeeDetails();
   }, []);
+
+  useEffect(() => {
+    if (feesChartInstanceRef.current) {
+      feesChartInstanceRef.current.destroy();
+    }
+
+    if (!feesChartRef.current) return;
+
+    const ctx = feesChartRef.current.getContext("2d");
+    const labels = ["Total Paid", "Total Pending"];
+    const data = [feeDetails.totalPaid, feeDetails.totalPending];
+
+    feesChartInstanceRef.current = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Fee Amount",
+            data,
+            backgroundColor: ["#4F46E5", "#E53E3E"],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true },
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true },
+        },
+      },
+    });
+
+    return () => {
+      if (feesChartInstanceRef.current) {
+        feesChartInstanceRef.current.destroy();
+        feesChartInstanceRef.current = null;
+      }
+    };
+  }, [feeDetails]);
 
   const [dashboardData, setDashboardData] = useState({
     totalStudents: 0,
@@ -629,6 +686,13 @@ const Dashboard = () => {
             <canvas ref={lineChartRef} className="w-full h-full max-w-full" />
           </div>
         </div>
+
+        <div className="p-6 mt-6 bg-white rounded-md shadow-md">
+        <h2 className="mb-4 text-xl font-semibold text-gray-700">Fees Growth Over Time</h2>
+        <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px]">
+          <canvas ref={feesChartRef} className="w-full h-full max-w-full" />
+        </div>
+      </div>
         {/* Notice Board Section */}
         <div className="p-6 mb-6 bg-white rounded-md shadow-md mt-28">
           <h2 className="text-xl text-gray-500">Notice Board</h2>

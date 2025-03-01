@@ -112,6 +112,65 @@ const ResultPage = () => {
     }
   };
 
+  const printMarksheet = async () => {
+    const element = marksheetRef.current;
+  
+    if (!element) {
+      console.error("Marksheet element not found!");
+      return;
+    }
+  
+    // Adjust styles for better rendering
+    const originalOverflow = element.style.overflow;
+    const originalWidth = element.style.width;
+    const originalHeight = element.style.height;
+  
+    element.style.overflow = "visible";
+    element.style.width = "1000px"; // A4 width
+    element.style.height = "auto";
+  
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+  
+      // Restore original styles
+      element.style.overflow = originalOverflow;
+      element.style.width = originalWidth;
+      element.style.height = originalHeight;
+  
+      const imgData = canvas.toDataURL("image/png");
+  
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <html>
+        <head>
+            <title>Print Marksheet</title>
+            <style>
+                @media print {
+                    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+                    img { width: 210mm; height: auto; } /* A4 width */
+                }
+                body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                img { width: 210mm; height: auto; }
+            </style>
+        </head>
+        <body>
+            <img src="${imgData}" />
+            <script>
+                window.onload = function() {
+                    window.print();
+                    window.close();
+                };
+            </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    } catch (error) {
+      console.error("Error generating print view:", error);
+    }
+  };
+  
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -261,13 +320,21 @@ const ResultPage = () => {
           </div>
         )}
 
+        <div className="fixed bottom-4 right-4 flex flex-col space-y-2">
         <button
           onClick={downloadPDF}
-          className="fixed bottom-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-purple-700 transition"
+          className="bg-purple-600 text-white px-3 py-1 text-sm rounded-md shadow-lg hover:bg-purple-700 transition"
         >
-          Download Marksheet
+          Download
         </button>
-
+        <button
+          onClick={printMarksheet}
+          className="bg-green-600 text-white px-3 py-1 text-sm rounded-md shadow-lg hover:bg-green-700 transition"
+        >
+          Print
+        </button>
+      </div>
+      
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
     </div>

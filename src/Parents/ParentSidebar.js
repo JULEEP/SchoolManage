@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import { FaBook, FaChevronDown, FaChevronRight, FaHome, FaList, FaSignOutAlt, FaUser, FaWallet } from "react-icons/fa"; // Added logout icon
+import { FaBook, FaChevronDown, FaChevronRight, FaHome, FaList, FaSignOutAlt, FaUser, FaWallet, FaChalkboardTeacher, FaClipboardList, FaBus, FaMoneyBill, FaQuestionCircle, FaCalendarAlt, FaVideo } from "react-icons/fa"; // Added new icons
 import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const ParentSidebar = () => {
-  const [isParentLessonPlanOpen, setParentLessonPlanOpen] = useState(false);
   const [isParentExaminationsOpen, setParentExaminationsOpen] = useState(false);
-  const [isParentLibraryOpen, setParentLibraryOpen] = useState(false);
   const navigate = useNavigate(); // Hook for navigation
 
-  const toggleParentLessonPlan = () => setParentLessonPlanOpen((prev) => !prev);
   const toggleParentExaminations = () => setParentExaminationsOpen((prev) => !prev);
-  const toggleParentLibrary = () => setParentLibraryOpen((prev) => !prev);
 
   const handleLogout = async () => {
     try {
@@ -33,66 +29,106 @@ const ParentSidebar = () => {
   };
 
   return (
-    <div className="w-64 max-h-screen ml-0 overflow-y-auto bg-white rounded-lg">
-      {/* Logo */}
-      <div className="flex flex-col items-center mb-8">
-        <img
-          src="https://cdn.pixabay.com/photo/2023/06/01/14/11/ai-generated-8033671_960_720.png"
-          alt="Logo"
-          className="w-32 h-32 rounded-full"
-        />
-        <span className="mt-2 text-lg font-semibold text-sky-500">Parent Dashboard</span>
+    <div className="w-64 h-screen flex flex-col justify-between ml-0 overflow-y-auto bg-gray-900 text-white rounded-lg">
+      <div>
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <img
+            src="https://cdn.pixabay.com/photo/2023/06/01/14/11/ai-generated-8033671_960_720.png"
+            alt="Logo"
+            className="w-32 h-32 rounded-full"
+          />
+          <span className="mt-2 text-lg font-semibold">Parent Dashboard</span>
+        </div>
+
+        {/* Sidebar Links */}
+        <ul className="space-y-2">
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/parent-dashboard" className="flex items-center text-white hover:text-gray-300">
+              <FaHome className="mr-3 text-gray-300" />
+              <span>Dashboard</span>
+            </NavLink>
+          </li>
+          
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/mychild-profile" className="flex items-center text-white hover:text-gray-300">
+              <FaUser className="mr-3 text-gray-300" />
+              <span>My Children</span>
+            </NavLink>
+          </li>
+          
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/mychild-fees" className="flex items-center text-white hover:text-gray-300">
+              <FaWallet className="mr-3 text-gray-300" />
+              <span>Fees</span>
+            </NavLink>
+          </li>
+          
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/homework" className="flex items-center text-white hover:text-gray-300">
+              <FaBook className="mr-3 text-gray-300" />
+              <span>Homework</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/teacher-subjects" className="flex items-center text-white hover:text-gray-300">
+              <FaChalkboardTeacher className="mr-3 text-gray-300" />
+              <span>Teacher Subjects</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/attendance" className="flex items-center text-white hover:text-gray-300">
+              <FaClipboardList className="mr-3 text-gray-300" />
+              <span>Attendance</span>
+            </NavLink>
+          </li>
+          
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/notice" className="flex items-center text-white hover:text-gray-300">
+              <FaBook className="mr-3 text-gray-300" />
+              <span>Notice</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/transport" className="flex items-center text-white hover:text-gray-300">
+              <FaBus className="mr-3 text-gray-300" />
+              <span>Transport</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/ask-queries" className="flex items-center text-white hover:text-gray-300">
+              <FaQuestionCircle className="mr-3 text-gray-300" />
+              <span>Ask Queries</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/holidays" className="flex items-center text-white hover:text-gray-300">
+              <FaCalendarAlt className="mr-3 text-gray-300" />
+              <span>Holidays</span>
+            </NavLink>
+          </li>
+
+          <li className="flex items-center p-3 text-lg rounded-md">
+            <NavLink to="/live-classes" className="flex items-center text-white hover:text-gray-300">
+              <FaVideo className="mr-3 text-gray-300" />
+              <span>Live Classes</span>
+            </NavLink>
+          </li>
+        </ul>
       </div>
 
-      {/* Sidebar Links */}
-      <ul className="space-y-2">
-        {/* Dashboard */}
-        <li className="flex items-center p-3 text-lg rounded-md hover:bg-gray-100">
-          <NavLink to="/parent-dashboard" className="flex items-center text-sky-500 hover:text-sky-400">
-            <FaHome className="mr-3 text-purple-600" />
-            <span>Dashboard</span>
-          </NavLink>
+      {/* Logout Button */}
+      <div className="p-3">
+        <li className="flex items-center p-3 text-lg rounded-md cursor-pointer hover:bg-red-700" onClick={handleLogout}>
+          <FaSignOutAlt className="mr-3 text-gray-300" />
+          <span>Logout</span>
         </li>
-
-        {/* My Children */}
-        <li className="flex items-center p-3 text-lg rounded-md hover:bg-gray-100">
-          <NavLink to="/mychild-profile" className="flex items-center text-sky-500 hover:text-sky-400">
-            <FaUser className="mr-3 text-purple-600" />
-            <span>My Children</span>
-          </NavLink>
-        </li>
-
-        {/* Fees */}
-        <li className="flex items-center p-3 text-lg rounded-md hover:bg-gray-100">
-          <NavLink to="/mychild-fees" className="flex items-center text-sky-500 hover:text-sky-400">
-            <FaWallet className="mr-3 text-purple-600" />
-            <span>Fees</span>
-          </NavLink>
-        </li>
-        {/* Examinations */}
-        <li className="flex flex-col items-start p-3 text-lg rounded-md hover:bg-gray-100">
-          <div className="flex items-center w-full cursor-pointer" onClick={toggleParentExaminations}>
-            <FaList className="mr-3 text-purple-600" />
-            <span className="text-sky-500">Examinations</span>
-            {isParentExaminationsOpen ? <FaChevronDown className="ml-2 text-purple-600" /> : <FaChevronRight className="ml-2 text-purple-600" />}
-          </div>
-          {isParentExaminationsOpen && (
-            <ul className="pl-8 mt-2 space-y-4">
-              <li>
-                <NavLink to="/mychild-exam-schedule" className="text-lg text-sky-500 hover:text-sky-400">
-                  Exam Schedule
-                </NavLink>
-              </li>
-            </ul>
-          )}
-        </li>
-
-        {/* Logout Button */}
-        <li className="flex items-center p-3 text-lg rounded-md cursor-pointer hover:bg-red-100" onClick={handleLogout}>
-          <FaSignOutAlt className="mr-3 text-purple-600" />
-          <span className="text-sky-400">Logout</span>
-        </li>
-      </ul>
+      </div>
     </div>
   );
 };

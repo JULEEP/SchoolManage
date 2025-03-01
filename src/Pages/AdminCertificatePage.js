@@ -57,6 +57,36 @@ const AdminCertificatePage = () => {
     }).catch(err => console.error("Error generating PDF", err));
   };
 
+  const handlePrint = () => {
+    if (!selectedStudent) return;
+
+    const input = document.getElementById("studentCertificate");
+    html2canvas(input, { scale: 3, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+
+      const printWindow = window.open("", "_blank");
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Certificate</title>
+          </head>
+          <body style="margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <img src="${imgData}" style="width: 100%; max-width: 1000px;"/>
+            <script>
+              window.onload = function () {
+                window.print();
+                window.close();
+              };
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }).catch(err => console.error("Error generating print", err));
+  };
+
+
+
   const filteredStudents = students.filter(
     (student) =>
       student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,6 +189,11 @@ const AdminCertificatePage = () => {
           <button onClick={downloadPDF} className="px-8 py-3 bg-purple-700 text-white ml-4 mb-4 text-lg font-semibold rounded-lg hover:bg-purple-800 transition">
             Download Certificate
           </button>
+
+          <button onClick={handlePrint} className="px-8 py-3 bg-purple-600 text-white ml-4 mb-4 text-lg font-semibold rounded-lg hover:bg-purple-700 transition">
+            Print Certificate
+          </button>
+
         </div>
       </div>
     </div>

@@ -52,6 +52,49 @@ const StudentIDCard = () => {
     });
 };
 
+const printIDCard = () => {
+  const input = document.getElementById("studentIDCard");
+
+  if (input) {
+      html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+
+          const printWindow = window.open("", "_blank");
+          printWindow.document.write(`
+              <html>
+              <head>
+                  <title>Print Student ID Card</title>
+                  <style>
+                      @media print {
+                          body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+                          img { width: 80mm; height: auto; } /* A4 size ke andar fit hoga */
+                      }
+                      body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                      img { width: 80mm; height: auto; } /* Default view */
+                  </style>
+              </head>
+              <body>
+                  <img src="${imgData}" />
+                  <script>
+                      window.onload = function() {
+                          window.print();
+                          window.close();
+                      };
+                  </script>
+              </body>
+              </html>
+          `);
+          printWindow.document.close();
+      }).catch(err => {
+          console.error("Error generating print view", err);
+      });
+  } else {
+      console.error("Student ID Card element not found.");
+  }
+};
+
+
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       <div
@@ -105,6 +148,12 @@ const StudentIDCard = () => {
           >
             Download PDF
           </button>
+          <button
+          onClick={printIDCard}
+          className="px-6 py-2 bg-purple-600 text-white ml-4 rounded-md hover:bg-purple-700 transition"
+      >
+          Print
+      </button>
         </div>
       </div>
     </div>

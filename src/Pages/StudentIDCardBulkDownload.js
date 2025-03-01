@@ -185,6 +185,49 @@ const StudentIDCardBulkDownload = () => {
       }).catch((err) => console.error("Error generating bulk PDF", err));
     }, 500);
   };
+
+  const printBulkIDCards = () => {
+    setVisibleCard("all");
+  
+    setTimeout(() => {
+      const studentCards = studentsData.map((student) => {
+        return new Promise((resolve) => {
+          const input = document.getElementById(`studentIDCard-${student.id}`);
+          if (!input) return resolve();
+  
+          html2canvas(input, { scale: 3, useCORS: true }).then((canvas) => {
+            const imageData = canvas.toDataURL("image/png");
+  
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+              <html>
+                <head>
+                  <title>Print ID Cards</title>
+                </head>
+                <body style="margin: 0; display: flex; flex-direction: column; align-items: center;">
+                  <img src="${imageData}" style="width: 80%; margin-bottom: 20px;"/>
+                  <script>
+                    window.onload = function () {
+                      window.print();
+                      window.close();
+                    };
+                  </script>
+                </body>
+              </html>
+            `);
+            printWindow.document.close();
+            resolve();
+          }).catch(err => console.error("Error generating print", err));
+        });
+      });
+  
+      // Wait for all ID cards to process before resetting visibility
+      Promise.all(studentCards).then(() => {
+        setVisibleCard(null);
+      }).catch(err => console.error("Error in bulk printing", err));
+    }, 500);
+  };
+  
   
 
   const filteredStudents = studentsData.filter((student) => {
@@ -195,30 +238,29 @@ const StudentIDCardBulkDownload = () => {
   });
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar Overlay for Mobile */}
-      <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-        onClick={toggleSidebar}
-      ></div>
-
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <Sidebar />
+    <div className="flex min-h-screen bg-gray-100">
+    {/* Sidebar Overlay */}
+    <div
+      className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
+      onClick={toggleSidebar}
+    ></div>
+  
+    {/* Sidebar */}
+    <div
+      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+    >
+      <Sidebar />
+    </div>
+  
+    {/* Main Content */}
+    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"} h-screen`}>
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between p-4 text-white bg-purple-700 shadow-lg lg:hidden">
+        <h1 className="text-lg font-bold">Student Bulk ID Card</h1>
+        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
-
-      {/* Main Content */}
-      <div className="flex-grow">
-        {/* Mobile Header */}
-        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-          <h1 className="text-lg font-bold">Student ID Card Bulk Download</h1>
-          <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
-            {isSidebarOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
-
         {/* Filters */}
         <div className="mb-4 mt-4">
           <select
@@ -243,10 +285,18 @@ const StudentIDCardBulkDownload = () => {
           </select>
         </div>
 
+        <div className="flex space-x-4">
         {/* Download Button */}
         <button onClick={downloadBulkPDF} className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">
           Download All ID Cards
         </button>
+      
+        {/* Print Button */}
+        <button onClick={printBulkIDCards} className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+          Print All ID Cards
+        </button>
+      </div>
+      
 
         {/* Display filtered student cards horizontally */}
         <div className="flex flex-wrap justify-start mt-6">

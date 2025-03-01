@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify"; // Importing toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Importing the toast styles
+import { MdOutlineLocalPrintshop } from "react-icons/md";
+import { CSVLink } from "react-csv";
 
 const StaffList = () => {
   const [staffList, setStaffList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const tableRef = useRef(null);
 
-  // Fetch staff
   useEffect(() => {
     const fetchStaff = async () => {
       try {
@@ -21,7 +23,6 @@ const StaffList = () => {
         setStaffList(response.data.staff || []);
       } catch (error) {
         console.error("Error fetching staff:", error);
-        toast.error("Error fetching staff. Please try again."); // Error toast
       } finally {
         setLoading(false);
       }
@@ -29,8 +30,13 @@ const StaffList = () => {
     fetchStaff();
   }, []);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const handlePrint = () => {
+    const printContent = tableRef.current.innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = `<html><head><title>Print</title></head><body>${printContent}</body></html>`;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
   };
 
   const handleSearch = (e) => {
@@ -44,100 +50,42 @@ const StaffList = () => {
       staff.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const formatDate = (date) => {
-    return date ? new Date(date).toLocaleDateString() : "N/A";
-  };
+  const formatDate = (date) => (date ? new Date(date).toLocaleDateString() : "N/A");
 
-  const exportToCSV = () => {
-    const headers = [
-      "SL,First Name,Last Name,Email,Phone,Position,Department,Gender,Date of Birth,Joining Date,Salary,Employee ID,Profile Picture,Qualifications,Created At",
-    ];
-    const rows = filteredStaff.map((staff, index) => [
-      index + 1,
-      staff.firstName || "N/A",
-      staff.lastName || "N/A",
-      staff.email || "N/A",
-      staff.phone || "N/A",
-      staff.position || "N/A",
-      staff.department || "N/A",
-      staff.gender || "N/A",
-      formatDate(staff.dateOfBirth),
-      formatDate(staff.joiningDate),
-      staff.salary || "N/A",
-      staff.employeeId || "N/A",
-      staff.profilePicture || "N/A",
-      staff.qualifications?.join(", ") || "N/A",
-      formatDate(staff.createdAt),
-    ]);
-
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [headers, ...rows.map((row) => row.join(","))].join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "staff_data.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    toast.success("CSV Exported Successfully!"); // Success toast
-  };
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const currentRecords = filteredStaff.slice(firstIndex, lastIndex);
+  const totalPages = Math.ceil(filteredStaff.length / recordsPerPage);
 
   return (
     <div className="min-h-screen flex bg-gray-100">
-    {/* Sidebar Overlay */}
-    <div
-      className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`}
-      onClick={toggleSidebar}
-    ></div>
-  
-    {/* Sidebar */}
-    <div
-      className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-    >
-      <Sidebar />
-    </div>
-  
-    {/* Main Content */}
-    <div className={`flex-grow overflow-y-auto transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"} h-screen`}>
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
-        <h1 className="text-lg font-bold">Staff List</h1>
-        <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
-        </button>
+      <div className={`fixed inset-0 bg-gray-800 bg-opacity-50 transition-opacity lg:hidden ${isSidebarOpen ? "block" : "hidden"}`} onClick={() => setIsSidebarOpen(false)}></div>
+      <div className={`fixed inset-y-0 left-0 bg-white shadow-lg transform lg:transform-none lg:relative w-64 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <Sidebar />
       </div>
-        {/* Search and Export */}
-        <div className="mb-6 flex justify-between items-center">
-          {/* Search Filter */}
-          <div className="w-full sm:w-1/2 md:w-1/3 mt-2">
-            <input
-              type="text"
-              placeholder="Search by Name or Email"
-              className="ml-4 px-4 py-2 bg-white border rounded-md w-70"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
-
-          {/* Export Button */}
-          <div className="w-full sm:w-1/3 md:w-1/4 mr-8">
-            <button
-              onClick={exportToCSV}
-              className="ml-4 px-4 py-2 mt-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 w-full"
-            >
-              Export CSV
-            </button>
+      <div className="flex-grow overflow-y-auto transition-all duration-300 p-4">
+        <div className="flex items-center justify-between bg-purple-700 text-white p-4 shadow-lg lg:hidden">
+          <h1 className="text-lg font-bold">Staff List</h1>
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-2xl focus:outline-none">
+            {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+        <div className="mb-4 flex justify-between items-center">
+          <input type="text" placeholder="Search by Name or Email" className="px-4 py-2 bg-white border rounded-md" value={searchTerm} onChange={handleSearch} />
+          <div className="flex gap-4">
+          <button 
+          onClick={handlePrint} 
+          className="p-2 bg-transparent text-purple-600 hover:text-purple-800 text-2xl"
+        >
+        <MdOutlineLocalPrintshop />
+        </button>            
+        <CSVLink data={filteredStaff} filename="staff_data.csv" className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">Download CSV</CSVLink>
           </div>
         </div>
-
-        {/* Staff Table */}
-        <div className="overflow-x-auto mb-8">
+        <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md" ref={tableRef}>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-purple-600 text-white">
                 <th className="px-4 py-2 border-b">SL</th>
                 <th className="px-4 py-2 border-b">First Name</th>
                 <th className="px-4 py-2 border-b">Last Name</th>
@@ -149,17 +97,13 @@ const StaffList = () => {
                 <th className="px-4 py-2 border-b">Date of Birth</th>
                 <th className="px-4 py-2 border-b">Joining Date</th>
                 <th className="px-4 py-2 border-b">Salary</th>
-                <th className="px-4 py-2 border-b">Employee ID</th>
-                <th className="px-4 py-2 border-b">Profile Picture</th>
-                <th className="px-4 py-2 border-b">Qualifications</th>
-                <th className="px-4 py-2 border-b">Created At</th>
               </tr>
             </thead>
             <tbody>
-              {filteredStaff.length > 0 ? (
-                filteredStaff.map((staff, index) => (
+              {currentRecords.length > 0 ? (
+                currentRecords.map((staff, index) => (
                   <tr key={staff._id}>
-                    <td className="px-4 py-2 border-b">{index + 1}</td>
+                    <td className="px-4 py-2 border-b">{firstIndex + index + 1}</td>
                     <td className="px-4 py-2 border-b">{staff.firstName}</td>
                     <td className="px-4 py-2 border-b">{staff.lastName}</td>
                     <td className="px-4 py-2 border-b">{staff.email}</td>
@@ -170,28 +114,19 @@ const StaffList = () => {
                     <td className="px-4 py-2 border-b">{formatDate(staff.dateOfBirth)}</td>
                     <td className="px-4 py-2 border-b">{formatDate(staff.joiningDate)}</td>
                     <td className="px-4 py-2 border-b">{staff.salary}</td>
-                    <td className="px-4 py-2 border-b">{staff.employeeId}</td>
-                    <td className="px-4 py-2 border-b">{staff.profilePicture}</td>
-                    <td className="px-4 py-2 border-b">
-                      {staff.qualifications?.join(", ") || "N/A"}
-                    </td>
-                    <td className="px-4 py-2 border-b">{formatDate(staff.createdAt)}</td>
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan="15" className="text-center text-gray-500">
-                    No staff found.
-                  </td>
-                </tr>
+                <tr><td colSpan="11" className="text-center py-4">No staff found.</td></tr>
               )}
             </tbody>
           </table>
         </div>
+        <div className="flex justify-center mt-4">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} className="px-4 py-2 bg-gray-600 text-white rounded-md">Previous</button>
+          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="ml-4 px-4 py-2 bg-gray-600 text-white rounded-md">Next</button>
+        </div>
       </div>
-
-      {/* ToastContainer to display toasts */}
-      <ToastContainer />
     </div>
   );
 };

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { MdOutlineLocalPrintshop } from "react-icons/md";
+
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -11,6 +13,7 @@ const StudentList = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const tableRef = useRef(null);
   const studentsPerPage = 10;
   
 
@@ -33,6 +36,16 @@ const StudentList = () => {
     };
     fetchStudents();
   }, []);
+
+  const handlePrint = () => {
+    const printContent = tableRef.current.innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = `<html><head><title>Print</title></head><body>${printContent}</body></html>`;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload();
+  };
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -185,17 +198,27 @@ const StudentList = () => {
 
           {/* Export Button */}
           <div className="w-full sm:w-1/2 md:w-auto mb-4 sm:mb-0">
-            <button
-              onClick={exportToCSV}
-              className="ml-4 px-4 py-2 mt-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 w-70"
-            >
-              Export CSV
-            </button>
+             <div className="flex items-center space-x-4 mt-4">
+             <button 
+               onClick={handlePrint} 
+               className="p-2 bg-transparent text-purple-600 hover:text-purple-800 text-2xl"
+             >
+               <MdOutlineLocalPrintshop />
+             </button>            
+             
+             <button
+               onClick={exportToCSV}
+               className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+             >
+               Export CSV
+             </button>
+           </div>
           </div>
         </div>
 
         {/* Student Table */}
         <div className="overflow-x-auto mb-8">
+        <div className="overflow-x-auto bg-white shadow-md p-4 rounded-md" ref={tableRef}>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-purple-600 text-white">
@@ -268,6 +291,7 @@ const StudentList = () => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
