@@ -240,6 +240,9 @@ import StudentCertificate from './Student/StudentCertificate';
 import StudentIDCardBulkDownload from './Pages/StudentIDCardBulkDownload';
 import AdminCertificatePage from './Pages/AdminCertificatePage';
 import GenerateMeeting from './Pages/GenerateMeeting';
+import VoiceCommand from './Teacher/VoiceCommand'
+import Students from './Student/Students';
+import StudentDoubtsPage from './Student/StudentDoubtsPage';
 
   function App() {
     return (
@@ -437,6 +440,8 @@ import GenerateMeeting from './Pages/GenerateMeeting';
               <Route path='/studentmeeting' element={<StudentMeeting/>}/>
 
               <Route path='/lecturepages' element={<LecturePages/>}/>
+              <Route path="/studentlist" element={<Students/>} />
+              <Route path="/student-doubts" element={<StudentDoubtsPage/>} />
               
 
               
@@ -513,6 +518,8 @@ import GenerateMeeting from './Pages/GenerateMeeting';
             <Route path="/teacher-meetings" element={<TeacherMeetingPage/>} />
             <Route path="/liveclassform" element={<LiveForm/>} />
             <Route path="/teacher-transport" element={<TeacherBusTracking/>} />
+            <Route path="/voice" element={<VoiceCommand/>} />
+
 
 
 

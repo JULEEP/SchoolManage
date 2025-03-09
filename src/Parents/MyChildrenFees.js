@@ -3,6 +3,8 @@ import axios from "axios";
 import { FaBars, FaTimes } from "react-icons/fa";
 import ParentSidebar from "./ParentSidebar";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 function MyChildrenFees() {
   const [fees, setFees] = useState([]);
@@ -51,23 +53,29 @@ function MyChildrenFees() {
   const downloadInvoice = (fee) => {
     const doc = new jsPDF();
   
-    // Title
     doc.setFontSize(18);
     doc.text("Fee Receipt", 14, 20);
   
-    // Fee Details
-    doc.setFontSize(12);
-    doc.text(`Invoice Number: ${String(fee.invoiceNumber)}`, 14, 30);
-    doc.text(`Fees Type: ${String(fee.feesType)}`, 14, 40);
-    doc.text(`Amount: ${String(fee.amount)}`, 14, 50);
-    doc.text(`Paid Amount: ${String(fee.paidAmount)}`, 14, 60);
-    doc.text(`Pending Payment: ${String(fee.pendingPayment)}`, 14, 70);
-    doc.text(`Status: ${String(fee.status)}`, 14, 80);
-    doc.text(`Payment Method: ${String(fee.paymentMethod)}`, 14, 90);
-    doc.text(`Paid Date: ${new Date(fee.paidDate).toLocaleDateString()}`, 14, 100);
+    const tableColumn = ["Field", "Details"];
+    const tableRows = [
+      ["Invoice Number", fee.invoiceNumber],
+      ["Fees Type", fee.feesType],
+      ["Amount", fee.amount],
+      ["Paid Amount", fee.paidAmount],
+      ["Pending Payment", fee.pendingPayment],
+      ["Status", fee.status],
+      ["Payment Method", fee.paymentMethod],
+      ["Paid Date", new Date(fee.paidDate).toLocaleDateString()],
+    ];
   
-    // Save PDF
-    doc.save(`Invoice_${String(fee.invoiceNumber)}.pdf`);
+    autoTable(doc, {
+      startY: 30,
+      head: [tableColumn],
+      body: tableRows,
+      theme: "grid",
+    });
+  
+    doc.save(`Invoice_${fee.invoiceNumber}.pdf`);
   };
   
   return (
@@ -113,7 +121,7 @@ function MyChildrenFees() {
 
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white rounded-lg shadow-md">
-                  <thead className="bg-gray-100 text-gray-700 border-b-2 border-gray-200">
+                  <thead className="bg-purple-600 text-white border-b-2 border-gray-200">
                     <tr>
                       <th className="px-6 py-3 text-left">Fees Type</th>
                       <th className="px-6 py-3 text-left">Invoice Number</th>

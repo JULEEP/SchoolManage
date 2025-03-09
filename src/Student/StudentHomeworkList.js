@@ -124,14 +124,14 @@ const StudentHomeworkList = () => {
         {/* Homework Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto">
-            <thead className="bg-gray-100">
+            <thead className="bg-purple-600">
               <tr>
-                <th className="px-4 py-2 text-left text-gray-400">Title</th>
-                <th className="px-4 py-2 text-left text-gray-400">Description</th>
-                <th className="px-4 py-2 text-left text-gray-400">Assigned By</th>
-                <th className="px-4 py-2 text-left text-gray-400">Homework Date</th>
-                <th className="px-4 py-2 text-left text-gray-400">Submission Date</th>
-                <th className="px-4 py-2 text-left text-gray-400">Status</th>
+                <th className="px-4 py-2 text-left text-white">Title</th>
+                <th className="px-4 py-2 text-left text-white">Description</th>
+                <th className="px-4 py-2 text-left text-white">Assigned By</th>
+                <th className="px-4 py-2 text-left text-white">Homework Date</th>
+                <th className="px-4 py-2 text-left text-white">Submission Date</th>
+                <th className="px-4 py-2 text-left text-white">Status</th>
               </tr>
             </thead>
             <tbody>

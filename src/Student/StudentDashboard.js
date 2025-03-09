@@ -34,7 +34,9 @@ const attendance = 'https://cdn.dribbble.com/users/1244169/screenshots/4494753/a
 const fee = 'https://cdn-icons-gif.flaticon.com/9908/9908553.gif';
 const holidays = 'https://media.tenor.com/KnM_tzEvCrQAAAAC/holiday-season.gif';
 const liveClass = 'https://cdn.dribbble.com/users/1681709/screenshots/4735856/gif.gif';
-const idCard = 'https://media.lordicon.com/icons/wired/lineal/734-id-business-card-1.gif'
+const idCard = 'https://media.lordicon.com/icons/wired/lineal/734-id-business-card-1.gif';
+const askToPeer = 'https://media.tenor.com/_k9HqF7tYhEAAAAj/what-confused.gif';
+const peerSupport = 'https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3229434/consultant-clipart-md.png'
 
 
 const bestCategories = [
@@ -52,6 +54,10 @@ const bestCategories = [
   { img: holidays, name: "Holidays", link: "/student-holidays" },
   { img: liveClass, name: "Live Class", link: "/live-class" },
   { img: idCard, name: "My IdCard", link: "/studentcard" },
+  { img: askToPeer, name: "ASK TO Peer", link: "/studentlist" },
+  { img: peerSupport, name: "Peer Support", link: "/student-doubts" },
+
+
 
 ];
 

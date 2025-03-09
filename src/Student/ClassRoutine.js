@@ -68,38 +68,37 @@ const DailyRoutinePage = () => {
         {/* Error Message */}
         {error && <p className="text-red-500 mt-4">{error}</p>}
 
-        {/* Routine Table */}
-        {routine.length > 0 ? (
-          <div className="bg-white shadow-md rounded-xl p-6">
-            <h2 className="text-xl font-medium text-gray-700 mb-4">Your Class Routine</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse bg-gray-50 rounded-lg">
-                <thead>
-                  <tr className="text-left text-gray-600 border-b">
-                    <th className="py-3 px-4">Day</th>
-                    <th className="py-3 px-4">Time</th>
-                    <th className="py-3 px-4">Subject</th>
-                    <th className="py-3 px-4">Teacher</th>
+{/* Routine Table */}
+{routine.length > 0 ? (
+  <div className="bg-white shadow-md rounded-xl p-6">
+    <h2 className="text-xl font-medium text-gray-700 mb-4">Your Class Routine</h2>
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="text-left text-white">
+            <th className="py-3 px-4 bg-purple-600">Day</th>
+            <th className="py-3 px-4 bg-purple-600">Time</th>
+            <th className="py-3 px-4 bg-purple-600">Subject</th>
+            <th className="py-3 px-4 bg-purple-600">Teacher</th>
+          </tr>
+        </thead>
+        <tbody>
+          {routine.map((entry) => (
+            <tr key={entry._id}>
+              <td className="py-3 px-4 text-gray-700">{entry.day}</td>
+              <td className="py-3 px-4 text-gray-700">{entry.time}</td>
+              <td className="py-3 px-4 text-gray-700">{entry.subject}</td>
+              <td className="py-3 px-4 text-gray-700">{entry.teacher || null}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+) : (
+  !loading && <p className="text-gray-500">No routine found.</p>
+)}
 
-                  </tr>
-                </thead>
-                <tbody>
-                  {routine.map((entry) => (
-                    <tr key={entry._id}>
-                      <td className="py-3 px-4 text-gray-700">{entry.day}</td>
-                      <td className="py-3 px-4 text-gray-700">{entry.time}</td>
-                      <td className="py-3 px-4 text-gray-700">{entry.subject}</td>
-                      <td className="py-3 px-4 text-gray-700">{entry.teacher || null}</td>
-
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          !loading && <p className="text-gray-500">No routine found.</p>
-        )}
 
         {/* Loading Message */}
         {loading && <p className="text-gray-500">Loading routine...</p>}

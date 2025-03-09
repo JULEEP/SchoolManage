@@ -65,7 +65,7 @@ const StudentBookListPage = () => {
         </div>
 
         {/* Title */}
-        <h2 className="text-xl font-medium text-gray-700 mb-6 mt-6 ml-2">All Books</h2>
+        <h2 className="text-xl font-medium text-purple-700 mb-6 mt-6 ml-2">All Books</h2>
 
         {/* Book List Table */}
         <div className="bg-white shadow-md rounded-lg p-6">
@@ -73,14 +73,14 @@ const StudentBookListPage = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full table-auto">
               <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Book Title</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Book No</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">ISBN No</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Category</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Subject</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Publisher Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Author Name</th>
+                <tr className="border-b bg-purple-600">
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Book Title</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Book No</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">ISBN No</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Category</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Subject</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Publisher Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Author Name</th>
                 </tr>
               </thead>
               <tbody>

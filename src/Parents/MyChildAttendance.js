@@ -194,11 +194,11 @@ const MyChildAttendance = () => {
           {filteredAttendance.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto border-collapse">
-                <thead className="bg-gray-100">
+                <thead className="bg-purple-600">
                   <tr>
-                    <th className="px-4 py-2 text-left text-gray-400">Date</th>
-                    <th className="px-4 py-2 text-left text-gray-400">Attendance Status</th>
-                    <th className="px-4 py-2 text-left text-gray-400">Subject</th>
+                    <th className="px-4 py-2 text-left text-white">Date</th>
+                    <th className="px-4 py-2 text-left text-white">Attendance Status</th>
+                    <th className="px-4 py-2 text-left text-white">Subject</th>
                   </tr>
                 </thead>
                 <tbody>
